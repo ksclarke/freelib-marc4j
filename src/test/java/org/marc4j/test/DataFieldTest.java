@@ -1,3 +1,4 @@
+
 package org.marc4j.test;
 
 import org.junit.Test;
@@ -7,10 +8,13 @@ import org.marc4j.marc.Subfield;
 
 import static org.junit.Assert.assertEquals;
 
-public class DataFieldTest  {
+public class DataFieldTest {
 
     MarcFactory factory = MarcFactory.newInstance();
 
+    /**
+     * Tests the {@link DataField} constructor.
+     */
     @Test
     public void testConstructor() {
         DataField df = factory.newDataField("245", '1', '0');
@@ -18,6 +22,10 @@ public class DataFieldTest  {
         assertEquals('1', df.getIndicator1());
         assertEquals('0', df.getIndicator2());
     }
+
+    /**
+     * Tests {@link DataField#addSubfield(Subfield)}.
+     */
     @Test
     public void testAddSubfield() {
         DataField df = factory.newDataField("245", '1', '0');
@@ -26,6 +34,9 @@ public class DataFieldTest  {
         assertEquals(1, df.getSubfields().size());
     }
 
+    /**
+     * Tests {@link DataField#addSubfield(int, Subfield).
+     */
     @Test
     public void testSetSubfield() {
         DataField df = factory.newDataField("245", '1', '0');
@@ -37,6 +48,12 @@ public class DataFieldTest  {
         assertEquals(2, df.getSubfields().size());
         assertEquals('a', s.getCode());
     }
+
+    /**
+     * Tests the {@link Comparable} aspect of {@link DataField}.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testComparable() throws Exception {
         DataField df1 = factory.newDataField("600", '0', '0');

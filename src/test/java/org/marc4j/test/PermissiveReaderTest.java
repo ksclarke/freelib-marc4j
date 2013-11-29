@@ -1,26 +1,46 @@
+
 package org.marc4j.test;
 
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.VariableField;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.Subfield;
+import org.marc4j.marc.Record;
+
 import org.junit.Test;
+
 import org.marc4j.MarcPermissiveStreamReader;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamWriter;
-import org.marc4j.marc.*;
 import org.marc4j.test.utils.StaticTestRecords;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PermissiveReaderTest {
 
+    /**
+     * Tests handling bad bytes in positions 10 and 11 of the leader.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testBadLeaderBytes10_11() throws Exception {
         int i = 0;
-        InputStream input = getClass().getResourceAsStream(StaticTestRecords.RESOURCES_BAD_LEADERS_10_11_MRC);
+        InputStream input =
+                getClass().getResourceAsStream(
+                        StaticTestRecords.RESOURCES_BAD_LEADERS_10_11_MRC);
         assertNotNull(input);
+
         MarcReader reader = new MarcPermissiveStreamReader(input, true, true);
+
         while (reader.hasNext()) {
             Record record = reader.next();
 
@@ -28,16 +48,24 @@ public class PermissiveReaderTest {
             assertEquals(2, record.getLeader().getSubfieldCodeLength());
             i++;
         }
+
         input.close();
         assertEquals(1, i);
     }
 
-
+    /**
+     * Tests the enabling of numeric code escaping.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNumericCodeEscapingEnabled() throws Exception {
-        ByteArrayInputStream in = getInputStreamForTestRecordWithNumericCoding();
-        MarcPermissiveStreamReader reader = new MarcPermissiveStreamReader(in, false, true,"MARC-8");
-        assertEquals("default lossless code expansion", true, reader.isTranslateLosslessUnicodeNumericCodeReferencesEnabled());
+        ByteArrayInputStream in =
+                getInputStreamForTestRecordWithNumericCoding();
+        MarcPermissiveStreamReader reader =
+                new MarcPermissiveStreamReader(in, false, true, "MARC-8");
+        assertEquals("default lossless code expansion", true, reader
+                .isTranslateLosslessUnicodeNumericCodeReferencesEnabled());
 
         assertTrue("have a record", reader.hasNext());
         Record r = reader.next();
@@ -47,26 +75,42 @@ public class PermissiveReaderTest {
         assertEquals("Should be expanded", "Character Test", sf.getData());
     }
 
+    /**
+     * Tests the disabling of numeric code escaping.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNumericCodeEscapingDisabled() throws Exception {
-        ByteArrayInputStream in = getInputStreamForTestRecordWithNumericCoding();
-        MarcPermissiveStreamReader reader = new MarcPermissiveStreamReader(in, true, true,"MARC-8");
+        ByteArrayInputStream in =
+                getInputStreamForTestRecordWithNumericCoding();
+        MarcPermissiveStreamReader reader =
+                new MarcPermissiveStreamReader(in, true, true, "MARC-8");
         reader.setTranslateLosslessUnicodeNumericCodeReferencesEnabled(false);
-        assertEquals("default lossless code expansion", false, reader.isTranslateLosslessUnicodeNumericCodeReferencesEnabled());
+        assertEquals("default lossless code expansion", false, reader
+                .isTranslateLosslessUnicodeNumericCodeReferencesEnabled());
 
         assertTrue("have a record", reader.hasNext());
         Record r = reader.next();
         assertFalse("too many records", reader.hasNext());
         DataField f = (DataField) r.getVariableField("999");
         Subfield sf = f.getSubfield('a');
-        assertEquals("Should NOT be expanded", "&#x0043;haracter Test", sf.getData());
+        assertEquals("Should NOT be expanded", "&#x0043;haracter Test", sf
+                .getData());
     }
 
+    /**
+     * Tests getting an {@link InputStream} for a record with numeric coding.
+     * 
+     * @return
+     */
     private ByteArrayInputStream getInputStreamForTestRecordWithNumericCoding() {
-        MarcFactory factory =  MarcFactory.newInstance();
+        MarcFactory factory = MarcFactory.newInstance();
         Record r = StaticTestRecords.chabon[0];
         r.getLeader().setCharCodingScheme(' ');
-        VariableField f = factory.newDataField("999", ' ', ' ', "a", "&#x0043;haracter Test");
+        VariableField f =
+                factory.newDataField("999", ' ', ' ', "a",
+                        "&#x0043;haracter Test");
         r.addVariableField(f);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MarcStreamWriter writer = new MarcStreamWriter(out);
@@ -77,15 +121,21 @@ public class PermissiveReaderTest {
         return new ByteArrayInputStream(recordBytes);
     }
 
+    /**
+     * Tests reading a MARC record that is too long.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testTooLongMarcRecord() throws Exception {
-        InputStream input = getClass().getResourceAsStream(StaticTestRecords.RESOURCES_BAD_TOO_LONG_PLUS_2_MRC);
+        InputStream input =
+                getClass().getResourceAsStream(
+                        StaticTestRecords.RESOURCES_BAD_TOO_LONG_PLUS_2_MRC);
         assertNotNull(input);
-        // This marc file has three records, but the first one
-        // is too long for a marc binary record. Can we still read
-        // the next two?
-        MarcReader reader = new MarcPermissiveStreamReader(input, true, true);
 
+        // This MARC file has three records, but the first one is too long for
+        // a MARC binary record. Can we still read the next two?
+        MarcReader reader = new MarcPermissiveStreamReader(input, true, true);
         Record bad_record = reader.next();
 
         // Bad record is a total loss, don't even bother trying to read
@@ -94,24 +144,28 @@ public class PermissiveReaderTest {
         ControlField good001 = good_record1.getControlNumberField();
         assertEquals(good001.getData(), "360945");
 
-
         Record good_record2 = reader.next();
         good001 = good_record2.getControlNumberField();
         assertEquals(good001.getData(), "360946");
-
     }
 
+    /**
+     * Tests reading a MARC record with a leader that's too long.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testTooLongLeaderByteRead() throws Exception {
-        InputStream input = getClass().getResourceAsStream(
-                StaticTestRecords.RESOURCES_BAD_TOO_LONG_PLUS_2_MRC);
+        InputStream input =
+                getClass().getResourceAsStream(
+                        StaticTestRecords.RESOURCES_BAD_TOO_LONG_PLUS_2_MRC);
         assertNotNull(input);
         MarcReader reader = new MarcPermissiveStreamReader(input, true, true);
 
-        //First record is the long one.
+        // First record is the long one.
         Record weird_record = reader.next();
 
-        //is it's marshal'd leader okay?
+        // is it's marshal'd leader okay?
         String strLeader = weird_record.getLeader().marshal();
 
         // Make sure only five digits for length is used in the leader,

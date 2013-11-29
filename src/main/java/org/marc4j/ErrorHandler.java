@@ -4,8 +4,8 @@
  * This file is part of MARC4J
  *
  * MARC4J is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * MARC4J is distributed in the hope that it will be useful,
@@ -13,11 +13,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
+ * You should have received a copy of the GNU Lesser General Public
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+
 package org.marc4j;
 
 import java.util.Iterator;
@@ -25,275 +26,314 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Defines and describes errors encountered in the processing a given MARC record.
- * Used in conjunction with the MarcPermissiveReader class. 
- *
+ * Defines and describes errors encountered in the processing a given MARC
+ * record. Used in conjunction with the MarcPermissiveReader class.
+ * 
  * @author Robert Haschart
  */
 public class ErrorHandler {
 
-	/**
-	 * FATAL is the most severe error, it is usually set in conjunction with throwing an
-	 * exception, generally no record is returned when a FATAL error occurs.  Although in 
-	 * some instances (a record with a field > 9999 bytes long) a record will be returned 
-	 * that can be used, but it cannot be written back out without causing an error.
-	 */ 
+    /**
+     * FATAL is the most severe error, it is usually set in conjunction with
+     * throwing an exception, generally no record is returned when a FATAL error
+     * occurs. Although in some instances (a record with a field > 9999 bytes
+     * long) a record will be returned that can be used, but it cannot be
+     * written back out without causing an error.
+     */
     public final static int FATAL = 4;
 
     /**
-	 * MAJOR_ERROR indicates that a serious problem existed with the record, such as a 
-	 * malformed directory or an invalid subfield tag, or an encoding error where missing 
-	 * data had to be inferred through some heuristic process.  This indicates that 
-	 * although a record is returned, you cannot be sure that the record is not corrupted.
-	 */ 
+     * MAJOR_ERROR indicates that a serious problem existed with the record,
+     * such as a malformed directory or an invalid subfield tag, or an encoding
+     * error where missing data had to be inferred through some heuristic
+     * process. This indicates that although a record is returned, you cannot be
+     * sure that the record is not corrupted.
+     */
     public final static int MAJOR_ERROR = 3;
-    
+
     /**
-	 * MINOR_ERROR indicates that a less serious problem existed with the record, such as 
-	 * a mismatch between the directory stated field sizes and the actual field sizes, 
-	 * or an encoding error where extraneous data had to be discarded to correctly 
-	 * interpret the data.  
-	 */ 
+     * MINOR_ERROR indicates that a less serious problem existed with the
+     * record, such as a mismatch between the directory stated field sizes and
+     * the actual field sizes, or an encoding error where extraneous data had to
+     * be discarded to correctly interpret the data.
+     */
     public final static int MINOR_ERROR = 2;
 
     /**
-	 * ERROR_TYPO indicates that an even less severe problem was found with the record,
-	 * such as the record leader ends with characters other than "4500" or a field tag 
-	 * contains non-numeric characters the record contains a html-style entity reference 
-	 * such as &amp; or &quote; which was replaced with the unescaped version. 
-	 */ 
+     * ERROR_TYPO indicates that an even less severe problem was found with the
+     * record, such as the record leader ends with characters other than "4500"
+     * or a field tag contains non-numeric characters the record contains a
+     * html-style entity reference such as &amp; or &quote; which was replaced
+     * with the unescaped version.
+     */
     public final static int ERROR_TYPO = 1;
- 
+
     /**
-	 * INFO is used to pass information about the record translation process.  It does 
-	 * not indicate an error.  It usually will occur when a defaultEncoding value of "BESTGUESS"
-	 * is passed in.  INFO statements are generated to indicate which character encoding was 
-	 * determined to be the best fit for the data, and why.
-	 */ 
+     * INFO is used to pass information about the record translation process. It
+     * does not indicate an error. It usually will occur when a defaultEncoding
+     * value of "BESTGUESS" is passed in. INFO statements are generated to
+     * indicate which character encoding was determined to be the best fit for
+     * the data, and why.
+     */
     public final static int INFO = 0;
-    
+
     private List errors;
+
     private String curRecordID;
+
     private String curField;
+
     private String curSubfield;
+
     private boolean hasMissingID;
+
     private int maxSeverity;
-    
+
     public class Error {
+
         public String curRecordID;
+
         public String curField;
+
         public String curSubfield;
+
         public int severity;
+
         public String message;
-        
-        protected Error(String recordID, String field, String subfield, int severity, String message)
-        {
+
+        protected Error(String recordID, String field, String subfield,
+                int severity, String message) {
             curRecordID = recordID;
             curField = field;
             curSubfield = subfield;
             this.severity = severity;
             this.message = message;
         }
-        
+
         /**
-         *  Formats the error message for display
-         *  
+         * Formats the error message for display
+         * 
          * @return String - a formatted representation of the error.
          */
-        public String toString()
-        {
+        public String toString() {
             String severityMsg = getSeverityMsg(severity);
-            String ret = severityMsg +" : " + message + " --- [ " + curField + " : " + curSubfield  + " ]" ;
-            return(ret);
+            String ret =
+                    severityMsg + " : " + message + " --- [ " + curField +
+                            " : " + curSubfield + " ]";
+            return (ret);
         }
 
-        private void setCurRecordID(String curRecordID)
-        {
+        private void setCurRecordID(String curRecordID) {
             this.curRecordID = curRecordID;
         }
-        
-        private String getCurRecordID()
-        {
-            return(curRecordID);
+
+        private String getCurRecordID() {
+            return (curRecordID);
         }
     }
-    
-    public ErrorHandler() 
-    {
+
+    /**
+     * Creates an error handler.
+     */
+    public ErrorHandler() {
         errors = null;
         hasMissingID = false;
         maxSeverity = INFO;
     }
 
     /**
-     *  Provides a descriptive string representation of the severity level.
-     *  
-     * @return String - a descriptive string representation of the severity level
+     * Provides a descriptive string representation of the severity level.
+     * 
+     * @return String - a descriptive string representation of the severity
+     *         level
      */
-    private String getSeverityMsg(int severity)
-    {
+    private String getSeverityMsg(int severity) {
         switch (severity) {
-            case FATAL:                 return("FATAL       ");
-            case MAJOR_ERROR:           return("Major Error ");
-            case MINOR_ERROR:           return("Minor Error ");
-            case ERROR_TYPO:            return("Typo        ");
-            case INFO:                  return("Info        ");
+            case FATAL:
+                return ("FATAL       ");
+            case MAJOR_ERROR:
+                return ("Major Error ");
+            case MINOR_ERROR:
+                return ("Minor Error ");
+            case ERROR_TYPO:
+                return ("Typo        ");
+            case INFO:
+                return ("Info        ");
         }
-        return(null);
+
+        return (null);
     }
 
     /**
-     *  Returns true if any errors (or warnings) were encountered in processing the 
-     *  current record.  Note that if only INFO level messages are encountered for a 
-     *  given record, this method will return false.
-     *  
-     * @return boolean - The highest error severity level encountered for the current record.
+     * Returns true if any errors (or warnings) were encountered in processing
+     * the current record. Note that if only INFO level messages are encountered
+     * for a given record, this method will return false.
+     * 
+     * @return boolean - The highest error severity level encountered for the
+     *         current record.
      */
-    public boolean hasErrors()
-    {
+    public boolean hasErrors() {
         return (errors != null && errors.size() > 0 && maxSeverity > INFO);
     }
-    
+
     /**
-     *  Returns the highest error severity level encountered in processing the current record.
-     *  
-     * @return int - The highest error severity level encountered for the current record.
+     * Returns the highest error severity level encountered in processing the
+     * current record.
+     * 
+     * @return int - The highest error severity level encountered for the
+     *         current record.
      */
-    public int getMaxSeverity()
-    {
+    public int getMaxSeverity() {
         return (maxSeverity);
     }
-    
+
     /**
-     *  Returns a list of all of the errors encountered in processing the current record.
-     *  
-     * @return List - A list of all of the errors encountered for the current record.
+     * Returns a list of all of the errors encountered in processing the current
+     * record.
+     * 
+     * @return List - A list of all of the errors encountered for the current
+     *         record.
      */
-    public List getErrors()
-    {
-        if (errors == null || errors.size() == 0) return null;        
-        return(errors);
+    public List getErrors() {
+        if (errors == null || errors.size() == 0) {
+            return null;
+        }
+
+        return (errors);
     }
-    
+
     /**
-     *  Resets the list of errors to empty. This should be called at the beginning of 
-     *  processing of each record.
+     * Resets the list of errors to empty. This should be called at the
+     * beginning of processing of each record.
      */
-    public void reset()
-    {
+    public void reset() {
         errors = null;
         maxSeverity = INFO;
     }
-    
+
     /**
-     *  Logs an error message using the stated severity level.  Uses the values passed  
-     *  in id, field, and subfield to note the location of the error.
+     * Logs an error message using the stated severity level. Uses the values
+     * passed in id, field, and subfield to note the location of the error.
      * 
      * @param id - the record ID of the record currently being processed
      * @param field - the tag of the field currently being processed
-     * @param subfield - the subfield tag of the subfield currently being processed
-     * @param severity - An indication of the relative severity of the error that was 
-     * 						encountered.
-     * @param message - A descriptive message about the error that was encountered.
+     * @param subfield - the subfield tag of the subfield currently being
+     *        processed
+     * @param severity - An indication of the relative severity of the error
+     *        that was encountered.
+     * @param message - A descriptive message about the error that was
+     *        encountered.
      */
-    public void addError(String id, String field, String subfield, int severity, String message)
-    {
-        if (errors == null) 
-        {
+    public void addError(String id, String field, String subfield,
+            int severity, String message) {
+        if (errors == null) {
             errors = new LinkedList();
             hasMissingID = false;
         }
-        if (id != null && id.equals("unknown"))  hasMissingID = true;
-        else if (hasMissingID)  
-        {
+
+        if (id != null && id.equals("unknown")) {
+            hasMissingID = true;
+        } else if (hasMissingID) {
             setRecordIDForAll(id);
         }
+
         errors.add(new Error(id, field, subfield, severity, message));
-        if (severity > maxSeverity)   maxSeverity = severity; 
+
+        if (severity > maxSeverity) {
+            maxSeverity = severity;
+        }
     }
-    
+
     /**
-     *  Logs an error message using the stated severity level.  Uses the values stored 
-     *  in curRecordID, curField, and curSubfield to note the location of the error.
+     * Logs an error message using the stated severity level. Uses the values
+     * stored in curRecordID, curField, and curSubfield to note the location of
+     * the error.
      * 
-     * @param severity - An indication of the relative severity of the error that was 
-     *                      encountered.
-     * @param message - A descriptive message about the error that was encountered.
+     * @param severity - An indication of the relative severity of the error
+     *        that was encountered.
+     * @param message - A descriptive message about the error that was
+     *        encountered.
      */
-    public void addError(int severity, String message)
-    {
+    public void addError(int severity, String message) {
         addError(curRecordID, curField, curSubfield, severity, message);
     }
 
     /**
-     *  Copys a List of errors into the current error handler
+     * Copys a List of errors into the current error handler
      * 
-     * @param newErrors - A list of Errors.
-     * @param message - A descriptive message about the error that was encountered.
+     * @param newErrors A list of Errors
      */
-    public void addErrors(List newErrors)
-    {
-        if (newErrors == null || newErrors.size() == 0) return;
-        if (errors == null) 
-        {
+    public void addErrors(List newErrors) {
+        if (newErrors == null || newErrors.size() == 0) {
+            return;
+        }
+
+        if (errors == null) {
             errors = new LinkedList();
             hasMissingID = false;
         }
-        for (Object err : newErrors)
-        {
-            Error errobj = (Error)err;
+
+        for (Object err : newErrors) {
+            Error errobj = (Error) err;
+
             errors.add(errobj);
-            if (errobj.severity > maxSeverity)   maxSeverity = errobj.severity;   
+
+            if (errobj.severity > maxSeverity) {
+                maxSeverity = errobj.severity;
+            }
         }
     }
 
-    private void setRecordIDForAll(String id)
-    {
-        if (id != null)
-        { 
-            Iterator iter = errors.iterator();       
-            while (iter.hasNext())
-            {
-                Error err = (Error)(iter.next());
-                if (err.getCurRecordID() == null || err.getCurRecordID().equals("unknown"))
-                {
+    private void setRecordIDForAll(String id) {
+        if (id != null) {
+            Iterator iter = errors.iterator();
+
+            while (iter.hasNext()) {
+                Error err = (Error) (iter.next());
+                if (err.getCurRecordID() == null ||
+                        err.getCurRecordID().equals("unknown")) {
                     err.setCurRecordID(id);
                 }
             }
+
             hasMissingID = false;
         }
     }
-    
+
     /**
-     *  Sets the record ID to be stored for subsequent error messages that are logged
-     *  If any previous messages are stored for the current record that don't have a 
-     *  stored record ID, set the value for those entries to this value also.
+     * Sets the record ID to be stored for subsequent error messages that are
+     * logged If any previous messages are stored for the current record that
+     * don't have a stored record ID, set the value for those entries to this
+     * value also.
      * 
      * @param recordID - the record ID of the record currently being processed
      */
-    public void setRecordID(String recordID)
-    {
+    public void setRecordID(String recordID) {
         curRecordID = recordID;
-        if (hasMissingID && errors != null) setRecordIDForAll(recordID);
+
+        if (hasMissingID && errors != null) {
+            setRecordIDForAll(recordID);
+        }
     }
 
     /**
-     *  Sets the field tag to be stored for subsequent error messages that are logged
+     * Sets the field tag to be stored for subsequent error messages that are
+     * logged
      * 
      * @param curField - the tag of the field currently being processed
      */
-    public void setCurrentField(String curField)
-    {
+    public void setCurrentField(String curField) {
         this.curField = curField;
     }
-    
+
     /**
-     *  Sets the subfield tag to be stored for subsequent error messages that are logged
+     * Sets the subfield tag to be stored for subsequent error messages that are
+     * logged
      * 
-     * @param curSubfield - the subfield tag of the subfield currently being processed
+     * @param curSubfield - the subfield tag of the subfield currently being
+     *        processed
      */
-    public void setCurrentSubfield(String curSubfield)
-    {
+    public void setCurrentSubfield(String curSubfield) {
         this.curSubfield = curSubfield;
     }
 }

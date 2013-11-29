@@ -1,3 +1,4 @@
+
 package org.marc4j.test;
 
 import org.junit.Test;
@@ -14,16 +15,21 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created with IntelliJ IDEA.
- * User: ses
- * Date: 3/2/13
- * Time: 7:13 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: ses Date: 3/2/13 Time: 7:13 PM To change
+ * this template use File | Settings | File Templates.
  */
 public class MarcXmlReaderTest {
+
+    /**
+     * Tests {@link MarcXmlReader}
+     * 
+     * @throws Exception
+     */
     @Test
     public void testMarcXmlReader() throws Exception {
-        InputStream input = getClass().getResourceAsStream(StaticTestRecords.RESOURCES_CHABON_XML);
+        InputStream input =
+                getClass().getResourceAsStream(
+                        StaticTestRecords.RESOURCES_CHABON_XML);
         assertNotNull(input);
         MarcXmlReader reader = new MarcXmlReader(input);
 
@@ -40,14 +46,18 @@ public class MarcXmlReaderTest {
         input.close();
     }
 
+    /**
+     * Tests reading an indicator-less {@link Record}.
+     */
     @Test(expected = MarcException.class)
     public void testReadIndicatorlessRecord() {
-        InputStream input = getClass().getResourceAsStream("/cruel-cruel-indicatorless-summerland.xml");
+        InputStream input =
+                getClass().getResourceAsStream(
+                        "/cruel-cruel-indicatorless-summerland.xml");
         assertNotNull(input);
         MarcXmlReader reader = new MarcXmlReader(input);
         assertTrue(reader.hasNext());
         Record record = reader.next();
-
 
     }
 

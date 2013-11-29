@@ -1,10 +1,18 @@
-# MARC4J
+# FreeLib-MARC4J
 
-This is an experimental Mavenized fork of the MARC4J project.  For more detailed information about this fork, read its [documentation](http://ksclarke.github.io/marc4j/).
+This is a Mavenized fork of the MARC4J project.  It's a place for me to do some experimentation.  For now, it aims to be compatible with the public API of the [original MARC4J project](http://github.com/marc4j/marc4j).  For more detailed information about this fork, read its [documentation](http://projects.freelibrary.info/freelib-marc4j/).
 
 ### TL;DR
 
-Is that too much to read?  If you just want to jump right in... and already have [Maven](http://maven.apache.org) installed... clone this project from its [GitHub page](http://github.com/ksclarke/marc4j), change into its project directory, and type:
+Is the official documentation too much to read?  If you just want to jump right in (and already have [Maven](http://maven.apache.org) installed), clone this project from [its GitHub page](http://github.com/ksclarke/freelib-marc4j):
+
+    git clone http://github.com/ksclarke/freelib-marc4j
+
+change into its project directory:
+
+    cd freelib-marc4j
+
+and type:
 
     mvn install
 
@@ -18,15 +26,13 @@ If you want to create the Javadocs for the project, you can type:
 
     mvn javadoc:javadoc
 
-and they will be created in ${PROJECT}/target/site/apidocs
+and they will be created in `freelib-marc4j/target/site/apidocs`
 
-If you want to create the site that you see at http://ksclarke.github.io/marc4j/ you can type:
+If you want to create the site that you see at http://projects.freelibrary.info/freelib-marc4j/ you can type:
 
     mvn site
  
-and it will be created in ${PROJECT}/target/site/
-
-This project is ready to be pushed into the [Sonatype OSS](https://oss.sonatype.org/index.html#welcome) Maven repository once (and if) a MARC4J account is created.  From there, its artifacts can be easily moved into the central Maven repository.
+and it will be created in `freelib-marc4j/target/site/`
 
 So, poke around... experiment, and if you have any problems or questions, [feel free to contact me](mailto:ksclarke@gmail.com).
 

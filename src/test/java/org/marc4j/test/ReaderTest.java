@@ -1,8 +1,8 @@
+
 package org.marc4j.test;
 
 import org.junit.Test;
 import org.marc4j.MarcStreamReader;
-import org.marc4j.MarcXmlReader;
 import org.marc4j.marc.Record;
 import org.marc4j.test.utils.StaticTestRecords;
 import org.marc4j.test.utils.TestUtils;
@@ -15,10 +15,16 @@ import static org.junit.Assert.assertTrue;
 
 public class ReaderTest {
 
+    /**
+     * Tests {@link MarcStreamReader}.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testMarcStreamReader() throws Exception {
-        InputStream input = getClass().getResourceAsStream(
-                StaticTestRecords.RESOURCES_CHABON_MRC);
+        InputStream input =
+                getClass().getResourceAsStream(
+                        StaticTestRecords.RESOURCES_CHABON_MRC);
         assertNotNull(input);
 
         MarcStreamReader reader = new MarcStreamReader(input);
@@ -34,6 +40,5 @@ public class ReaderTest {
         assertFalse(" have more than two records", reader.hasNext());
         input.close();
     }
-
 
 }

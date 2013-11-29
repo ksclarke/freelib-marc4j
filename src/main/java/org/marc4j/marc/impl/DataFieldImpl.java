@@ -4,8 +4,8 @@
  * This file is part of MARC4J
  *
  * MARC4J is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * MARC4J is distributed in the hope that it will be useful,
@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
+ * You should have received a copy of the GNU Lesser General Public
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.marc4j.marc.impl;
 
 import org.marc4j.marc.DataField;
@@ -34,7 +35,7 @@ import java.util.List;
 public class DataFieldImpl extends VariableFieldImpl implements DataField {
 
     private Long id;
-    
+
     private char ind1;
 
     private char ind2;
@@ -48,15 +49,12 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
     }
 
     /**
-     * Creates a new <code>DataField</code> and sets the tag name and the
-     * first and second indicator.
+     * Creates a new <code>DataField</code> and sets the tag name and the first
+     * and second indicator.
      * 
-     * @param tag
-     *            the tag name
-     * @param ind1
-     *            the first indicator
-     * @param ind2
-     *            the second indicator
+     * @param tag the tag name
+     * @param ind1 the first indicator
+     * @param ind2 the second indicator
      */
     public DataFieldImpl(String tag, char ind1, char ind2) {
         super(tag);
@@ -67,8 +65,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
     /**
      * Sets the first indicator.
      * 
-     * @param ind1
-     *            the first indicator
+     * @param ind1 the first indicator
      */
     public void setIndicator1(char ind1) {
         this.ind1 = ind1;
@@ -86,8 +83,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
     /**
      * Sets the second indicator.
      * 
-     * @param ind2
-     *            the second indicator
+     * @param ind2 the second indicator
      */
     public void setIndicator2(char ind2) {
         this.ind2 = ind2;
@@ -105,27 +101,25 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
     /**
      * Adds a <code>Subfield</code>.
      * 
-     * @param subfield
-     *            the <code>Subfield</code> object
-     * @throws IllegalAddException
-     *             when the parameter is not a <code>Subfield</code> instance
+     * @param subfield the <code>Subfield</code> object
+     * @throws IllegalAddException when the parameter is not a
+     *         <code>Subfield</code> instance
      */
     public void addSubfield(Subfield subfield) {
-        if (subfield instanceof SubfieldImpl)
+        if (subfield instanceof SubfieldImpl) {
             subfields.add(subfield);
-        else
+        } else {
             throw new IllegalAddException("Subfield");
+        }
     }
 
     /**
      * Inserts a <code>Subfield</code> at the specified position.
      * 
-     * @param index
-     *            the position within the list
-     * @param subfield
-     *            the <code>Subfield</code> object
-     * @throws IllegalAddException
-     *             when the parameter is not a <code>Subfield</code> instance
+     * @param index the position within the list
+     * @param subfield the <code>Subfield</code> object
+     * @throws IllegalAddException when the parameter is not a
+     *         <code>Subfield</code> instance
      */
     public void addSubfield(int index, Subfield subfield) {
         subfields.add(index, subfield);
@@ -147,37 +141,52 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
         return subfields;
     }
 
+    /**
+     * Returns the {@link Subfield}s with the supplied <code>char</code> code.
+     * 
+     * @return A {@link List} of {@link Subfield}s
+     */
     public List<Subfield> getSubfields(char code) {
         List<Subfield> retSubfields = new ArrayList<Subfield>();
-        for (Subfield sf : subfields)
-        {
-            if (sf.getCode() == code)
+
+        for (Subfield sf : subfields) {
+            if (sf.getCode() == code) {
                 retSubfields.add(sf);
+            }
         }
         return retSubfields;
     }
 
+    /**
+     * Returns the first {@link Subfield} matching the supplied
+     * <code>char</code> code.
+     */
     public Subfield getSubfield(char code) {
-        for (Subfield sf : subfields) 
-        {
-            if (sf.getCode() == code)
-                return sf; 
+        for (Subfield sf : subfields) {
+            if (sf.getCode() == code) {
+                return sf;
+            }
         }
+
         return null;
     }
 
+    /**
+     * Returns <code>true</code> if a match is found for the supplied regular
+     * expression pattern; else, <code>false</code>.
+     */
     public boolean find(String pattern) {
-        for (Subfield sf : subfields) 
-        {
-            if (sf.find(pattern))
+        for (Subfield sf : subfields) {
+            if (sf.find(pattern)) {
                 return true;
+            }
         }
+
         return false;
     }
 
     /**
      * Returns a string representation of this data field.
-     * 
      * <p>
      * Example:
      * 
@@ -193,17 +202,22 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
         sb.append(' ');
         sb.append(getIndicator1());
         sb.append(getIndicator2());
-        for (Subfield sf : subfields) 
-        {
+        for (Subfield sf : subfields) {
             sb.append(sf.toString());
         }
         return sb.toString();
     }
 
+    /**
+     * Sets the ID for the field.
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets the ID of the field.
+     */
     public Long getId() {
         return id;
     }

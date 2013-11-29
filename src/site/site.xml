@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MARC4J" xmlns="http://maven.apache.org/DECORATION/1.3.0"
+<project name="FreeLib-MARC4J" xmlns="http://maven.apache.org/DECORATION/1.3.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
 
   <bannerLeft>
-    <name>MARC4J</name>
-    <href>http://ksclarke.github.io/marc4j/</href>
+    <name>FreeLib-MARC4J</name>
+    <href>http://projects.freelibrary.info/freelib-marc4j/</href>
   </bannerLeft>
 
   <publishDate position="bottom" format="yyyy-MM-dd"/>
   <version position="bottom"/>
-  <googleAnalyticsAccountId/>
+  <googleAnalyticsAccountId>${ga.accountId}</googleAnalyticsAccountId>
 
   <skin>
     <groupId>lt.velykis.maven.skins</groupId>
@@ -19,13 +19,12 @@
   </skin>
   <custom>
     <reflowSkin>
-      <theme>bootswatch-spacelab</theme>
-      <protocolRelativeURLs>false</protocolRelativeURLs>
+      <protocolRelativeURLs>true</protocolRelativeURLs>
       <smoothScroll>true</smoothScroll>
-      <highlightJs>false</highlightJs>
+      <theme>site</theme>
       <brand>
-        <name>MARC4J </name>
-        <href>http://ksclarke.github.io/marc4j/</href>
+        <name>FreeLib-MARC4J </name>
+        <href>http://projects.freelibrary.info/freelib-marc4j/</href>
       </brand>
       <slogan>An easy to use API for working with MARC and MARCXML in
         Java</slogan>
@@ -40,8 +39,8 @@
         <column>reports|Maven Theme|Site Copyright</column>
       </bottomNav>
       <pages>
-        <index project="marc4j">
-          <titleTemplate>MARC4J</titleTemplate>
+        <index project="freelib-marc4j">
+          <titleTemplate>FreeLib-MARC4J</titleTemplate>
           <breadcrumbs>false</breadcrumbs>
           <toc>false</toc>
           <markPageHeader>true</markPageHeader>
@@ -56,12 +55,14 @@
   </custom>
 
   <body>
-    <head> </head>
+    <head>
+      <link rel="author" href="http://kevinclarke.info"/>
+    </head>
 
     <links>
-      <item name="Download ↗" href="http://github.com/ksclarke/marc4j/releases"
+      <item name="GitHub project ↗" href="http://github.com/ksclarke/freelib-marc4j"
         target="_new"/>
-      <item name="GitHub project ↗" href="http://github.com/ksclarke/marc4j"
+      <item name="Download Zip ↗" href="http://github.com/ksclarke/freelib-marc4j/archive/master.zip"
         target="_new"/>
     </links>
 
@@ -70,7 +71,7 @@
       <item name="Tutorial" href="tutorial.html"/>
       <item name="Javadocs ↗" href="apidocs/index.html" target="_new"/>
       <item name="Issues Queue ↗" target="_new"
-        href="http://github.com/ksclarke/marc4j/issues"/>
+        href="http://github.com/ksclarke/freelib-marc4j/issues"/>
       <item name="License" href="license.html"/>
     </menu>
 
@@ -90,8 +91,8 @@
       <item name="Tag List" href="taglist.html"/>
     </menu>
     <menu name="Build Status">
-      <item img="https://travis-ci.org/ksclarke/marc4j.png?branch=mavenized" name=" ↗"
-        href="https://travis-ci.org/ksclarke/marc4j"/>
+      <item img="https://travis-ci.org/ksclarke/freelib-marc4j.png?branch=master" name=" ↗"
+        href="https://travis-ci.org/ksclarke/freelib-marc4j"/>
     </menu>
     <menu name="Maven Docs" ref="reports"/>
     <menu name="Maven Theme">

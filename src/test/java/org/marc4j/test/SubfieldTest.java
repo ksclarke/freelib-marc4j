@@ -1,3 +1,4 @@
+
 package org.marc4j.test;
 
 import org.junit.Test;
@@ -7,21 +8,22 @@ import org.marc4j.marc.Subfield;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+public class SubfieldTest {
 
-public class SubfieldTest  {
+    MarcFactory factory = MarcFactory.newInstance();
 
-	MarcFactory  factory = MarcFactory.newInstance();
-
-
+    /**
+     * Tests the constructor of {@link Subfield}.
+     */
     @Test
-	public void testContructor() {
-	    Subfield sf = factory.newSubfield();
-	    assertNotNull("subfield is null", sf);
-	    sf = factory.newSubfield('a');
-	    assertEquals('a', sf.getCode());
-	    sf = factory.newSubfield('a', "Summerland");
-	    assertEquals('a', sf.getCode());
-	    assertEquals("Summerland", sf.getData());
-	}
+    public void testContructor() {
+        Subfield sf = factory.newSubfield();
+        assertNotNull("subfield is null", sf);
+        sf = factory.newSubfield('a');
+        assertEquals('a', sf.getCode());
+        sf = factory.newSubfield('a', "Summerland");
+        assertEquals('a', sf.getCode());
+        assertEquals("Summerland", sf.getData());
+    }
 
 }

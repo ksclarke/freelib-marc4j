@@ -4,8 +4,8 @@
  * This file is part of MARC4J
  *
  * MARC4J is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * MARC4J is distributed in the hope that it will be useful,
@@ -13,11 +13,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
+ * You should have received a copy of the GNU Lesser General Public
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
+
 package org.marc4j;
 
 import javax.xml.parsers.SAXParserFactory;
@@ -29,12 +30,11 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 /**
- * Creates <code>Record</code> objects from SAX events and pushes each item
- * onto the top of the <code>RecordStack</code>. Used by
- * <code>MarcXmlParserThread</code>.
- * 
- * This class requires a JAXP compliant XML parser and XSLT processor. The
- * underlying SAX2 parser should be namespace aware.
+ * Creates <code>Record</code> objects from SAX events and pushes each item onto
+ * the top of the <code>RecordStack</code>. Used by
+ * <code>MarcXmlParserThread</code>. This class requires a JAXP compliant XML
+ * parser and XSLT processor. The underlying SAX2 parser should be namespace
+ * aware.
  * 
  * @author Bas Peters
  */
@@ -45,8 +45,7 @@ public class MarcXmlParser {
     /**
      * Default constructor.
      * 
-     * @param handler
-     *            the <code>MarcXmlHandler</code> object
+     * @param handler the <code>MarcXmlHandler</code> object
      */
     public MarcXmlParser(MarcXmlHandler handler) {
         this.handler = handler;
@@ -55,8 +54,7 @@ public class MarcXmlParser {
     /**
      * Calls the parser.
      * 
-     * @param input
-     *            the input source
+     * @param input the input source
      */
     public void parse(InputSource input) {
         parse(handler, input);
@@ -66,10 +64,8 @@ public class MarcXmlParser {
      * Calls the parser and tries to transform the source into MARCXML using the
      * given stylesheet source before creating <code>Record</code> objects.
      * 
-     * @param input
-     *            the input source
-     * @param th
-     *            the transformation content handler
+     * @param input the input source
+     * @param th the transformation content handler
      */
     public void parse(InputSource input, TransformerHandler th) {
         SAXResult result = new SAXResult();

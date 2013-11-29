@@ -1,3 +1,4 @@
+
 package org.marc4j;
 
 import org.marc4j.converter.CharConverter;
@@ -11,218 +12,447 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-public class MarcJsonWriter implements MarcWriter
-{
+public class MarcJsonWriter implements MarcWriter {
+
     public final static int MARC_IN_JSON = 0;
+
     public final static int MARC_JSON = 1;
-    
 
     /**
      * Character encoding. Default is UTF-8.
      */
-//    private String encoding = "UTF8";
     private CharConverter converter = null;
+
     private OutputStream os = null;
+
     private int useJsonFormat = MARC_IN_JSON;
+
     private boolean indent = false;
+
     private boolean escapeSlash = false;
+
     private boolean quoteLabels = true;
+
     private String ql = "\"";
+
     private boolean normalize = false;
-    
-    public MarcJsonWriter(OutputStream os)
-    {
+
+    /**
+     * Creates a {@link MarcJsonWriter} with the supplied {@link OutputStream}.
+     * 
+     * @param os
+     */
+    public MarcJsonWriter(OutputStream os) {
         this.os = os;
     }
-    
-    public MarcJsonWriter(OutputStream os, CharConverter conv)
-    {
+
+    /**
+     * Creates a {@link MarcJsonWriter} with the supplied {@link OutputStream}
+     * using the supplied {@link CharConverter}.
+     * 
+     * @param os
+     * @param conv
+     */
+    public MarcJsonWriter(OutputStream os, CharConverter conv) {
         this.os = os;
         setConverter(conv);
     }
-    
-    public MarcJsonWriter(OutputStream os, int jsonFormat)
-    {
+
+    /**
+     * Creates a {@link MarcJsonWriter} with the supplied {@link OutputStream}
+     * to write using the supplied JSON format.
+     * 
+     * @param os
+     * @param jsonFormat
+     */
+    public MarcJsonWriter(OutputStream os, int jsonFormat) {
         this.os = os;
         useJsonFormat = jsonFormat;
-        if (useJsonFormat == MARC_JSON) this.setQuoteLabels(false);
+
+        if (useJsonFormat == MARC_JSON) {
+            this.setQuoteLabels(false);
+        }
     }
-    
-    public MarcJsonWriter(OutputStream os, CharConverter conv, int jsonFormat)
-    {
+
+    /**
+     * Creates a {@link MarcJsonWriter} with the supplied {@link OutputStream}
+     * using the specified {@link CharConverter} to write using the specified
+     * JSON format.
+     * 
+     * @param os
+     * @param conv
+     * @param jsonFormat
+     */
+    public MarcJsonWriter(OutputStream os, CharConverter conv, int jsonFormat) {
         setConverter(conv);
         useJsonFormat = jsonFormat;
-        if (useJsonFormat == MARC_JSON) this.setQuoteLabels(false);
+
+        if (useJsonFormat == MARC_JSON) {
+            this.setQuoteLabels(false);
+        }
     }
-    
-    public void close()
-    {
+
+    /**
+     * Closes the {@link MarcJsonWriter}
+     */
+    public void close() {
         // TODO Auto-generated method stub
-        
     }
-    
-    protected String toMarcJson(Record record)
-    {
+
+    protected String toMarcJson(Record record) {
         StringBuffer buf = new StringBuffer();
         buf.append("{");
-        if (indent) buf.append("\n    ");
-        buf.append(ql + "leader" + ql + ":\"").append(record.getLeader().toString()).append("\",");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
+        buf.append(ql + "leader" + ql + ":\"").append(
+                record.getLeader().toString()).append("\",");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append(ql + "controlfield" + ql + ":");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("[");
         boolean firstField = true;
-        for (ControlField cf : record.getControlFields())
-        {
-            if (!firstField) buf.append(","); 
-            else firstField = false;
-            if (indent) buf.append("\n        ");
-            buf.append("{ " + ql + "tag" + ql + " : \"" + cf.getTag() + "\", " + ql + "data" + ql + " : ").append("\"" + unicodeEscape(cf.getData()) + "\" }");
+
+        for (ControlField cf : record.getControlFields()) {
+            if (!firstField) {
+                buf.append(",");
+            } else {
+                firstField = false;
+            }
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
+            buf.append(
+                    "{ " + ql + "tag" + ql + " : \"" + cf.getTag() + "\", " +
+                            ql + "data" + ql + " : ").append(
+                    "\"" + unicodeEscape(cf.getData()) + "\" }");
         }
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("]");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("datafield :");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("[");
         firstField = true;
-        for (DataField df : record.getDataFields())
-        {
-            if (!firstField) buf.append(","); 
-            else firstField = false;
-            if (indent) buf.append("\n        ");
+
+        for (DataField df : record.getDataFields()) {
+            if (!firstField) {
+                buf.append(",");
+            } else {
+                firstField = false;
+            }
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("{");
-            if (indent) buf.append("\n            ");
-            buf.append(ql + "tag" + ql + " : \"" + df.getTag() + "\", " + ql + "ind" + ql + " : \"" + df.getIndicator1() + df.getIndicator2()+ "\",");
-            if (indent) buf.append("\n            ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
+            buf.append(ql + "tag" + ql + " : \"" + df.getTag() + "\", " + ql +
+                    "ind" + ql + " : \"" + df.getIndicator1() +
+                    df.getIndicator2() + "\",");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
             buf.append(ql + "subfield" + ql + " :");
-            if (indent) buf.append("\n            ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
             buf.append("[");
             boolean firstSubfield = true;
-            for (Subfield sf : df.getSubfields())
-            {
-                if (!firstSubfield) buf.append(","); 
-                else firstSubfield = false;
-                if (indent) buf.append("\n                ");
-                buf.append("{ " + ql + "code" + ql + " : \"" + sf.getCode() + "\", " + ql + "data" + ql + " : \"" + unicodeEscape(sf.getData()) + "\" }");
+
+            for (Subfield sf : df.getSubfields()) {
+                if (!firstSubfield) {
+                    buf.append(",");
+                } else {
+                    firstSubfield = false;
+                }
+
+                if (indent) {
+                    buf.append("\n                ");
+                }
+
+                buf.append("{ " + ql + "code" + ql + " : \"" + sf.getCode() +
+                        "\", " + ql + "data" + ql + " : \"" +
+                        unicodeEscape(sf.getData()) + "\" }");
             }
-            if (indent) buf.append("\n            ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
             buf.append("]");
-            if (indent) buf.append("\n        ");
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("}");
         }
-        if (indent) buf.append("\n    ");
-        buf.append("]");
-        if (indent) buf.append("\n");
-        buf.append("}\n");
-        return(buf.toString());
 
+        if (indent) {
+            buf.append("\n    ");
+        }
+
+        buf.append("]");
+
+        if (indent) {
+            buf.append("\n");
+        }
+
+        buf.append("}\n");
+
+        return (buf.toString());
     }
-    
-    protected String toMarcInJson(Record record) 
-    {
+
+    protected String toMarcInJson(Record record) {
         StringBuffer buf = new StringBuffer();
         buf.append("{");
-        if (indent) buf.append("\n    ");
-        buf.append(ql + "leader" + ql + ":\"").append(record.getLeader().toString()).append("\",");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
+        buf.append(ql + "leader" + ql + ":\"").append(
+                record.getLeader().toString()).append("\",");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append(ql + "fields" + ql + ":");
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("[");
         boolean firstField = true;
-        for (ControlField cf : record.getControlFields())
-        {
-            if (!firstField) buf.append(","); 
-            else firstField = false;
-            if (indent) buf.append("\n        ");
+
+        for (ControlField cf : record.getControlFields()) {
+            if (!firstField) {
+                buf.append(",");
+            } else {
+                firstField = false;
+            }
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("{");
-            if (indent) buf.append("\n            ");
-            buf.append(ql + cf.getTag() + ql + ":").append("\"" + unicodeEscape(cf.getData()) + "\"");
-            if (indent) buf.append("\n        ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
+            buf.append(ql + cf.getTag() + ql + ":").append(
+                    "\"" + unicodeEscape(cf.getData()) + "\"");
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("}");
         }
-        for (DataField df : record.getDataFields())
-        {
-            if (!firstField) buf.append(","); 
-            else firstField = false;
-            if (indent) buf.append("\n        ");
+
+        for (DataField df : record.getDataFields()) {
+            if (!firstField) {
+                buf.append(",");
+            } else {
+                firstField = false;
+            }
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("{");
-            if (indent) buf.append("\n            ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
             buf.append(ql + df.getTag() + ql + ":");
-            if (indent) buf.append("\n                ");
+
+            if (indent) {
+                buf.append("\n                ");
+            }
+
             buf.append("{");
-        //    if (indent) buf.append("\n                ");
+            // if (indent) buf.append("\n                ");
             buf.append(ql + "subfields" + ql + ":");
-            if (indent) buf.append("\n                ");
+
+            if (indent) {
+                buf.append("\n                ");
+            }
+
             buf.append("[");
             boolean firstSubfield = true;
-            for (Subfield sf : df.getSubfields())
-            {
-                if (!firstSubfield)  buf.append(","); 
-                else firstSubfield = false;
-                if (indent) buf.append("\n                    ");
+
+            for (Subfield sf : df.getSubfields()) {
+                if (!firstSubfield) {
+                    buf.append(",");
+                } else {
+                    firstSubfield = false;
+                }
+
+                if (indent) {
+                    buf.append("\n                    ");
+                }
+
                 buf.append("{");
-                if (indent) buf.append("\n                        ");
-                buf.append(ql + sf.getCode() + ql + ":\"" + unicodeEscape(sf.getData()) + "\"");
-                if (indent) buf.append("\n                    ");
+
+                if (indent) {
+                    buf.append("\n                        ");
+                }
+
+                buf.append(ql + sf.getCode() + ql + ":\"" +
+                        unicodeEscape(sf.getData()) + "\"");
+
+                if (indent) {
+                    buf.append("\n                    ");
+                }
+
                 buf.append("}");
             }
-            if (indent) buf.append("\n                ");
+
+            if (indent) {
+                buf.append("\n                ");
+            }
+
             buf.append("],");
-            if (indent) buf.append("\n                ");
+
+            if (indent) {
+                buf.append("\n                ");
+            }
+
             buf.append(ql + "ind1" + ql + ":\"" + df.getIndicator1() + "\",");
-            if (indent) buf.append("\n                ");
+
+            if (indent) {
+                buf.append("\n                ");
+            }
+
             buf.append(ql + "ind2" + ql + ":\"" + df.getIndicator2() + "\"");
-            if (indent) buf.append("\n            ");
+
+            if (indent) {
+                buf.append("\n            ");
+            }
+
             buf.append("}");
-            if (indent) buf.append("\n        ");
+
+            if (indent) {
+                buf.append("\n        ");
+            }
+
             buf.append("}");
         }
-        if (indent) buf.append("\n    ");
+
+        if (indent) {
+            buf.append("\n    ");
+        }
+
         buf.append("]");
-        if (indent) buf.append("\n");
+
+        if (indent) {
+            buf.append("\n");
+        }
+
         buf.append("}\n");
-        return(buf.toString());
+
+        return (buf.toString());
     }
 
-
-    private String unicodeEscape(String data)
-    {
-        if (converter != null)
+    private String unicodeEscape(String data) {
+        if (converter != null) {
             data = converter.convert(data);
-        if (normalize)
+        }
+
+        if (normalize) {
             data = Normalizer.normalize(data, Normalizer.NFC);
+        }
+
         StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < data.length(); i++)
-        {
+
+        for (int i = 0; i < data.length(); i++) {
             char c = data.charAt(i);
-            switch (c)
-            {
-                case '/': 
-                {
-                    if (escapeSlash) buffer.append("\\/"); 
-                    else             buffer.append("/"); 
-                }
-                break;
-                case '"': buffer.append("\\\""); break;
-                case '\\': buffer.append("\\\\"); break;
-                case '\b': buffer.append("\\b"); break;
-                case '\f': buffer.append("\\f"); break;
-                case '\n': buffer.append("\\n"); break;
-                case '\r': buffer.append("\\r"); break;
-                case '\t': buffer.append("\\t"); break;
-                default: 
-                {
-                    if ((int) c > 0xff || (int) c < 0x1f)
-                    {
-                        String val = "0000"+Integer.toHexString((int)(c));
-                        buffer.append("\\u"+ (val.substring(val.length()-4, val.length())) );
+            switch (c) {
+                case '/': {
+                    if (escapeSlash) {
+                        buffer.append("\\/");
+                    } else {
+                        buffer.append("/");
                     }
-                    else buffer.append(c); break;
+                }
+                    break;
+                case '"':
+                    buffer.append("\\\"");
+                    break;
+                case '\\':
+                    buffer.append("\\\\");
+                    break;
+                case '\b':
+                    buffer.append("\\b");
+                    break;
+                case '\f':
+                    buffer.append("\\f");
+                    break;
+                case '\n':
+                    buffer.append("\\n");
+                    break;
+                case '\r':
+                    buffer.append("\\r");
+                    break;
+                case '\t':
+                    buffer.append("\\t");
+                    break;
+                default: {
+                    if ((int) c > 0xff || (int) c < 0x1f) {
+                        String val = "0000" + Integer.toHexString((int) (c));
+                        buffer.append("\\u")
+                                .append((val.substring(val.length() - 4, val
+                                        .length())));
+                    } else {
+                        buffer.append(c);
+                    }
+
+                    break;
                 }
             }
         }
-        return(buffer.toString());
+        return (buffer.toString());
     }
 
     /**
@@ -230,19 +460,16 @@ public class MarcJsonWriter implements MarcWriter
      * 
      * @return CharConverter the character converter
      */
-    public CharConverter getConverter() 
-    {
+    public CharConverter getConverter() {
         return converter;
     }
 
     /**
      * Sets the character converter.
      * 
-     * @param converter
-     *            the character converter
+     * @param converter the character converter
      */
-    public void setConverter(CharConverter converter) 
-    {
+    public void setConverter(CharConverter converter) {
         this.converter = converter;
     }
 
@@ -251,8 +478,7 @@ public class MarcJsonWriter implements MarcWriter
      * 
      * @return boolean
      */
-    public boolean hasIndent() 
-    {
+    public boolean hasIndent() {
         return indent;
     }
 
@@ -261,71 +487,88 @@ public class MarcJsonWriter implements MarcWriter
      * 
      * @param indent
      */
-    public void setIndent(boolean indent) 
-    {
+    public void setIndent(boolean indent) {
         this.indent = indent;
     }
 
-
-
-    public void write(Record record)
-    {
+    /**
+     * Writes the supplied {@link Record}.
+     */
+    public void write(Record record) {
         String recordAsJson = "";
-        if (useJsonFormat == MARC_IN_JSON)
-        {
+
+        if (useJsonFormat == MARC_IN_JSON) {
             recordAsJson = toMarcInJson(record);
-        }
-        else if (useJsonFormat == MARC_JSON)
-        {
+        } else if (useJsonFormat == MARC_JSON) {
             recordAsJson = toMarcJson(record);
         }
-        try
-        {
+
+        try {
             os.write(recordAsJson.getBytes("UTF-8"));
             os.flush();
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public boolean isEscapeSlash()
-    {
+    /**
+     * Returns true if escape slashes are turned on; else, false.
+     * 
+     * @return True if escape slashes are turned on; else, false
+     */
+    public boolean isEscapeSlash() {
         return escapeSlash;
     }
 
-    public void setEscapeSlash(boolean escapeSlash)
-    {
+    /**
+     * Turns on escape slashes.
+     * 
+     * @param escapeSlash True if escape slashes should be turned on; else,
+     *        false
+     */
+    public void setEscapeSlash(boolean escapeSlash) {
         this.escapeSlash = escapeSlash;
     }
 
-    public boolean isQuoteLabels()
-    {
+    /**
+     * Returns true if quote labels are turned on; else, false.
+     * 
+     * @return True if quote labels are turned on; else, false
+     */
+    public boolean isQuoteLabels() {
         return quoteLabels;
     }
 
-    public void setQuoteLabels(boolean quoteLabels)
-    {
+    /**
+     * Turns on quote labels.
+     * 
+     * @param quoteLabels
+     */
+    public void setQuoteLabels(boolean quoteLabels) {
         this.quoteLabels = quoteLabels;
         ql = (quoteLabels) ? "\"" : "";
     }
 
-    public boolean isIndent()
-    {
+    /**
+     * Returns true if JSON output is indented; else, false.
+     * 
+     * @return True if JSON output is indented; else, false
+     */
+    public boolean isIndent() {
         return indent;
     }
 
-    public void setUnicodeNormalization(boolean b)
-    {
+    /**
+     * Turns on Unicode normalization.
+     * 
+     * @param b
+     */
+    public void setUnicodeNormalization(boolean b) {
         this.normalize = b;
     }
-
 
 }

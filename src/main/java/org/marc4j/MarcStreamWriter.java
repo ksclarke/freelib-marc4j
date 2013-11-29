@@ -4,8 +4,8 @@
  * This file is part of MARC4J
  *
  * MARC4J is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * MARC4J is distributed in the hope that it will be useful,
@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
+ * You should have received a copy of the GNU Lesser General Public
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.marc4j;
 
 import java.io.ByteArrayOutputStream;
@@ -34,7 +35,6 @@ import org.marc4j.util.CustomDecimalFormat;
 
 /**
  * Class for writing MARC record objects in ISO 2709 format.
- * 
  * <p>
  * The following example reads a file with MARCXML records and outputs the
  * record set in ISO 2709 format:
@@ -50,10 +50,9 @@ import org.marc4j.util.CustomDecimalFormat;
  * }
  * writer.close();
  * </pre>
- * 
  * <p>
- * To convert characters like for example from UCS/Unicode to MARC-8 register
- * a {@link org.marc4j.converter.CharConverter}&nbsp;implementation:
+ * To convert characters like for example from UCS/Unicode to MARC-8 register a
+ * {@link org.marc4j.converter.CharConverter}&nbsp;implementation:
  * </p>
  * 
  * <pre>
@@ -77,33 +76,37 @@ public class MarcStreamWriter implements MarcWriter {
     protected String encoding = "ISO8859_1";
 
     private CharConverter converter = null;
+
     protected boolean allowOversizeEntry = false;
+
     protected boolean hasOversizeOffset = false;
+
     protected boolean hasOversizeLength = false;
-    
+
     protected static DecimalFormat format4Use = new CustomDecimalFormat(4);
 
     protected static DecimalFormat format5Use = new CustomDecimalFormat(5);
 
     /**
-     * Constructs an instance and creates a <code>Writer</code> object with
-     * the specified output stream.
+     * Constructs an instance and creates a <code>Writer</code> object with the
+     * specified output stream.
      */
     public MarcStreamWriter(OutputStream out) {
         this.out = out;
     }
 
     /**
-     * Constructs an instance and creates a <code>Writer</code> object with
-     * the specified output stream and character encoding.
+     * Constructs an instance and creates a <code>Writer</code> object with the
+     * specified output stream and character encoding.
      */
     public MarcStreamWriter(OutputStream out, String encoding) {
         this.encoding = encoding;
         this.out = out;
     }
+
     /**
-     * Constructs an instance and creates a <code>Writer</code> object with
-     * the specified output stream.
+     * Constructs an instance and creates a <code>Writer</code> object with the
+     * specified output stream.
      */
     public MarcStreamWriter(OutputStream out, boolean allowOversizeRecord) {
         this.out = out;
@@ -111,10 +114,11 @@ public class MarcStreamWriter implements MarcWriter {
     }
 
     /**
-     * Constructs an instance and creates a <code>Writer</code> object with
-     * the specified output stream and character encoding.
+     * Constructs an instance and creates a <code>Writer</code> object with the
+     * specified output stream and character encoding.
      */
-    public MarcStreamWriter(OutputStream out, String encoding, boolean allowOversizeRecord) {
+    public MarcStreamWriter(OutputStream out, String encoding,
+            boolean allowOversizeRecord) {
         this.encoding = encoding;
         this.out = out;
         this.allowOversizeEntry = allowOversizeRecord;
@@ -132,8 +136,7 @@ public class MarcStreamWriter implements MarcWriter {
     /**
      * Sets the character converter.
      * 
-     * @param converter
-     *            the character converter
+     * @param converter the character converter
      */
     public void setConverter(CharConverter converter) {
         this.converter = converter;
@@ -142,40 +145,38 @@ public class MarcStreamWriter implements MarcWriter {
     /**
      * Writes a <code>Record</code> object to the writer.
      * 
-     * @param record -
-     *            the <code>Record</code> object
+     * @param record - the <code>Record</code> object
      */
     public void write(Record record) {
         int previous = 0;
-        
+
         try {
             ByteArrayOutputStream data = new ByteArrayOutputStream();
             ByteArrayOutputStream dir = new ByteArrayOutputStream();
             hasOversizeOffset = false;
             hasOversizeLength = false;
-            
+
             // control fields
-            for (ControlField cf : record.getControlFields())
-            {
+            for (ControlField cf : record.getControlFields()) {
                 data.write(getDataElement(cf.getData()));
                 data.write(Constants.FT);
-                dir.write(getEntry(cf.getTag(), data.size() - previous, previous));
+                dir.write(getEntry(cf.getTag(), data.size() - previous,
+                        previous));
                 previous = data.size();
             }
 
             // data fields
-            for (DataField df : record.getDataFields())
-            {
+            for (DataField df : record.getDataFields()) {
                 data.write(df.getIndicator1());
                 data.write(df.getIndicator2());
-                for (Subfield sf : df.getSubfields())
-                {
+                for (Subfield sf : df.getSubfields()) {
                     data.write(Constants.US);
                     data.write(sf.getCode());
                     data.write(getDataElement(sf.getData()));
                 }
                 data.write(Constants.FT);
-                dir.write(getEntry(df.getTag(), data.size() - previous, previous));
+                dir.write(getEntry(df.getTag(), data.size() - previous,
+                        previous));
                 previous = data.size();
             }
             dir.write(Constants.FT);
@@ -191,16 +192,21 @@ public class MarcStreamWriter implements MarcWriter {
             // write record to output stream
             dir.close();
             data.close();
-            
-            if (!allowOversizeEntry && (baseAddress > 99999 || recordLength > 99999 || hasOversizeOffset))
-            {
-                throw new MarcException("Record is too long to be a valid MARC binary record, it's length would be "+recordLength+" which is more thatn 99999 bytes");
+
+            if (!allowOversizeEntry &&
+                    (baseAddress > 99999 || recordLength > 99999 || hasOversizeOffset)) {
+                throw new MarcException(
+                        "Record is too long to be a valid MARC binary record, it's length would be " +
+                                recordLength +
+                                " which is more thatn 99999 bytes");
             }
-            if (!allowOversizeEntry && (hasOversizeLength))
-            {
-                throw new MarcException("Record has field that is too long to be a valid MARC binary record. The maximum length for a field counting all of the sub-fields is 9999 bytes.");
+            if (!allowOversizeEntry && (hasOversizeLength)) {
+                throw new MarcException(
+                        "Record has field that is too long to be a valid MARC binary record. The maximum length for a field counting all of the sub-fields is 9999 bytes.");
             }
-            if (converter != null)  ldr.setCharCodingScheme(converter.outputsUnicode() ? 'a' : ' ');
+            if (converter != null) {
+                ldr.setCharCodingScheme(converter.outputsUnicode() ? 'a' : ' ');
+            }
             writeLeader(ldr);
             out.write(dir.toByteArray());
             out.write(data.toByteArray());
@@ -220,8 +226,10 @@ public class MarcStreamWriter implements MarcWriter {
         out.write(new String(ldr.getImplDefined1()).getBytes(encoding));
         out.write(ldr.getCharCodingScheme());
         out.write(Integer.toString(ldr.getIndicatorCount()).getBytes(encoding));
-        out.write(Integer.toString(ldr.getSubfieldCodeLength()).getBytes(encoding));
-        out.write(format5Use.format(ldr.getBaseAddressOfData()).getBytes(encoding));
+        out.write(Integer.toString(ldr.getSubfieldCodeLength()).getBytes(
+                encoding));
+        out.write(format5Use.format(ldr.getBaseAddressOfData()).getBytes(
+                encoding));
         out.write(new String(ldr.getImplDefined2()).getBytes(encoding));
         out.write(new String(ldr.getEntryMap()).getBytes(encoding));
     }
@@ -238,25 +246,41 @@ public class MarcStreamWriter implements MarcWriter {
     }
 
     protected byte[] getDataElement(String data) throws IOException {
-        if (converter != null)
+        if (converter != null) {
             return converter.convert(data).getBytes(encoding);
+        }
         return data.getBytes(encoding);
     }
 
-    protected byte[] getEntry(String tag, int length, int start) throws IOException {
-        String entryUse = tag + format4Use.format(length) + format5Use.format(start);
-        if (length > 99999) hasOversizeLength = true;
-        if (start > 99999) hasOversizeOffset = true;
+    protected byte[] getEntry(String tag, int length, int start)
+            throws IOException {
+        String entryUse =
+                tag + format4Use.format(length) + format5Use.format(start);
+        if (length > 99999) {
+            hasOversizeLength = true;
+        }
+        if (start > 99999) {
+            hasOversizeOffset = true;
+        }
         return (entryUse.getBytes(encoding));
     }
 
-    public boolean allowsOversizeEntry()
-    {
+    /**
+     * Returns <code>true</code> if an oversized entry is allowed; else,
+     * <code>false</code>.
+     * 
+     * @return
+     */
+    public boolean allowsOversizeEntry() {
         return allowOversizeEntry;
     }
 
-    public void setAllowOversizeEntry(boolean allowOversizeEntry)
-    {
+    /**
+     * Sets whether an oversized entry is allowed.
+     * 
+     * @param allowOversizeEntry
+     */
+    public void setAllowOversizeEntry(boolean allowOversizeEntry) {
         this.allowOversizeEntry = allowOversizeEntry;
     }
 }

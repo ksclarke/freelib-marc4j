@@ -1,3 +1,4 @@
+
 package org.marc4j.test;
 
 import org.junit.Test;
@@ -6,24 +7,38 @@ import org.marc4j.marc.MarcFactory;
 
 import static org.junit.Assert.assertEquals;
 
+public class ControlFieldTest {
 
-public class ControlFieldTest  {
+    MarcFactory factory = MarcFactory.newInstance();
 
-	MarcFactory factory = MarcFactory.newInstance();
-
+    /**
+     * Tests the {@link ControlField} constructor.
+     * 
+     * @throws Exception
+     */
     @Test
-	public void testConstructor() throws Exception {
-	    ControlField cf = factory.newControlField("001");
-	    assertEquals("001", cf.getTag());
-	}
+    public void testConstructor() throws Exception {
+        ControlField cf = factory.newControlField("001");
+        assertEquals("001", cf.getTag());
+    }
 
+    /**
+     * Tests {@link ControlField#setData(String)}.
+     * 
+     * @throws Exception
+     */
     @Test
-	public void testSetData() throws Exception {
-	    ControlField cf = factory.newControlField("001");
-	    cf.setData("12883376");
-	    assertEquals("12883376", cf.getData());
-	}
+    public void testSetData() throws Exception {
+        ControlField cf = factory.newControlField("001");
+        cf.setData("12883376");
+        assertEquals("12883376", cf.getData());
+    }
 
+    /**
+     * Tests the {@link Comparable} aspect of {@link ControlField}.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testComparable() throws Exception {
         ControlField cf1 = factory.newControlField("008", "12345");

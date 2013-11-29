@@ -1,17 +1,31 @@
+
 package org.marc4j.test;
 
+import org.marc4j.marc.MarcFactory;
+
+import org.marc4j.marc.DataField;
+
+import org.marc4j.marc.ControlField;
+
+import org.marc4j.marc.VariableField;
+
 import org.junit.Test;
-import org.marc4j.marc.*;
+
+import org.marc4j.marc.Record;
 import org.marc4j.test.utils.StaticTestRecords;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-public class RecordTest  {
+public class RecordTest {
 
     Record record = StaticTestRecords.getSummerlandRecord();
 
+    /**
+     * Tests the various ways to get fields from a {@link Record}.
+     */
     @Test
     public void testGetFields() {
         String cn = record.getControlNumber();
@@ -36,11 +50,17 @@ public class RecordTest  {
         fieldList = record.getVariableFields("650");
         assertEquals(3, fieldList.size());
 
-        String[] fields = { "245", "260", "300" };
+        String[] fields = {"245", "260", "300"};
         fieldList = record.getVariableFields(fields);
         assertEquals(3, fieldList.size());
     }
 
+    /**
+     * Tests {@link Record#find(String)} and {@link Record#find(String, String)}
+     * and {@link Record#find(String[], String)}.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testFind() throws Exception {
         VariableField field = record.getVariableField("245");
@@ -62,7 +82,7 @@ public class RecordTest  {
         result = record.find("100", "Chabon");
         assertEquals(1, result.size());
 
-        String[] tags = { "100", "260", "300" };
+        String[] tags = {"100", "260", "300"};
         result = record.find(tags, "Chabon");
         assertEquals(1, result.size());
 
@@ -75,6 +95,11 @@ public class RecordTest  {
 
     }
 
+    /**
+     * Tests creating a new {@link Record}.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreateRecord() throws Exception {
         MarcFactory factory = MarcFactory.newInstance();

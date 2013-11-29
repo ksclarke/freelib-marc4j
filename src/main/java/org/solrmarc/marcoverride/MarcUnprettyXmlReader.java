@@ -1,3 +1,4 @@
+
 package org.solrmarc.marcoverride;
 
 import java.io.InputStream;
@@ -10,49 +11,57 @@ import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
 
+public class MarcUnprettyXmlReader implements MarcReader {
 
-public class MarcUnprettyXmlReader implements MarcReader
-{
     private MarcXmlReader reader = null;
-    
-    public MarcUnprettyXmlReader(InputStream input) 
-    {
+
+    /**
+     * Creates an ugly XML reader from the supplied {@link InputStream}.
+     * 
+     * @param input
+     */
+    public MarcUnprettyXmlReader(InputStream input) {
         reader = new MarcXmlReader(input);
     }
-    
-    public boolean hasNext()
-    {
+
+    /**
+     * Returns <code>true</code> if there is a next record to read; else,
+     * <code>false</code>.
+     */
+    public boolean hasNext() {
         return (reader.hasNext());
     }
 
-    public Record next()
-    {
+    /**
+     * Returns the next {@link Record} from the reader.
+     * 
+     * @return The next {@link Record} from the reader
+     */
+    public Record next() {
         Record rec = reader.next();
-        rec.getLeader().setCharCodingScheme('a');
         List<?> varFields = rec.getVariableFields();
-        for (Object f : varFields)
-        {
-            if (f instanceof ControlField)
-            {
-                ControlField cf = (ControlField)f;
+
+        rec.getLeader().setCharCodingScheme('a');
+
+        for (Object f : varFields) {
+            if (f instanceof ControlField) {
+                ControlField cf = (ControlField) f;
                 String data = cf.getData();
-                if (data.contains("\n"))
-                {
+
+                if (data.contains("\n")) {
                     data = data.replaceAll("\\r?\\n[ \t]*", " ");
                     data = data.trim();
                     cf.setData(data);
                 }
-            }
-            else if (f instanceof DataField)
-            {
-                DataField df = (DataField)f;
+            } else if (f instanceof DataField) {
+                DataField df = (DataField) f;
                 List<?> subFields = df.getSubfields();
-                for (Object s : subFields)
-                {
-                    Subfield sf = (Subfield)s;
+
+                for (Object s : subFields) {
+                    Subfield sf = (Subfield) s;
                     String data = sf.getData();
-                    if (data.contains("\n"))
-                    {
+
+                    if (data.contains("\n")) {
                         data = data.replaceAll("\\r?\\n[ \t]*", " ");
                         data = data.trim();
                         sf.setData(data);
@@ -60,7 +69,8 @@ public class MarcUnprettyXmlReader implements MarcReader
                 }
             }
         }
-        return(rec);
+
+        return rec;
     }
 
 }

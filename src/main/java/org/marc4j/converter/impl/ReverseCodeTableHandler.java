@@ -17,6 +17,7 @@
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.marc4j.converter.impl;
 
 import java.util.Hashtable;
@@ -28,127 +29,165 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * <p>
  * <code>ReverseCodeTableHandler</code> is a SAX2 <code>ContentHandler</code>
  * that builds a data structure to facilitate <code>UnicodeToAnsel</code>
  * character conversion.
  * 
  * @author Corey Keith
- * 
  * @see DefaultHandler
  */
 public class ReverseCodeTableHandler extends DefaultHandler {
-  private Hashtable<Character, Hashtable<Integer, char[]>> charsets;
 
-  private Vector<Character> combiningchars;
+    private Hashtable<Character, Hashtable<Integer, char[]>> charsets;
 
-  private boolean useAlt = false;
-  
-  /** Data element identifier */
-  private Integer isocode;
+    private Vector<Character> combiningchars;
 
-  private char[] marc;
+    private boolean useAlt = false;
 
-  private Character ucs;
+    /** Data element identifier */
+    private Integer isocode;
 
-  private boolean combining;
+    private char[] marc;
 
-  /** Tag name */
-  //private String tag;
+    private Character ucs;
 
-  /** StringBuffer to store data */
-  private StringBuffer data;
+    private boolean combining;
 
-  /** Locator object */
-  protected Locator locator;
+    /** StringBuffer to store data */
+    private StringBuffer data;
 
-  public Hashtable<Character, Hashtable<Integer, char[]>> getCharSets() {
-    return charsets;
-  }
+    /** Locator object */
+    protected Locator locator;
 
-  public Vector<Character> getCombiningChars() {
-    return combiningchars;
-  }
-
-  /**
-   * <p>
-   * Registers the SAX2 <code>Locator</code> object.
-   * </p>
-   * 
-   * @param locator
-   *          the {@link Locator}object
-   */
-  public void setDocumentLocator(Locator locator) {
-    this.locator = locator;
-  }
-
-  public void startElement(String uri, String name, String qName,
-      Attributes atts) throws SAXParseException {
-    if (name.equals("characterSet"))
-      isocode = Integer.valueOf(atts.getValue("ISOcode"), 16);
-    else if (name.equals("marc"))
-      data = new StringBuffer();
-    else if (name.equals("codeTables")) {
-      charsets = new Hashtable<Character, Hashtable<Integer, char[]>>();
-      combiningchars = new Vector<Character>();
-    } else if (name.equals("ucs"))
-      data = new StringBuffer();
-    else if (name.equals("alt"))
-      data = new StringBuffer();
-    else if (name.equals("code"))
-      combining = false;
-    else if (name.equals("isCombining"))
-      data = new StringBuffer();
-
-  }
-
-  public void characters(char[] ch, int start, int length) {
-    if (data != null) {
-      data.append(ch, start, length);
+    /**
+     * Gets the character sets hashtable.
+     * 
+     * @return The character sets
+     */
+    public Hashtable<Character, Hashtable<Integer, char[]>> getCharSets() {
+        return charsets;
     }
-  }
 
-  public void endElement(String uri, String name, String qName)
-      throws SAXParseException {
-    if (name.equals("marc")) {
-      String marcstr = data.toString();
-      if (marcstr.length() == 6) {
-        marc = new char[3];
-        marc[0] = (char) Integer.parseInt(marcstr.substring(0, 2), 16);
-        marc[1] = (char) Integer.parseInt(marcstr.substring(2, 4), 16);
-        marc[2] = (char) Integer.parseInt(marcstr.substring(4, 6), 16);
-      } else {
-        marc = new char[1];
-        marc[0] = (char) Integer.parseInt(marcstr, 16);
-      }
-    } else if (name.equals("ucs")) {
-      if (data.length() > 0)
-        ucs = new Character((char) Integer.parseInt(data.toString(), 16));
-      else
-        useAlt = true;
-    } else if (name.equals("alt")) {
-      if (useAlt && data.length() > 0) {
-        ucs = new Character((char) Integer.parseInt(data.toString(), 16));
-        useAlt = false;
-      }      
-    } else if (name.equals("code")) {
-      if (combining) {
-        combiningchars.add(ucs);
-      }
-
-      if (charsets.get(ucs) == null) {
-        Hashtable<Integer, char[]> h = new Hashtable<Integer, char[]>(1);
-        h.put(isocode, marc);
-        charsets.put(ucs, h);
-      } else {
-        Hashtable<Integer, char[]> h = (Hashtable<Integer, char[]>) charsets.get(ucs);
-        h.put(isocode, marc);
-      }
-    } else if (name.equals("isCombining")) {
-      if (data.toString().equals("true"))
-        combining = true;
+    /**
+     * Gets the combining characters.
+     * 
+     * @return The combining characters
+     */
+    public Vector<Character> getCombiningChars() {
+        return combiningchars;
     }
-    data = null;
-  }
+
+    /**
+     * <p>
+     * Registers the SAX2 <code>Locator</code> object.
+     * </p>
+     * 
+     * @param locator the {@link Locator}object
+     */
+    public void setDocumentLocator(Locator locator) {
+        this.locator = locator;
+    }
+
+    /**
+     * An event fired at the start of an element.
+     * 
+     * @param uri
+     * @param name
+     * @param qName
+     * @paran atts
+     */
+    public void startElement(String uri, String name, String qName,
+            Attributes atts) throws SAXParseException {
+        if (name.equals("characterSet")) {
+            isocode = Integer.valueOf(atts.getValue("ISOcode"), 16);
+        } else if (name.equals("marc")) {
+            data = new StringBuffer();
+        } else if (name.equals("codeTables")) {
+            charsets = new Hashtable<Character, Hashtable<Integer, char[]>>();
+            combiningchars = new Vector<Character>();
+        } else if (name.equals("ucs")) {
+            data = new StringBuffer();
+        } else if (name.equals("alt")) {
+            data = new StringBuffer();
+        } else if (name.equals("code")) {
+            combining = false;
+        } else if (name.equals("isCombining")) {
+            data = new StringBuffer();
+        }
+
+    }
+
+    /**
+     * An event fired as characters are consumed.
+     * 
+     * @param ch
+     * @param start
+     * @param length
+     */
+    public void characters(char[] ch, int start, int length) {
+        if (data != null) {
+            data.append(ch, start, length);
+        }
+    }
+
+    /**
+     * An event fired at the end of cosuming an element.
+     * 
+     * @param uri
+     * @param name
+     * @param qname
+     * @throws SAXParseException
+     */
+    public void endElement(String uri, String name, String qName)
+            throws SAXParseException {
+        if (name.equals("marc")) {
+            String marcstr = data.toString();
+            if (marcstr.length() == 6) {
+                marc = new char[3];
+                marc[0] = (char) Integer.parseInt(marcstr.substring(0, 2), 16);
+                marc[1] = (char) Integer.parseInt(marcstr.substring(2, 4), 16);
+                marc[2] = (char) Integer.parseInt(marcstr.substring(4, 6), 16);
+            } else {
+                marc = new char[1];
+                marc[0] = (char) Integer.parseInt(marcstr, 16);
+            }
+        } else if (name.equals("ucs")) {
+            if (data.length() > 0) {
+                ucs =
+                        new Character((char) Integer.parseInt(data.toString(),
+                                16));
+            } else {
+                useAlt = true;
+            }
+        } else if (name.equals("alt")) {
+            if (useAlt && data.length() > 0) {
+                ucs =
+                        new Character((char) Integer.parseInt(data.toString(),
+                                16));
+                useAlt = false;
+            }
+        } else if (name.equals("code")) {
+            if (combining) {
+                combiningchars.add(ucs);
+            }
+
+            if (charsets.get(ucs) == null) {
+                Hashtable<Integer, char[]> h =
+                        new Hashtable<Integer, char[]>(1);
+                h.put(isocode, marc);
+                charsets.put(ucs, h);
+            } else {
+                Hashtable<Integer, char[]> h =
+                        (Hashtable<Integer, char[]>) charsets.get(ucs);
+                h.put(isocode, marc);
+            }
+        } else if (name.equals("isCombining")) {
+            if (data.toString().equals("true")) {
+                combining = true;
+            }
+        }
+
+        data = null;
+    }
 
 }

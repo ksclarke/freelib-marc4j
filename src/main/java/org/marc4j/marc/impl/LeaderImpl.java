@@ -4,8 +4,8 @@
  * This file is part of MARC4J
  *
  * MARC4J is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
  * MARC4J is distributed in the hope that it will be useful,
@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
+ * You should have received a copy of the GNU Lesser General Public
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.marc4j.marc.impl;
 
 import java.text.DecimalFormat;
@@ -27,7 +28,6 @@ import org.marc4j.marc.Leader;
  * Represents a record label in a MARC record.
  * 
  * @author Bas Peters
- * 
  */
 public class LeaderImpl implements Leader {
 
@@ -72,8 +72,7 @@ public class LeaderImpl implements Leader {
     /**
      * Creates a new leader from a String object.
      * 
-     * @param ldr
-     *            the leader string value
+     * @param ldr the leader string value
      */
     public LeaderImpl(String ldr) {
         unmarshal(ldr);
@@ -82,8 +81,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the logical record length (positions 00-04).
      * 
-     * @param recordLength
-     *            integer representing the record length
+     * @param recordLength integer representing the record length
      */
     public void setRecordLength(int recordLength) {
         this.recordLength = recordLength;
@@ -92,8 +90,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the record status (position 05).
      * 
-     * @param recordStatus
-     *            character representing the record status
+     * @param recordStatus character representing the record status
      */
     public void setRecordStatus(char recordStatus) {
         this.recordStatus = recordStatus;
@@ -102,8 +99,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the type of record (position 06).
      * 
-     * @param typeOfRecord
-     *            character representing the type of record
+     * @param typeOfRecord character representing the type of record
      */
     public void setTypeOfRecord(char typeOfRecord) {
         this.typeOfRecord = typeOfRecord;
@@ -112,8 +108,8 @@ public class LeaderImpl implements Leader {
     /**
      * Sets implementation defined values (position 07-08).
      * 
-     * @param implDefined1
-     *            character array representing the implementation defined data
+     * @param implDefined1 character array representing the implementation
+     *        defined data
      */
     public void setImplDefined1(char[] implDefined1) {
         this.implDefined1 = implDefined1;
@@ -122,8 +118,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the character encoding scheme (position 09).
      * 
-     * @param charCodingScheme
-     *            character representing the character encoding
+     * @param charCodingScheme character representing the character encoding
      */
     public void setCharCodingScheme(char charCodingScheme) {
         this.charCodingScheme = charCodingScheme;
@@ -132,9 +127,8 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the indicator count (position 10).
      * 
-     * @param indicatorCount
-     *            integer representing the number of indicators present in a
-     *            data field
+     * @param indicatorCount integer representing the number of indicators
+     *        present in a data field
      */
     public void setIndicatorCount(int indicatorCount) {
         this.indicatorCount = indicatorCount;
@@ -143,8 +137,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the subfield code length (position 11).
      * 
-     * @param subfieldCodeLength
-     *            integer representing the subfield code length
+     * @param subfieldCodeLength integer representing the subfield code length
      */
     public void setSubfieldCodeLength(int subfieldCodeLength) {
         this.subfieldCodeLength = subfieldCodeLength;
@@ -153,8 +146,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the base address of data (positions 12-16).
      * 
-     * @param baseAddressOfData
-     *            integer representing the base address of data
+     * @param baseAddressOfData integer representing the base address of data
      */
     public void setBaseAddressOfData(int baseAddressOfData) {
         this.baseAddressOfData = baseAddressOfData;
@@ -163,8 +155,8 @@ public class LeaderImpl implements Leader {
     /**
      * Sets implementation defined values (positions 17-19).
      * 
-     * @param implDefined2
-     *            character array representing the implementation defined data
+     * @param implDefined2 character array representing the implementation
+     *        defined data
      */
     public void setImplDefined2(char[] implDefined2) {
         this.implDefined2 = implDefined2;
@@ -173,8 +165,7 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the entry map (positions 20-23).
      * 
-     * @param entryMap
-     *            character array representing the entry map
+     * @param entryMap character array representing the entry map
      */
     public void setEntryMap(char[] entryMap) {
         this.entryMap = entryMap;
@@ -274,42 +265,44 @@ public class LeaderImpl implements Leader {
      * <p>
      * Creates a leader object from a string object.
      * </p>
-     * 
      * <p>
      * Indicator count and subfield code length are defaulted to 2 if they are
      * not integer values.
      * </p>
      * 
-     * @param ldr
-     *            the leader
+     * @param ldr the leader
      */
     public void unmarshal(String ldr) {
         try {
             String s;
             s = ldr.substring(0, 5);
-            if (isInteger(s))
+            if (isInteger(s)) {
                 setRecordLength(Integer.parseInt(s));
-            else
+            } else {
                 setRecordLength(0);
+            }
             setRecordStatus(ldr.charAt(5));
             setTypeOfRecord(ldr.charAt(6));
             setImplDefined1(ldr.substring(7, 9).toCharArray());
             setCharCodingScheme(ldr.charAt(9));
             s = String.valueOf(ldr.charAt(10));
-            if (isInteger(s))
+            if (isInteger(s)) {
                 setIndicatorCount(Integer.parseInt(s));
-            else
+            } else {
                 setIndicatorCount(2);
+            }
             s = String.valueOf(ldr.charAt(10));
-            if (isInteger(s))
+            if (isInteger(s)) {
                 setSubfieldCodeLength(Integer.parseInt(s));
-            else
+            } else {
                 setSubfieldCodeLength(2);
+            }
             s = ldr.substring(12, 17);
-            if (isInteger(s))
+            if (isInteger(s)) {
                 setBaseAddressOfData(Integer.parseInt(s));
-            else
+            } else {
                 setBaseAddressOfData(0);
+            }
             setImplDefined2(ldr.substring(17, 20).toCharArray());
             setEntryMap(ldr.substring(20, 24).toCharArray());
         } catch (NumberFormatException e) {
@@ -328,7 +321,6 @@ public class LeaderImpl implements Leader {
 
     /**
      * Returns a string representation of this leader.
-     * 
      * <p>
      * Example:
      * 
@@ -347,35 +339,43 @@ public class LeaderImpl implements Leader {
 
     private boolean isInteger(String value) {
         int len = value.length();
-        if (len == 0)
+        if (len == 0) {
             return false;
+        }
         int i = 0;
         do {
             switch (value.charAt(i)) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                break;
-            default:
-                return false;
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    break;
+                default:
+                    return false;
             }
         } while (++i < len);
         return true;
     }
 
-    private static DecimalFormat format5 = new org.marc4j.util.CustomDecimalFormat(5);
+    private static DecimalFormat format5 =
+            new org.marc4j.util.CustomDecimalFormat(5);
 
+    /**
+     * Sets the ID for the leader.
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * Gets the ID of the leader.
+     */
     public Long getId() {
         return id;
     }
