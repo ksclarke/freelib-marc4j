@@ -38,4 +38,4 @@ So, poke around... experiment, and if you have any problems or questions, [feel 
 
 ### Project Status
 
-[![master branch](https://travis-ci.org/ksclarke/freelib-marc4j.png?branch=master)](https://travis-ci.org/ksclarke/freelib-marc4j)
+[![The 'master' branch build status image](https://travis-ci.org/ksclarke/freelib-marc4j.png?branch=master)](https://travis-ci.org/ksclarke/freelib-marc4j)
