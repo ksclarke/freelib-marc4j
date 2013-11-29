@@ -36,3 +36,6 @@ and it will be created in `freelib-marc4j/target/site/`
 
 So, poke around... experiment, and if you have any problems or questions, [feel free to contact me](mailto:ksclarke@gmail.com).
 
+### Project Status
+
+[![master branch](https://travis-ci.org/ksclarke/freelib-marc4j.png?branch=master)](https://travis-ci.org/ksclarke/freelib-marc4j)
