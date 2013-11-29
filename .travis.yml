@@ -5,7 +5,7 @@ jdk:
 
 branches:
   only:
-    - mavenized
+    - master
 
 script: "mvn install"
 
