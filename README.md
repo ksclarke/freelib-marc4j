@@ -1,6 +1,6 @@
 # FreeLib-MARC4J
 
-This is a fork of the MARC4J project. It is designed to be used by other software projects that use Maven as a project management tool.  For now, it aims to be backward-compatible with the public API of the [original MARC4J project](http://github.com/marc4j/marc4j).
+This is a fork of the MARC4J project. It is designed to be used by other software projects that use Maven as a project management tool.  For now, it aims to be backward-compatible with MARC4J's public API.
 
 For more detailed information about this fork, read its [documentation](http://projects.freelibrary.info/freelib-marc4j/).
 
