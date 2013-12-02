@@ -20,6 +20,8 @@
  */
 package org.marc4j;
 
+import java.util.regex.Pattern;
+
 /**
  * Defines constant values.
  *
@@ -53,4 +55,6 @@ public class Constants {
     /** ISO6937 ENCODING **/
     public static final String ISO6937_ENCODING = "ISO6937";
 
+    /** Regular expression pattern for ControlField tag **/
+    public static final Pattern CF_TAG_PATTERN = Pattern.compile("^00[1-9]$");
 }

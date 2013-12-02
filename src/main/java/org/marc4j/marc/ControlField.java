@@ -21,7 +21,15 @@
 package org.marc4j.marc;
 
 /**
- * Represents a control field in a MARC record.
+ * ControlField defines behavior for a control field (tag 001-009).
+ * <p>
+ * Control fields are variable fields identified by tags beginning with two
+ * zero's. They are comprised of data and a field terminator and do not contain
+ * indicators or subfield codes. The structure of a control field according to
+ * the MARC standard is as follows:
+ * 
+ * <pre>DATA_ELEMENT FIELD_TERMINATOR</pre>
+ * </p>
  * 
  * @author Bas Peters
  */

@@ -31,13 +31,13 @@ import java.io.UnsupportedEncodingException;
 
 import org.marc4j.converter.CharConverter;
 import org.marc4j.converter.impl.AnselToUnicode;
+
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
-import org.marc4j.marc.impl.Verifier;
 
 /**
  * An iterator over a collection of MARC records in ISO 2709 format.
@@ -209,7 +209,9 @@ public class MarcStreamReader implements MarcReader {
 
             for (int i = 0; i < size; i++) {
                 getFieldLength(inputrec);
-                if (Verifier.isControlField(tags[i])) {
+
+                // If tag is for a ControlField; else, try as DataField
+                if (Constants.CF_TAG_PATTERN.matcher(tags[i]).find()) {
                     byteArray = new byte[lengths[i] - 1];
                     inputrec.readFully(byteArray);
 

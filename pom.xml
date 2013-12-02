@@ -120,6 +120,12 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
+				<configuration>
+					<excludes>
+						<!-- TODO: Move samples into tests and site documentation -->
+						<exclude>**/samples/*.java</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>codetable-compile</id>
@@ -199,10 +205,10 @@
 							<outputDirectory>${basedir}/target/site</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/site/resources/eclipse</directory>
+									<directory>${basedir}/src/site/resources/eclipse</directory>
 								</resource>
 								<resource>
-									<directory>src/site/resources/checkstyle</directory>
+									<directory>${basedir}/src/site/resources/checkstyle</directory>
 								</resource>
 							</resources>
 						</configuration>

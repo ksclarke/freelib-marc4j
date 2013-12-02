@@ -23,87 +23,100 @@ package org.marc4j.marc;
 import java.util.List;
 
 /**
- * Represents a data field in a MARC record.
+ * DataField defines behavior for a data field (tag 010-999).
+ * <p>
+ * Data fields are variable fields identified by tags beginning with ASCII
+ * numeric values other than two zero's. Data fields contain indicators,
+ * subfield codes, data and a field terminator.
  * 
  * @author Bas Peters
+ * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
 public interface DataField extends VariableField {
 
     /**
-     * Returns the first indicator
+     * Returns the first indicator of the <code>DataField</code>
      * 
-     * @return char - the first indicator
+     * @return The first indicator of the <code>DataField</code>
      */
     public char getIndicator1();
 
     /**
-     * Sets the first indicator.
+     * Sets the first indicator of the <code>DataField</code>.
      * 
-     * @param ind1 the first indicator
+     * @param aFirstInd The first indicator of the <code>DataField</code>
      */
-    public void setIndicator1(char ind1);
+    public void setIndicator1(char aFirstInd);
 
     /**
-     * Returns the second indicator
+     * Returns the second indicator of the <code>DataField</code>.
      * 
-     * @return char - the second indicator
+     * @return The second indicator character of the <code>DataField</code>
      */
     public char getIndicator2();
 
     /**
-     * Sets the second indicator.
+     * Sets the second indicator of the <code>DataField</code>.
      * 
-     * @param ind2 the second indicator
+     * @param aSecondInd The second indicator of the <code>DataField</code>
      */
-    public void setIndicator2(char ind2);
+    public void setIndicator2(char aSecondInd);
 
     /**
-     * Returns the list of <code>Subfield</code> objects.
+     * Returns the {@link List} of {@link Subfield}.
      * 
-     * @return List - the list of <code>Subfield</code> objects
+     * @return The {@link List} of {@link Subfield}s
      */
     public List<Subfield> getSubfields();
 
     /**
-     * Returns the list of <code>Subfield</code> objects for the goven subfield
-     * code.
+     * Returns the {@link List} of {@link Subfield}s for the given subfield code.
      * 
-     * @param code the subfield code
-     * @return List - the list of <code>Subfield</code> objects
+     * @param aCode The code of the subfields to return
+     * @return The {@link List} of {@link Subfield}s in the <code>DataField</code>
      */
-    public List<Subfield> getSubfields(char code);
+    public List<Subfield> getSubfields(char aCode);
 
     /**
      * Returns the first <code>Subfield</code> with the given code.
      * 
-     * @param code the subfield code
-     * @return Subfield - the subfield object or null if no subfield is found
+     * @param aCode The subfield code of the <code>Subfield</code> to return
+     * @return The <code>Subfield</code> or null if no subfield is found
      */
-    public Subfield getSubfield(char code);
+    public Subfield getSubfield(char aCode);
 
     /**
-     * Adds a <code>Subfield</code>.
+     * Adds the supplied <code>Subfield</code> to the <code>DataField</code>.
      * 
-     * @param subfield the <code>Subfield</code> object
+     * @param aSubfield The <code>Subfield</code> object
      * @throws IllegalAddException when the parameter is not a
      *         <code>Subfield</code> instance
      */
-    public void addSubfield(Subfield subfield);
+    public void addSubfield(Subfield aSubfield);
 
     /**
      * Inserts a <code>Subfield</code> at the specified position.
      * 
-     * @param index the position within the list
-     * @param subfield the <code>Subfield</code> object
-     * @throws IllegalAddException when the parameter is not a
-     *         <code>Subfield</code> instance
+     * @param aIndex The position at which to add the <code>Subfield<code>
+     * @param aSubfield The <code>Subfield</code> to add to the
+     *        <code>DataField</code>
+     * @throws IllegalAddException when the supplied <code>Subfield</code> is of
+     *         the wrong type
      */
-    public void addSubfield(int index, Subfield subfield);
+    public void addSubfield(int aIndex, Subfield aSubfield);
 
     /**
      * Removes a <code>Subfield</code>.
+     * 
+     * @param aSubfield The <code>Subfield</code> to remove
      */
-    @SuppressWarnings("UnusedDeclaration")
-    public void removeSubfield(Subfield subfield);
+    public void removeSubfield(Subfield aSubfield);
+
+    /**
+     * Returns the number of subfields in this <code>DataField</code>.
+     * 
+     * @return The number of subfields in this <code>DataField</code>
+     */
+    public int countSubfields();
 
 }

@@ -20,43 +20,37 @@
 
 package org.marc4j.marc.impl;
 
-import org.marc4j.MarcException;
 import org.marc4j.marc.VariableField;
 
 /**
  * Represents a variable field in a MARC record.
  * 
  * @author Bas Peters
+ * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
 public abstract class VariableFieldImpl implements VariableField {
 
-    private static final long serialVersionUID = 1L;
-
-    private String tag;
-
     /**
-     * Creates a new <code>VariableField</code>.
+     * A <code>serialVersionUID</code> for the class.
      */
-    public VariableFieldImpl() {
-    }
+    private static final long serialVersionUID = -8396090810780390995L;
 
-    /**
-     * Creates a new <code>VariableField</code> and sets the tag name.
-     */
-    public VariableFieldImpl(String tag) throws MarcException {
-        if (tag == null) {
-            throw new MarcException("Attempt to create field with null tag");
-        }
-        this.setTag(tag);
-    }
+    private String myTag;
+
+    private Long myID;
 
     /**
      * Sets this field's tag.
      * 
-     * @param tag This field's tag
+     * @param aTag This field's tag
      */
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTag(String aTag) {
+        if (aTag == null) {
+            String className = getClass().getSimpleName();
+            throw new NullPointerException(className + "'s tag can't be null");
+        }
+
+        myTag = aTag;
     }
 
     /**
@@ -65,31 +59,49 @@ public abstract class VariableFieldImpl implements VariableField {
      * @return This field's tag
      */
     public String getTag() {
-        return tag;
+        return myTag;
     }
 
     /**
      * Compare's this {@link VariableField} to the supplied one.
      * 
-     * @param obj A {@link VariableField} to compare to this one
+     * @param aObject A {@link VariableField} to compare to this one
      * @return 0 for a match, -1 if this one sorts first, or 1 if it sorts last
      */
-    public int compareTo(VariableField obj) {
-        if (!(obj instanceof VariableFieldImpl)) {
+    public int compareTo(VariableField aObject) {
+        if (!(aObject instanceof VariableFieldImpl)) {
             throw new ClassCastException("A VariableField object expected");
         }
 
-        VariableField field = (VariableField) obj;
-        return tag.compareTo(field.getTag());
+        return myTag.compareTo(((VariableField) aObject).getTag());
+    }
+
+    /**
+     * Sets an ID.
+     * 
+     * @param aID A unique ID for this field
+     */
+    public void setId(Long aID) {
+        // TODO: understand the point of this ID
+        myID = aID;
+    }
+
+    /**
+     * Return the field's ID.
+     * 
+     * @return The field's unique ID
+     */
+    public Long getId() {
+        return myID;
     }
 
     /**
      * Returns a string representation of this variable field.
      * 
-     * @return String - a string representation of this variable field
+     * @return A string representation of this variable field
      */
     public String toString() {
-        return tag;
+        return myTag;
     }
 
 }

@@ -20,6 +20,8 @@
 
 package org.marc4j.marc.impl;
 
+import java.util.Collections;
+
 import org.marc4j.marc.VariableField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.ControlField;
@@ -102,16 +104,14 @@ public class RecordImpl implements Record {
      * @param field the <code>VariableField</code>
      */
     public void addVariableField(VariableField field) {
-        String tag = field.getTag();
-
         if (field instanceof ControlField) {
             ControlField controlField = (ControlField) field;
 
-            if (Verifier.isControlNumberField(tag)) {
-                if (Verifier.hasControlNumberField(controlFields)) {
-                    controlFields.set(0, controlField);
-                } else {
+            if (field.getTag().equals("001")) {
+                if (getControlNumberField() == null) {
                     controlFields.add(0, controlField);
+                } else {
+                    controlFields.set(0, controlField);
                 }
             } else {
                 controlFields.add(controlField);
@@ -125,9 +125,7 @@ public class RecordImpl implements Record {
      * Removes the supplied {@link VariableField}
      */
     public void removeVariableField(VariableField field) {
-        String tag = field.getTag();
-
-        if (Verifier.isControlField(tag)) {
+        if (field instanceof ControlField) {
             controlFields.remove(field);
         } else {
             dataFields.remove(field);
@@ -141,11 +139,15 @@ public class RecordImpl implements Record {
      * @return ControlField - the control number field
      */
     public ControlField getControlNumberField() {
-        if (Verifier.hasControlNumberField(controlFields)) {
-            return controlFields.get(0);
-        } else {
-            return null;
+        for (int index = 0; index < controlFields.size(); index++) {
+            ControlField field = controlFields.get(index);
+
+            if (field.getTag().equals("001")) {
+                return field;
+            }
         }
+
+        return null;
     }
 
     /**
@@ -163,23 +165,17 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Gets the {@link VariableField} with the supplied tag.
+     * Gets the first {@link VariableField} with the supplied tag.
      * 
-     * @param tag
+     * @param aTag The tag of the field to be returned
      */
-    public VariableField getVariableField(String tag) {
-        Iterator<? extends VariableField> i;
+    public VariableField getVariableField(String aTag) {
+        Iterator<? extends VariableField> iterator = getIterator(aTag);
 
-        if (Verifier.isControlField(tag)) {
-            i = controlFields.iterator();
-        } else {
-            i = dataFields.iterator();
-        }
+        while (iterator.hasNext()) {
+            VariableField field = iterator.next();
 
-        while (i.hasNext()) {
-            VariableField field = (VariableField) i.next();
-
-            if (field.getTag().equals(tag)) {
+            if (field.getTag().equals(aTag)) {
                 return field;
             }
         }
@@ -190,22 +186,18 @@ public class RecordImpl implements Record {
     /**
      * Gets a {@link List} of {@link VariableField}s with the supplied tag.
      */
-    public List<VariableField> getVariableFields(String tag) {
+    public List<VariableField> getVariableFields(String aTag) {
         List<VariableField> fields = new ArrayList<VariableField>();
-        Iterator<? extends VariableField> i;
+        Iterator<? extends VariableField> iterator = getIterator(aTag);
 
-        if (Verifier.isControlField(tag)) {
-            i = controlFields.iterator();
-        } else {
-            i = dataFields.iterator();
-        }
+        while (iterator.hasNext()) {
+            VariableField field = iterator.next();
 
-        while (i.hasNext()) {
-            VariableField field = (VariableField) i.next();
-            if (field.getTag().equals(tag)) {
+            if (field.getTag().equals(aTag)) {
                 fields.add(field);
             }
         }
+
         return fields;
     }
 
@@ -214,15 +206,18 @@ public class RecordImpl implements Record {
      */
     public List<VariableField> getVariableFields() {
         List<VariableField> fields = new ArrayList<VariableField>();
-        Iterator<? extends VariableField> i;
-        i = controlFields.iterator();
-        while (i.hasNext()) {
-            fields.add(i.next());
+        Iterator<? extends VariableField> iterator = controlFields.iterator();
+
+        while (iterator.hasNext()) {
+            fields.add(iterator.next());
         }
-        i = dataFields.iterator();
-        while (i.hasNext()) {
-            fields.add(i.next());
+
+        iterator = dataFields.iterator();
+
+        while (iterator.hasNext()) {
+            fields.add(iterator.next());
         }
+
         return fields;
     }
 
@@ -381,4 +376,24 @@ public class RecordImpl implements Record {
         return id;
     }
 
+    private Iterator<? extends VariableField> getIterator(String aTag) {
+        int tag;
+
+        if (aTag.length() == 3) {
+            try {
+                tag = Integer.parseInt(aTag);
+
+                if (tag > 0 && tag < 10) {
+                    return controlFields.iterator();
+                } else if (tag >= 10 && tag <= 999) {
+                    return dataFields.iterator();
+                }
+            } catch (NumberFormatException details) {
+                // Log warning below...
+            }
+        }
+
+        // TODO: log a warning here
+        return Collections.<VariableField> emptyList().iterator();
+    }
 }

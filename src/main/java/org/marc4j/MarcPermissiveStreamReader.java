@@ -37,8 +37,6 @@ import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.DataField;
 
-import org.marc4j.marc.impl.Verifier;
-
 import org.marc4j.converter.CharConverter;
 import org.marc4j.converter.impl.AnselToUnicode;
 import org.marc4j.converter.impl.Iso5426ToUnicode;
@@ -848,8 +846,10 @@ public class MarcPermissiveStreamReader implements MarcReader {
 
                     }
                 }
+
                 totalLength += lengths[i];
-                if (isControlField(tags[i])) {
+
+                if (Constants.CF_TAG_PATTERN.matcher(tags[i]).find()) {
                     byteArray = new byte[lengths[i] - 1];
                     inputrec.readFully(byteArray);
 
@@ -911,22 +911,6 @@ public class MarcPermissiveStreamReader implements MarcReader {
             }
         }
         return true;
-    }
-
-    private boolean isControlField(String tag) {
-        boolean isControl = false;
-        try {
-            isControl = Verifier.isControlField(tag);
-        } catch (NumberFormatException nfe) {
-            if (permissive) {
-                errors.addError(record.getControlNumber(), tag, "n/a",
-                        ErrorHandler.ERROR_TYPO,
-                        "Field tag contains non-numeric characters (" + tag +
-                                ").");
-                isControl = false;
-            }
-        }
-        return isControl;
     }
 
     private void guessAndSelectCorrectNonUTF8Encoding() {

@@ -63,8 +63,6 @@ public interface Record extends Serializable {
      * Adds a <code>VariableField</code>.
      * 
      * @param field the <code>VariableField</code>
-     * @throws IllegalAddException when the parameter is not a
-     *         <code>VariableField</code> instance
      */
     public void addVariableField(VariableField field);
 
