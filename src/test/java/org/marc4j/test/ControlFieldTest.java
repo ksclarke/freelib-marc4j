@@ -20,7 +20,7 @@ import static org.junit.Assert.fail;
  */
 public class ControlFieldTest {
 
-    private final MarcFactory myFactory = MarcFactory.newInstance();
+    private MarcFactory myFactory = MarcFactory.newInstance();
 
     /**
      * Tests the {@link ControlField} constructor.

@@ -40,9 +40,12 @@ public interface VariableField extends Serializable, Comparable<VariableField> {
     public void setId(Long id);
 
     /**
-     * Returns the identifier.
+     * Gets the identifier.
+     * <p>
+     * The purpose of this identifier is to provide an identifier for
+     * persistency.
      * 
-     * @return Long - the identifier
+     * @return The identifier
      */
     public Long getId();
 
