@@ -45,8 +45,8 @@ Finally, if you are using Maven for your projects, you can include MARC4J as a d
 
     <dependency>
 	    <groupId>org.marc4j</groupId>
-	    <artifactId>marc4j</artifactId>
-	    <version>2.6.1</version>
+	    <artifactId>freelib-marc4j</artifactId>
+	    <version>2.6.1-SNAPSHOT</version>
     </dependency>
 
 It's that simple.  If you have trouble, or would like to ask questions, feel free to file a ticket in the project's [issues tracker](http://github.com/ksclarke/marc4j/issues).
