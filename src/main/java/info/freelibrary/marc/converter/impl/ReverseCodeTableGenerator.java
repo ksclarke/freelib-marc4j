@@ -1,10 +1,8 @@
 
-package org.marc4j.converter.impl;
-
-import java.io.FileNotFoundException;
+package info.freelibrary.marc.converter.impl;
 
 import java.io.File;
-
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -27,7 +25,7 @@ import org.xml.sax.XMLReader;
  * The routines generated for converting unicode characters to MARC8 multibyte
  * characters are split into several routines to workaround a limitation in java
  * that a method can only contain 64k of code when it is compiled.
- * 
+ *
  * @author Robert Haschart
  * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
@@ -35,52 +33,52 @@ public class ReverseCodeTableGenerator {
 
     /**
      * The main class for the reverse code table generator.
-     * 
+     *
      * @param args
      * @throws FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(final String[] args) throws FileNotFoundException {
         Hashtable<Character, Hashtable<Integer, char[]>> charsets = null;
 
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
-            SAXParser saxParser = factory.newSAXParser();
-            XMLReader rdr = saxParser.getXMLReader();
+            final SAXParser saxParser = factory.newSAXParser();
+            final XMLReader rdr = saxParser.getXMLReader();
 
-            InputSource src =
+            final InputSource src =
                     new InputSource(ReverseCodeTableHandler.class
                             .getResourceAsStream("resources/codetables.xml"));
 
-            ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
+            final ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
 
             rdr.setContentHandler(saxUms);
             rdr.parse(src);
             charsets = saxUms.getCharSets();
-            Vector<Character> combining = saxUms.getCombiningChars();
-            Object charsetsKeys[] = charsets.keySet().toArray();
+            final Vector<Character> combining = saxUms.getCombiningChars();
+            final Object charsetsKeys[] = charsets.keySet().toArray();
             Arrays.sort(charsetsKeys);
 
             if (args.length > 0) {
-                PrintStream outStream = new PrintStream(new File(args[0]));
+                final PrintStream outStream = new PrintStream(new File(args[0]));
                 dumpTablesAsSwitchStatement(combining, charsets, outStream);
             } else {
                 dumpTablesAsSwitchStatement(combining, charsets, System.out);
             }
-        } catch (FileNotFoundException details) {
+        } catch (final FileNotFoundException details) {
             throw details; // exec-maven-plugin will tell us what went wrong
-        } catch (Exception details) {
+        } catch (final Exception details) {
             details.printStackTrace(System.out);
             System.err.println("Exception: " + details);
         }
     }
 
     private static void dumpTablesAsSwitchStatement(
-            Vector<Character> combining,
-            Hashtable<Character, Hashtable<Integer, char[]>> charsets,
-            PrintStream out) {
-        out.println("package org.marc4j.converter.impl;");
+            final Vector<Character> combining,
+            final Hashtable<Character, Hashtable<Integer, char[]>> charsets,
+            final PrintStream out) {
+        out.println("package info.freelibrary.marc.converter.impl;");
         out.println("");
         out.println("/**");
         out.println(" * An implementation of ReverseCodeTable that is used in converting Unicode");
@@ -107,15 +105,15 @@ public class ReverseCodeTableGenerator {
         out.println("    public boolean isCombining(Character c) {");
         out.println("        switch ((int)c.charValue()) {");
 
-        Character combineArray[] = combining.toArray(new Character[0]);
+        final Character combineArray[] = combining.toArray(new Character[0]);
         Arrays.sort(combineArray);
         Character prevc = null;
 
         for (int index = 0; index < combineArray.length; index++) {
-            Character c = combineArray[index];
+            final Character c = combineArray[index];
 
             if (!c.equals(prevc)) {
-                String hex = Integer.toHexString((int) c.charValue());
+                final String hex = Integer.toHexString(c.charValue());
                 out.println("            case 0x" + hex + ":");
             }
 
@@ -151,29 +149,29 @@ public class ReverseCodeTableGenerator {
         out.println("    }");
         out.println("");
 
-        Character charsetsKeys[] = charsets.keySet().toArray(new Character[0]);
+        final Character charsetsKeys[] = charsets.keySet().toArray(new Character[0]);
         Arrays.sort(charsetsKeys);
-        StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder();
 
         out.println("    private String getCharTableCharSet(Character c) {");
         out.println("        int cVal = (int)c.charValue();");
         out.println("        switch(cVal) {");
 
         for (int sel = 0; sel < charsetsKeys.length; sel++) {
-            Hashtable<Integer, char[]> table = charsets.get(charsetsKeys[sel]);
-            Object tableKeys[] = table.keySet().toArray();
+            final Hashtable<Integer, char[]> table = charsets.get(charsetsKeys[sel]);
+            final Object tableKeys[] = table.keySet().toArray();
             Arrays.sort(tableKeys);
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
 
             for (int index = 0; index < tableKeys.length; index++) {
                 sb.append((char) ((Integer) tableKeys[index]).intValue());
             }
 
-            String charset = sb.toString().trim();
+            final String charset = sb.toString().trim();
 
             if (!charset.equals("1")) {
-                int intChar = (int) ((Character) charsetsKeys[sel]).charValue();
-                String intCharHex = Integer.toHexString(intChar);
+                final int intChar = charsetsKeys[sel].charValue();
+                final String intCharHex = Integer.toHexString(intChar);
                 out.println("            case 0x" + intCharHex + ":");
                 out.println("                return \"" + charset + "\";");
             }
@@ -201,17 +199,17 @@ public class ReverseCodeTableGenerator {
 
     }
 
-    static private void dumpPartialCharTableCharString(PrintStream out,
-            StringBuilder buffer, Object charsetsKeys[],
-            Hashtable<Character, Hashtable<Integer, char[]>> charsets,
-            int startOffset, int endOffset) {
-        String startByteStr =
+    static private void dumpPartialCharTableCharString(final PrintStream out,
+            final StringBuilder buffer, final Object charsetsKeys[],
+            final Hashtable<Character, Hashtable<Integer, char[]>> charsets,
+            final int startOffset, final int endOffset) {
+        final String startByteStr =
                 "0x" +
-                        Integer.toHexString(((int) ((Character) charsetsKeys[startOffset])
+                        Integer.toHexString((((Character) charsetsKeys[startOffset])
                                 .charValue()));
-        String endByteStr =
+        final String endByteStr =
                 "0x" +
-                        Integer.toHexString(((int) ((Character) charsetsKeys[endOffset - 1])
+                        Integer.toHexString((((Character) charsetsKeys[endOffset - 1])
                                 .charValue()));
         buffer.append("        if (cVal >= " + startByteStr + " && cVal <= " +
                 endByteStr + ") {\n            return getCharTableCharString_" +
@@ -223,17 +221,17 @@ public class ReverseCodeTableGenerator {
 
         for (int sel = startOffset; sel < charsetsKeys.length &&
                 sel < endOffset; sel++) {
-            Hashtable<Integer, char[]> table = charsets.get(charsetsKeys[sel]);
-            Object tableKeys[] = table.keySet().toArray();
+            final Hashtable<Integer, char[]> table = charsets.get(charsetsKeys[sel]);
+            final Object tableKeys[] = table.keySet().toArray();
             Arrays.sort(tableKeys);
-            StringBuilder sb1 = new StringBuilder();
-            StringBuilder sb2 = new StringBuilder();
+            final StringBuilder sb1 = new StringBuilder();
+            final StringBuilder sb2 = new StringBuilder();
             boolean useSB1 = false;
             char prevcharArray[] = null;
 
             for (int index = 0; index < tableKeys.length; index++) {
-                Object value = table.get(tableKeys[index]);
-                char valarray[] = (char[]) value;
+                final Object value = table.get(tableKeys[index]);
+                final char valarray[] = (char[]) value;
                 sb1.append(hexify(valarray));
 
                 if (index == 0) {
@@ -250,10 +248,10 @@ public class ReverseCodeTableGenerator {
                 prevcharArray = valarray;
             }
 
-            String returnVal =
+            final String returnVal =
                     useSB1 ? sb1.toString().trim() : sb2.toString().trim();
-            int intChar = (int) ((Character) charsetsKeys[sel]).charValue();
-            String hex = Integer.toHexString(intChar);
+            final int intChar = ((Character) charsetsKeys[sel]).charValue();
+            final String hex = Integer.toHexString(intChar);
             out.println("            case 0x" + hex + ":");
             out.println("                return \"" + returnVal + "\";");
         }
@@ -268,15 +266,15 @@ public class ReverseCodeTableGenerator {
     /**
      * Utility function for translating an array of characters to a two
      * character hex string of the character values.
-     * 
+     *
      * @param aValArray The array of characters to encode
      * @return A string representation of the hex code
      */
-    private static String hexify(char[] aValArray) {
+    private static String hexify(final char[] aValArray) {
         String result = "";
 
         for (int index = 0; index < aValArray.length; index++) {
-            result += Integer.toHexString((int) aValArray[index]);
+            result += Integer.toHexString(aValArray[index]);
         }
 
         return result;

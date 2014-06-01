@@ -280,9 +280,9 @@
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>org.marc4j.converter.impl.CodeTableGenerator</mainClass>
+              <mainClass>info.freelibrary.marc.converter.impl.CodeTableGenerator</mainClass>
               <arguments>
-                <argument>src/main/java/org/marc4j/converter/impl/CodeTableGenerated.java</argument>
+                <argument>src/main/java/info/freelibrary/marc/converter/impl/CodeTableGenerated.java</argument>
               </arguments>
             </configuration>
           </execution>
@@ -293,9 +293,9 @@
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>org.marc4j.converter.impl.ReverseCodeTableGenerator</mainClass>
+              <mainClass>info.freelibrary.marc.converter.impl.ReverseCodeTableGenerator</mainClass>
               <arguments>
-                <argument>src/main/java/org/marc4j/converter/impl/ReverseCodeTableGenerated.java</argument>
+                <argument>src/main/java/info/freelibrary/marc/converter/impl/ReverseCodeTableGenerated.java</argument>
               </arguments>
             </configuration>
           </execution>

@@ -1,5 +1,5 @@
 
-package org.marc4j.converter.impl;
+package info.freelibrary.marc.converter.impl;
 
 public interface CodeTableInterface {
 

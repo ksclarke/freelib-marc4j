@@ -112,7 +112,7 @@ import javax.xml.transform.stream.StreamSource;
  * <p>
  * Please note that it's not garanteed to work if you try to convert normalized
  * Unicode back to MARC-8 encoding using
- * {@link org.marc4j.converter.impl.UnicodeToAnsel}.
+ * {@link info.freelibrary.marc.converter.impl.UnicodeToAnsel}.
  * </p>
  * <p>
  * This class provides very basic formatting options. For more advanced options

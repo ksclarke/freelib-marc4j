@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.marc4j.MarcJsonReader;
 import org.marc4j.MarcJsonWriter;
 import org.marc4j.MarcStreamReader;
-import org.marc4j.converter.impl.AnselToUnicode;
+import info.freelibrary.marc.converter.impl.AnselToUnicode;
 import org.marc4j.marc.Record;
 import org.marc4j.test.utils.StaticTestRecords;
 import org.marc4j.test.utils.TestUtils;

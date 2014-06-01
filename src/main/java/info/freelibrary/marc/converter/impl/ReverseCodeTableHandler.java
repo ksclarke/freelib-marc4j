@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.marc4j.converter.impl;
+package info.freelibrary.marc.converter.impl;
 
 import java.util.Hashtable;
 import java.util.Vector;

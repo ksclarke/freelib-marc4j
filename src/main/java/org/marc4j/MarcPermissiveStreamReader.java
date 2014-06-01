@@ -34,8 +34,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.marc4j.converter.CharConverter;
-import org.marc4j.converter.impl.AnselToUnicode;
-import org.marc4j.converter.impl.Iso5426ToUnicode;
+import info.freelibrary.marc.converter.impl.AnselToUnicode;
+import info.freelibrary.marc.converter.impl.Iso5426ToUnicode;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;

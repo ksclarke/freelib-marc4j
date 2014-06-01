@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.marc4j.converter.impl;
+package info.freelibrary.marc.converter.impl;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -178,7 +178,7 @@ public class AnselToUnicode extends CharConverter {
 
     private CodeTableInterface loadGeneratedTable(final boolean loadMultibyte) {
         try {
-            final Class<?> generated = Class.forName("org.marc4j.converter.impl.CodeTableGenerated");
+            final Class<?> generated = Class.forName("info.freelibrary.marc.converter.impl.CodeTableGenerated");
             final Constructor<?> cons = generated.getConstructor();
             final Object ct = cons.newInstance();
             loadedMultibyte = true;

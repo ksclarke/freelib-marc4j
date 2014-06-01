@@ -1,4 +1,4 @@
-package org.marc4j.converter.impl;
+package info.freelibrary.marc.converter.impl;
 
 /**
  *  An implementation of CodeTableInterface that is used in converting MARC8

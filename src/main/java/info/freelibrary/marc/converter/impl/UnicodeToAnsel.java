@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.marc4j.converter.impl;
+package info.freelibrary.marc.converter.impl;
 
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -89,7 +89,7 @@ public class UnicodeToAnsel extends CharConverter {
     private ReverseCodeTable loadGeneratedTable() {
         try {
             Class<?> generated =
-                    Class.forName("org.marc4j.converter.impl.ReverseCodeTableGenerated");
+                    Class.forName("info.freelibrary.marc.converter.impl.ReverseCodeTableGenerated");
             Constructor<?> cons = generated.getConstructor();
             Object rct = cons.newInstance();
             return ((ReverseCodeTable) rct);
