@@ -40,41 +40,40 @@ import org.marc4j.converter.impl.UnicodeToIso6937;
 import org.marc4j.marc.Record;
 
 /**
- * Provides a driver to convert MARCXML records to MARC format. The following
- * example reads input.xml and writes output to the console:
- * 
+ * Provides a driver to convert MARCXML records to MARC format. The following example reads input.xml and writes output
+ * to the console:
+ *
  * <pre>
  *       java org.marc4j.util.XmlMarcDriver input.xml
  * </pre>
  * <p>
- * The following example reads input.xml, converts UTF-8 and writes output in
- * MARC-8 to output.mrc:
+ * The following example reads input.xml, converts UTF-8 and writes output in MARC-8 to output.mrc:
  * </p>
- * 
+ *
  * <pre>
  *       java org.marc4j.util.XmlMarcDriver -convert MARC8 -out output.mrc input.xml
  * </pre>
  * <p>
- * It is possible to pre-process the input file using an XSLT stylesheet. The
- * transformation should produce valid MARCXML. The following example transforms
- * a MODS file to MARCXML and outputs MARC records.
+ * It is possible to pre-process the input file using an XSLT stylesheet. The transformation should produce valid
+ * MARCXML. The following example transforms a MODS file to MARCXML and outputs MARC records.
  * </p>
- * 
+ *
  * <pre>
- *       java org.marc4j.util.XmlMarcDriver -convert MARC8 -out output.mrc -xsl http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl modsfile.xml
+ *       java org.marc4j.util.XmlMarcDriver -convert MARC8 -out output.mrc \
+ *         -xsl http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl modsfile.xml
  * </pre>
  * <p>
  * For usage, run from the command-line with the following command:
  * </p>
- * 
+ *
  * <pre>
  *       java org.marc4j.util.XmlMarcDriver -usage
  * </pre>
  * <p>
- * Check the home page for <a href="http://www.loc.gov/standards/marcxml/">
- * MARCXML </a> for more information about the MARCXML format.
+ * Check the home page for <a href="http://www.loc.gov/standards/marcxml/"> MARCXML </a> for more information about the
+ * MARCXML format.
  * </p>
- * 
+ *
  * @author Bas Peters
  */
 public class XmlMarcDriver {
@@ -87,17 +86,15 @@ public class XmlMarcDriver {
      * <ul>
      * <li>-xsl &lt;stylesheet URL&gt; - pre-process using XSLT-stylesheet</li>
      * <li>-out &lt;output file&gt; - write to output file</li>
-     * <li>-convert &lt;encoding&gt; - convert UTF-8 to &lt;encoding&gt;
+     * <li>-convert &lt;encoding&gt; - convert UTF-8 to &lt;encoding&gt;<br/>
      * (Supported encodings: MARC8, ISO5426, ISO6937)</li>
-     * <li>-encoding &lt;encoding&gt; - Output using specified Java character
-     * encoding</li>
+     * <li>-encoding &lt;encoding&gt; - Output using specified Java character encoding</li>
      * <li>-usage - show usage</li>
-     * <li>&lt;input file&gt; - input file with MARCXML records or a
-     * transformation source
+     * <li>&lt;input file&gt; - input file with MARCXML records or a transformation source
      * </ul>
      */
-    public static void main(String args[]) {
-        long start = System.currentTimeMillis();
+    public static void main(final String args[]) {
+        final long start = System.currentTimeMillis();
 
         String input = null;
         String output = null;
@@ -146,14 +143,14 @@ public class XmlMarcDriver {
         InputStream in = null;
         try {
             in = new FileInputStream(new File(input));
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             e.printStackTrace();
         }
         MarcXmlReader reader = null;
         if (stylesheet == null) {
             reader = new MarcXmlReader(in);
         } else {
-            Source source = new StreamSource(stylesheet);
+            final Source source = new StreamSource(stylesheet);
             reader = new MarcXmlReader(in, source);
         }
 
@@ -161,7 +158,7 @@ public class XmlMarcDriver {
         if (output != null) {
             try {
                 out = new FileOutputStream(output);
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
@@ -191,7 +188,7 @@ public class XmlMarcDriver {
         }
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             if (Constants.MARC_8_ENCODING.equals(convert)) {
                 record.getLeader().setCharCodingScheme(' ');
             }
@@ -199,28 +196,20 @@ public class XmlMarcDriver {
         }
         writer.close();
 
-        System.err.println("Total time: " +
-                (System.currentTimeMillis() - start) + " miliseconds");
+        System.err.println("Total time: " + (System.currentTimeMillis() - start) + " miliseconds");
     }
 
     private static void usage() {
         System.err.println("MARC4J, Copyright (C) 2002-2006 Bas Peters");
-        System.err
-                .println("Usage: org.marc4j.util.XmlMarcDriver [-options] <file.mrc>");
-        System.err
-                .println("       -convert <encoding> = Converts UTF-8 to <encoding>");
-        System.err
-                .println("       Valid encodings are: MARC8, ISO5426, ISO6937");
-        System.err
-                .println("       -encoding <encoding> = Output using specified Java character encoding");
-        System.err
-                .println("       -xsl <file> = Pre-process MARCXML using XSLT stylesheet <file>");
+        System.err.println("Usage: org.marc4j.util.XmlMarcDriver [-options] <file.mrc>");
+        System.err.println("       -convert <encoding> = Converts UTF-8 to <encoding>");
+        System.err.println("       Valid encodings are: MARC8, ISO5426, ISO6937");
+        System.err.println("       -encoding <encoding> = Output using specified Java character encoding");
+        System.err.println("       -xsl <file> = Pre-process MARCXML using XSLT stylesheet <file>");
         System.err.println("       -out <file> = Output using <file>");
         System.err.println("       -usage or -help = this message");
-        System.err
-                .println("The program outputs MARC records in ISO 2709 format");
-        System.err
-                .println("See http://marc4j.tigris.org for more information.");
+        System.err.println("The program outputs MARC records in ISO 2709 format");
+        System.err.println("See http://marc4j.tigris.org for more information.");
         System.exit(1);
     }
 

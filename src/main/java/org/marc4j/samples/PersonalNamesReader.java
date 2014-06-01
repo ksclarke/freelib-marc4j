@@ -1,3 +1,4 @@
+
 package org.marc4j.samples;
 
 import java.io.BufferedReader;
@@ -15,32 +16,45 @@ import org.marc4j.marc.Record;
 public class PersonalNamesReader implements MarcReader {
 
     private BufferedReader br = null;
-    
+
     private MarcFactory factory;
 
     private String line;
 
-    public PersonalNamesReader(InputStream in) {        
+    /**
+     * Creates a PersonalNamesReader from the supplied InputStream.
+     * 
+     * @param in
+     */
+    public PersonalNamesReader(InputStream in) {
         factory = MarcFactory.newInstance();
         br = new BufferedReader(new InputStreamReader(in));
     }
 
+    /**
+     * Returns true if the PersonalNamesReader has another Record.
+     */
     public boolean hasNext() {
         try {
-            if ((line = br.readLine()) != null)
+            if ((line = br.readLine()) != null) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         } catch (IOException e) {
             throw new MarcException(e.getMessage(), e);
         }
     }
 
+    /**
+     * Returns the next Record in the PersonalNamesReader.
+     */
     public Record next() {
         String[] tokens = line.trim().split("\t");
-        
-        if (tokens.length != 3)
+
+        if (tokens.length != 3) {
             throw new MarcException("Index out of bounds");
+        }
 
         Record record = factory.newRecord("00000nz  a2200000o  4500");
 

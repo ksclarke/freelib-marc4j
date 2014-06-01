@@ -18,36 +18,35 @@ import org.marc4j.marc.Subfield;
 
 public class MarcSplitStreamWriter extends MarcStreamWriter {
 
-    private int recordThreshold;
+    private final int recordThreshold;
 
-    private String fieldsToSplit;
+    private final String fieldsToSplit;
 
     /**
-     * Creates a split stream writer from the supplied {@link OutputStream}
-     * using the supplied threshold and fields to split.
-     * 
+     * Creates a split stream writer from the supplied {@link OutputStream} using the supplied threshold and fields to
+     * split.
+     *
      * @param out
      * @param threshhold
      * @param fieldsToSplit
      */
-    public MarcSplitStreamWriter(OutputStream out, int threshold,
-            String fieldsToSplit) {
+    public MarcSplitStreamWriter(final OutputStream out, final int threshold, final String fieldsToSplit) {
         super(out, false);
         recordThreshold = threshold;
         this.fieldsToSplit = fieldsToSplit;
     }
 
     /**
-     * Creates a split stream writer from the supplied {@link OutputStream}
-     * using the supplied encoding, threshold, and fields to split.
-     * 
+     * Creates a split stream writer from the supplied {@link OutputStream} using the supplied encoding, threshold, and
+     * fields to split.
+     *
      * @param out
      * @param encoding
      * @param threshold
      * @param fieldsToSplit
      */
-    public MarcSplitStreamWriter(OutputStream out, String encoding,
-            int threshold, String fieldsToSplit) {
+    public MarcSplitStreamWriter(final OutputStream out, final String encoding, final int threshold,
+            final String fieldsToSplit) {
         super(out, encoding, false);
         recordThreshold = threshold;
         this.fieldsToSplit = fieldsToSplit;
@@ -56,16 +55,17 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
 
     /**
      * Writes a <code>Record</code> object to the writer.
-     * 
+     *
      * @param record - the <code>Record</code> object
      */
-    public void write(Record record) {
+    @Override
+    public void write(final Record record) {
         List<?> fields = record.getDataFields();
         Iterator<?> i = fields.iterator();
         boolean doneWithRec = false;
 
         while (i.hasNext()) {
-            DataField df = (DataField) i.next();
+            final DataField df = (DataField) i.next();
 
             if (!df.getTag().matches(fieldsToSplit)) {
                 continue;
@@ -76,8 +76,8 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
 
         while (!doneWithRec) {
             try {
-                ByteArrayOutputStream data = new ByteArrayOutputStream();
-                ByteArrayOutputStream dir = new ByteArrayOutputStream();
+                final ByteArrayOutputStream data = new ByteArrayOutputStream();
+                final ByteArrayOutputStream dir = new ByteArrayOutputStream();
                 int previous = 0;
 
                 // control fields
@@ -85,12 +85,11 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                 i = fields.iterator();
 
                 while (i.hasNext()) {
-                    ControlField cf = (ControlField) i.next();
+                    final ControlField cf = (ControlField) i.next();
 
                     data.write(getDataElement(cf.getData()));
                     data.write(Constants.FT);
-                    dir.write(getEntry(cf.getTag(), data.size() - previous,
-                            previous));
+                    dir.write(getEntry(cf.getTag(), data.size() - previous, previous));
                     previous = data.size();
                 }
 
@@ -99,7 +98,7 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                 i = fields.iterator();
 
                 while (i.hasNext()) {
-                    DataField df = (DataField) i.next();
+                    final DataField df = (DataField) i.next();
                     if (df.getTag().matches(fieldsToSplit)) {
                         continue;
                     }
@@ -107,19 +106,18 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                     data.write(df.getIndicator1());
                     data.write(df.getIndicator2());
 
-                    List subfields = df.getSubfields();
-                    Iterator si = subfields.iterator();
+                    final List subfields = df.getSubfields();
+                    final Iterator si = subfields.iterator();
 
                     while (si.hasNext()) {
-                        Subfield sf = (Subfield) si.next();
+                        final Subfield sf = (Subfield) si.next();
                         data.write(Constants.US);
                         data.write(sf.getCode());
                         data.write(getDataElement(sf.getData()));
                     }
 
                     data.write(Constants.FT);
-                    dir.write(getEntry(df.getTag(), data.size() - previous,
-                            previous));
+                    dir.write(getEntry(df.getTag(), data.size() - previous, previous));
                     previous = data.size();
                 }
 
@@ -128,7 +126,7 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                 i = fields.iterator();
 
                 while (i.hasNext() && previous < recordThreshold) {
-                    DataField df = (DataField) i.next();
+                    final DataField df = (DataField) i.next();
 
                     if (!df.getTag().matches(fieldsToSplit)) {
                         continue;
@@ -141,17 +139,16 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                     df.setId(new Long(0));
                     data.write(df.getIndicator1());
                     data.write(df.getIndicator2());
-                    List subfields = df.getSubfields();
-                    Iterator si = subfields.iterator();
+                    final List subfields = df.getSubfields();
+                    final Iterator si = subfields.iterator();
                     while (si.hasNext()) {
-                        Subfield sf = (Subfield) si.next();
+                        final Subfield sf = (Subfield) si.next();
                         data.write(Constants.US);
                         data.write(sf.getCode());
                         data.write(getDataElement(sf.getData()));
                     }
                     data.write(Constants.FT);
-                    dir.write(getEntry(df.getTag(), data.size() - previous,
-                            previous));
+                    dir.write(getEntry(df.getTag(), data.size() - previous, previous));
                     previous = data.size();
                 }
                 if (!i.hasNext()) {
@@ -160,11 +157,11 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                 dir.write(Constants.FT);
 
                 // base address of data and logical record length
-                Leader ldr = record.getLeader();
+                final Leader ldr = record.getLeader();
 
-                int baseAddress = 24 + dir.size();
+                final int baseAddress = 24 + dir.size();
                 ldr.setBaseAddressOfData(baseAddress);
-                int recordLength = ldr.getBaseAddressOfData() + data.size() + 1;
+                final int recordLength = ldr.getBaseAddressOfData() + data.size() + 1;
                 ldr.setRecordLength(recordLength);
 
                 // write record to output stream
@@ -172,18 +169,17 @@ public class MarcSplitStreamWriter extends MarcStreamWriter {
                 data.close();
 
                 if (!allowOversizeEntry && (hasOversizeLength)) {
-                    throw new MarcException(
-                            "Record has field that is too long to be a valid MARC binary record. The maximum length for a field counting all of the sub-fields is 9999 bytes.");
+                    throw new MarcException("Record has field that is too long to be a valid MARC binary record. "
+                            + "The maximum length for a field counting all of the sub-fields is 9999 bytes.");
                 }
                 writeLeader(ldr);
                 out.write(dir.toByteArray());
                 out.write(data.toByteArray());
                 out.write(Constants.RT);
 
-            } catch (IOException e) {
-                throw new MarcException(
-                        "IO Error occured while writing record", e);
-            } catch (MarcException e) {
+            } catch (final IOException e) {
+                throw new MarcException("IO Error occured while writing record", e);
+            } catch (final MarcException e) {
                 throw e;
             }
         }

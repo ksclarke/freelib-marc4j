@@ -1,8 +1,12 @@
-# IDE config files... though these should probably be put in ~/.gitignore
-.idea
-.project
-.classpath
-.settings
-
-# Maven build artifacts, though also should be configured in ~/.gitignore
+# Maven build artifacts (should really be configured in ~/.gitignore)
 target
+
+# These files are dynamically created by the maven-dependency-plugin
+src/main/resources/site
+src/main/resources/checkstyle
+
+# These files are dynamically created by the maven-resources-plugin
+src/site/markdown/coders-welcome.md
+src/site/markdown/testers-welcome.md
+src/site/markdown/documenters-welcome.md
+src/site/markdown/translators-welcome.md

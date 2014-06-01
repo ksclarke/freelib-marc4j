@@ -1,3 +1,4 @@
+
 package org.marc4j.samples;
 
 import java.io.FileOutputStream;
@@ -26,31 +27,36 @@ import org.marc4j.marc.Record;
  */
 public class StylesheetChainExample {
 
+    /**
+     * The main class for StylesheetChainExample.
+     * 
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
 
-        if (tFactory.getFeature(SAXSource.FEATURE)
-                && tFactory.getFeature(SAXResult.FEATURE)) {
+        if (tFactory.getFeature(SAXSource.FEATURE) && tFactory.getFeature(SAXResult.FEATURE)) {
 
             // cast the transformer handler to a sax transformer handler
             SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
 
             // create a TransformerHandler for each stylesheet.
-            TransformerHandler tHandler1 = saxTFactory
-                    .newTransformerHandler(new StreamSource(
+            TransformerHandler tHandler1 =
+                    saxTFactory.newTransformerHandler(new StreamSource(
                             "http://www.loc.gov/standards/mods/v3/MARC21slim2MODS3.xsl"));
-            TransformerHandler tHandler2 = saxTFactory
-                    .newTransformerHandler(new StreamSource(
+            TransformerHandler tHandler2 =
+                    saxTFactory.newTransformerHandler(new StreamSource(
                             "http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl"));
-            TransformerHandler tHandler3 = saxTFactory
-                    .newTransformerHandler(new StreamSource(
+            TransformerHandler tHandler3 =
+                    saxTFactory.newTransformerHandler(new StreamSource(
                             "http://www.loc.gov/standards/marcxml/xslt/MARC21slim2HTML.xsl"));
 
             // chain the transformer handlers
             tHandler1.setResult(new SAXResult(tHandler2));
             tHandler2.setResult(new SAXResult(tHandler3));
-            
+
             OutputStream out = new FileOutputStream("c:/temp/output.html");
             tHandler3.setResult(new StreamResult(out));
 
@@ -58,18 +64,18 @@ public class StylesheetChainExample {
             Result result = new SAXResult(tHandler1);
 
             // create the input stream
-            InputStream input = ReadMarcExample.class
-                    .getResourceAsStream("resources/summerland.mrc");
+            InputStream input = ReadMarcExample.class.getResourceAsStream("resources/summerland.mrc");
 
             // parse the input
             MarcReader reader = new MarcStreamReader(input);
             MarcWriter writer = new MarcXmlWriter(result);
+
             while (reader.hasNext()) {
                 Record record = reader.next();
                 writer.write(record);
             }
+
             writer.close();
-            
             out.close();
         }
     }

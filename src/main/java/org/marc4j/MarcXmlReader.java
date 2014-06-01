@@ -38,7 +38,7 @@ import org.xml.sax.InputSource;
  * <p>
  * Basic usage:
  * </p>
- * 
+ *
  * <pre>
  * InputStream input = new FileInputStream(&quot;file.xml&quot;);
  * MarcReader reader = new MarcXmlReader(input);
@@ -48,98 +48,95 @@ import org.xml.sax.InputSource;
  * }
  * </pre>
  * <p>
- * Check the {@link org.marc4j.marc}&nbsp;package for examples about the use of
- * the {@link org.marc4j.marc.Record}&nbsp;object model.
+ * Check the {@link org.marc4j.marc}&nbsp;package for examples about the use of the {@link org.marc4j.marc.Record}
+ * &nbsp;object model.
  * </p>
  * <p>
- * You can also pre-process the source to create MARC XML from a different
- * format using an XSLT stylesheet. The following example creates an iterator
- * over a collection of MARC records in MARC XML format from a MODS source and
+ * You can also pre-process the source to create MARC XML from a different format using an XSLT stylesheet. The
+ * following example creates an iterator over a collection of MARC records in MARC XML format from a MODS source and
  * outputs MARC records in MARC21 format:
  * </p>
- * 
+ *
  * <pre>
  * InputStream in = new FileInputStream(&quot;modsfile.xml&quot;);
- * 
+ *
  * MarcStreamWriter writer = new MarcStreamWriter(System.out, Constants.MARC8);
- * MarcXmlReader reader = new MarcXmlReader(in, &quot;http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl&quot;);
+ * MarcXmlReader reader =
+ *   new MarcXmlReader(in, &quot;http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl&quot;);
  * while (reader.hasNext()) {
  *   Record record = reader.next();
  *   writer.write(record);
  * }
  * writer.close();
  * </pre>
- * 
+ *
  * @author Bas Peters
  */
 public class MarcXmlReader implements MarcReader {
 
-    private RecordStack queue;
+    private final RecordStack queue;
 
     /**
      * Constructs an instance with the specified input stream.
-     * 
+     *
      * @param input the input stream
      */
-    public MarcXmlReader(InputStream input) {
+    public MarcXmlReader(final InputStream input) {
         this(new InputSource(input));
     }
 
     /**
      * Constructs an instance with the specified input source.
-     * 
+     *
      * @param input the input source
      */
-    public MarcXmlReader(InputSource input) {
+    public MarcXmlReader(final InputSource input) {
         this.queue = new RecordStack();
-        MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
+        final MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
         producer.start();
     }
 
     /**
-     * Constructs an instance with the specified input stream and stylesheet
-     * location. The stylesheet is used to transform the source file and should
-     * produce valid MARC XML records. The result is then used to create
+     * Constructs an instance with the specified input stream and stylesheet location. The stylesheet is used to
+     * transform the source file and should produce valid MARC XML records. The result is then used to create
      * <code>Record</code> objects.
-     * 
+     *
      * @param input the input stream
      * @param stylesheetUrl the stylesheet location
      */
-    public MarcXmlReader(InputStream input, String stylesheetUrl) {
+    public MarcXmlReader(final InputStream input, final String stylesheetUrl) {
         this(new InputSource(input), new StreamSource(stylesheetUrl));
     }
 
     /**
-     * Constructs an instance with the specified input stream and stylesheet
-     * source. The stylesheet is used to transform the source file and should
-     * produce valid MARCXML records. The result is then used to create
-     * <code>Record</code> objects.
-     * 
+     * Constructs an instance with the specified input stream and stylesheet source. The stylesheet is used to transform
+     * the source file and should produce valid MARCXML records. The result is then used to create <code>Record</code>
+     * objects.
+     *
      * @param input the input stream
      * @param stylesheet the stylesheet source
      */
-    public MarcXmlReader(InputStream input, Source stylesheet) {
+    public MarcXmlReader(final InputStream input, final Source stylesheet) {
         this(new InputSource(input), stylesheet);
     }
 
     /**
-     * Constructs an instance with the specified input source and stylesheet
-     * source. The stylesheet is used to transform the source file and should
-     * produce valid MARCXML records. The result is then used to create
-     * <code>Record</code> objects.
-     * 
+     * Constructs an instance with the specified input source and stylesheet source. The stylesheet is used to transform
+     * the source file and should produce valid MARCXML records. The result is then used to create <code>Record</code>
+     * objects.
+     *
      * @param input the input source
      * @param stylesheet the stylesheet source
      */
-    public MarcXmlReader(InputSource input, Source stylesheet) {
+    public MarcXmlReader(final InputSource input, final Source stylesheet) {
         this.queue = new RecordStack();
-        MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
-        TransformerFactory factory = TransformerFactory.newInstance();
-        SAXTransformerFactory stf = (SAXTransformerFactory) factory;
+        final MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
+        final TransformerFactory factory = TransformerFactory.newInstance();
+        final SAXTransformerFactory stf = (SAXTransformerFactory) factory;
         TransformerHandler th = null;
         try {
             th = stf.newTransformerHandler(stylesheet);
-        } catch (TransformerConfigurationException e) {
+        } catch (final TransformerConfigurationException e) {
             throw new MarcException("Error creating TransformerHandler", e);
         }
         producer.setTransformerHandler(th);
@@ -147,45 +144,39 @@ public class MarcXmlReader implements MarcReader {
     }
 
     /**
-     * Constructs an instance with the specified input stream and transformer
-     * handler. The {@link javax.xml.transform.sax.TransformerHandler}&nbsp;is
-     * used to transform the source file and should produce valid MARCXML
-     * records. The result is then used to create <code>Record</code> objects. A
-     * <code>TransformerHandler</code> can be obtained from a
-     * <code>SAXTransformerFactory</code> with either a
-     * {@link javax.xml.transform.Source}&nbsp;or
-     * {@link javax.xml.transform.Templates}&nbsp;object.
-     * 
+     * Constructs an instance with the specified input stream and transformer handler. The
+     * {@link javax.xml.transform.sax.TransformerHandler}&nbsp;is used to transform the source file and should produce
+     * valid MARCXML records. The result is then used to create <code>Record</code> objects. A
+     * <code>TransformerHandler</code> can be obtained from a <code>SAXTransformerFactory</code> with either a
+     * {@link javax.xml.transform.Source}&nbsp;or {@link javax.xml.transform.Templates}&nbsp;object.
+     *
      * @param input the input stream
      * @param th the transformation content handler
      */
-    public MarcXmlReader(InputStream input, TransformerHandler th) {
+    public MarcXmlReader(final InputStream input, final TransformerHandler th) {
         this(new InputSource(input), th);
     }
 
     /**
-     * Constructs an instance with the specified input source and transformer
-     * handler. The {@link javax.xml.transform.sax.TransformerHandler}&nbsp;is
-     * used to transform the source file and should produce valid MARCXML
-     * records. The result is then used to create <code>Record</code> objects. A
-     * <code>TransformerHandler</code> can be obtained from a
-     * <code>SAXTransformerFactory</code> with either a
-     * {@link javax.xml.transform.Source}&nbsp;or
-     * {@link javax.xml.transform.Templates}&nbsp;object.
-     * 
+     * Constructs an instance with the specified input source and transformer handler. The
+     * {@link javax.xml.transform.sax.TransformerHandler}&nbsp;is used to transform the source file and should produce
+     * valid MARCXML records. The result is then used to create <code>Record</code> objects. A
+     * <code>TransformerHandler</code> can be obtained from a <code>SAXTransformerFactory</code> with either a
+     * {@link javax.xml.transform.Source}&nbsp;or {@link javax.xml.transform.Templates}&nbsp;object.
+     *
      * @param input the input source
      * @param th the transformation content handler
      */
-    public MarcXmlReader(InputSource input, TransformerHandler th) {
+    public MarcXmlReader(final InputSource input, final TransformerHandler th) {
         this.queue = new RecordStack();
-        MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
+        final MarcXmlParserThread producer = new MarcXmlParserThread(queue, input);
         producer.setTransformerHandler(th);
         producer.start();
     }
 
     /**
      * Returns true if the iteration has more records, false otherwise.
-     * 
+     *
      * @return boolean - true if the iteration has more records, false otherwise
      */
     public boolean hasNext() {
@@ -194,7 +185,7 @@ public class MarcXmlReader implements MarcReader {
 
     /**
      * Returns the next record in the iteration.
-     * 
+     *
      * @return Record - the record object
      */
     public Record next() {

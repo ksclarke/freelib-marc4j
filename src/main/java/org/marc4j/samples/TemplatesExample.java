@@ -1,3 +1,4 @@
+
 package org.marc4j.samples;
 
 import java.io.File;
@@ -25,22 +26,27 @@ import org.marc4j.marc.Record;
  */
 public class TemplatesExample {
 
+    /**
+     * The main class for TemplateExample.
+     * 
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
-        if (args.length != 1)
+        if (args.length != 1) {
             throw new Exception("Usage: TemplatesExample: <input-dir>");
+        }
 
         String inputDir = args[0];
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
 
-        if (tFactory.getFeature(SAXSource.FEATURE)
-                && tFactory.getFeature(SAXResult.FEATURE)) {
+        if (tFactory.getFeature(SAXSource.FEATURE) && tFactory.getFeature(SAXResult.FEATURE)) {
 
             // cast the transformer handler to a sax transformer handler
             SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
 
-            Source stylesheet = new StreamSource(
-                    "http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl");
+            Source stylesheet = new StreamSource("http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl");
 
             // create an in-memory stylesheet representation
             Templates templates = tFactory.newTemplates(stylesheet);
@@ -49,6 +55,7 @@ public class TemplatesExample {
 
             // create a filter to include only .xml files
             FilenameFilter filter = new FilenameFilter() {
+
                 public boolean accept(File dir, String name) {
                     return name.endsWith(".xml");
                 }
@@ -58,8 +65,7 @@ public class TemplatesExample {
             for (int i = 0; i < files.length; i++) {
                 InputStream input = new FileInputStream(files[i]);
 
-                TransformerHandler handler = saxTFactory
-                        .newTransformerHandler(templates);
+                TransformerHandler handler = saxTFactory.newTransformerHandler(templates);
 
                 // parse the input
                 MarcReader reader = new MarcXmlReader(input, handler);

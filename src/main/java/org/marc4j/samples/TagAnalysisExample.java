@@ -19,6 +19,12 @@ import org.marc4j.marc.VariableField;
  */
 public class TagAnalysisExample {
 
+    /**
+     * The main class for the TagAnalysisExample.
+     * 
+     * @param args
+     * @throws Exception
+     */
     public static void main(String args[]) throws Exception {
 
         InputStream input = AddLocationExample.class
