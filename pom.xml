@@ -26,6 +26,10 @@
     <system>GitHub</system>
     <url>https://github.com/ksclarke/freelib-marc4j/issues</url>
   </issueManagement>
+  <organization>
+    <name>FreeLibrary</name>
+    <url>http://freelibrary.info</url>
+  </organization>
   <developers>
     <developer>
       <email>rochkind@jhu.edu</email>
