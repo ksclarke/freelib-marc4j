@@ -20,13 +20,12 @@
 
 package org.marc4j.marc;
 
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
-
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -34,7 +33,7 @@ import java.util.Properties;
  * <p/>
  * You can use <code>MarcFactory</code> to create records from scratch:
  * <p/>
- * 
+ *
  * <pre>
  *
  *  MarcFactory factory = MarcFactory.newInstance();
@@ -44,7 +43,7 @@ import java.util.Properties;
  *  etc...
  *
  * </pre>
- * 
+ *
  * @author Bas Peters
  */
 public abstract class MarcFactory {
@@ -80,21 +79,21 @@ public abstract class MarcFactory {
 
             if (className != null) {
                 try {
-                    Class<?> t =
+                    final Class<?> t =
                             (loader != null) ? loader.loadClass(className)
                                     : Class.forName(className);
                     return (MarcFactory) t.newInstance();
-                } catch (ClassNotFoundException e) {
+                } catch (final ClassNotFoundException e) {
                     className = null;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                 }
             }
         } while (className == null && count < 3);
 
-        return new org.marc4j.marc.impl.MarcFactoryImpl();
+        return new info.freelibrary.marc4j.impl.MarcFactoryImpl();
     }
 
-    private static String getFactoryClassName(ClassLoader loader, int attempt) {
+    private static String getFactoryClassName(final ClassLoader loader, final int attempt) {
         final String propertyName = "org.marc4j.marc.MarcFactory";
 
         switch (attempt) {
@@ -105,32 +104,32 @@ public abstract class MarcFactory {
                     File file = new File(System.getProperty("java.home"));
                     file = new File(file, "lib");
                     file = new File(file, "marc4j.properties");
-                    InputStream in = new FileInputStream(file);
-                    Properties props = new Properties();
+                    final InputStream in = new FileInputStream(file);
+                    final Properties props = new Properties();
                     props.load(in);
                     in.close();
 
                     return props.getProperty(propertyName);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     return null;
                 }
             case 2:
                 try {
-                    String serviceKey = "/META-INF/services/" + propertyName;
-                    InputStream in =
+                    final String serviceKey = "/META-INF/services/" + propertyName;
+                    final InputStream in =
                             (loader != null) ? loader
                                     .getResourceAsStream(serviceKey)
                                     : MarcFactory.class
                                             .getResourceAsStream(serviceKey);
                     if (in != null) {
-                        BufferedReader r =
+                        final BufferedReader r =
                                 new BufferedReader(new InputStreamReader(in));
-                        String ret = r.readLine();
+                        final String ret = r.readLine();
                         r.close();
 
                         return ret;
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                 }
                 return null;
             default:
@@ -140,14 +139,14 @@ public abstract class MarcFactory {
 
     /**
      * Returns a new control field instance.
-     * 
+     *
      * @return ControlField
      */
     public abstract ControlField newControlField();
 
     /**
      * Creates a new control field with the given tag and returns the instance.
-     * 
+     *
      * @return ControlField
      */
     public abstract ControlField newControlField(String tag);
@@ -155,14 +154,14 @@ public abstract class MarcFactory {
     /**
      * Creates a new control field with the given tag and data and returns the
      * instance.
-     * 
+     *
      * @return ControlField
      */
     public abstract ControlField newControlField(String tag, String data);
 
     /**
      * Returns a new data field instance.
-     * 
+     *
      * @return DataField
      */
     public abstract DataField newDataField();
@@ -170,7 +169,7 @@ public abstract class MarcFactory {
     /**
      * Creates a new data field with the given tag and indicators and returns
      * the instance.
-     * 
+     *
      * @return DataField
      */
     public abstract DataField newDataField(String tag, char ind1, char ind2);
@@ -178,7 +177,7 @@ public abstract class MarcFactory {
     /**
      * Creates a new data field with the given tag and indicators and subfields
      * and returns the instance.
-     * 
+     *
      * @return DataField
      */
     public abstract DataField newDataField(String tag, char ind1, char ind2,
@@ -186,56 +185,56 @@ public abstract class MarcFactory {
 
     /**
      * Returns a new leader instance.
-     * 
+     *
      * @return Leader
      */
     public abstract Leader newLeader();
 
     /**
      * Creates a new leader with the given <code>String</code> object.
-     * 
+     *
      * @return Leader
      */
     public abstract Leader newLeader(String ldr);
 
     /**
      * Returns a new record instance.
-     * 
+     *
      * @return Record
      */
     public abstract Record newRecord();
 
     /**
      * Returns a new record instance.
-     * 
+     *
      * @return Record
      */
     public abstract Record newRecord(Leader leader);
 
     /**
      * Returns a new record instance.
-     * 
+     *
      * @return Record
      */
     public abstract Record newRecord(String leader);
 
     /**
      * Returns a new subfield instance.
-     * 
+     *
      * @return Leader
      */
     public abstract Subfield newSubfield();
 
     /**
      * Creates a new subfield with the given identifier.
-     * 
+     *
      * @return Subfield
      */
     public abstract Subfield newSubfield(char code);
 
     /**
      * Creates a new subfield with the given identifier and data.
-     * 
+     *
      * @return Subfield
      */
     public abstract Subfield newSubfield(char code, String data);
@@ -243,22 +242,22 @@ public abstract class MarcFactory {
     /**
      * Returns <code>true</code> if the {@link Record} is valid; else,
      * <code>false</code>.
-     * 
+     *
      * @param record
      * @return
      */
-    public boolean validateRecord(Record record) {
+    public boolean validateRecord(final Record record) {
         if (record.getLeader() == null) {
             return false;
         }
 
-        for (ControlField controlField : record.getControlFields()) {
+        for (final ControlField controlField : record.getControlFields()) {
             if (!validateControlField(controlField)) {
                 return false;
             }
         }
 
-        for (DataField dataField : record.getDataFields()) {
+        for (final DataField dataField : record.getDataFields()) {
             if (!validateDataField(dataField)) {
                 return false;
             }
@@ -270,33 +269,33 @@ public abstract class MarcFactory {
     /**
      * Returns <code>true</code> if supplied {@link VariableField} is valid;
      * else, <code>false</code>.
-     * 
+     *
      * @param field
      * @return
      */
-    public boolean validateVariableField(VariableField field) {
+    public boolean validateVariableField(final VariableField field) {
         return field.getTag() != null;
     }
 
     /**
      * Returns <code>true</code> if supplied {@link ControlField} is valid;
      * else, <code>false</code>.
-     * 
+     *
      * @param field
      * @return
      */
-    public boolean validateControlField(ControlField field) {
+    public boolean validateControlField(final ControlField field) {
         return validateVariableField(field) && field.getData() != null;
     }
 
     /**
      * Returns <code>true</code> if supplied {@link DataField} is valid; else,
      * <code>false</code>.
-     * 
+     *
      * @param field
      * @return
      */
-    public boolean validateDataField(DataField field) {
+    public boolean validateDataField(final DataField field) {
         if (!validateVariableField(field)) {
             return false;
         }
@@ -305,7 +304,7 @@ public abstract class MarcFactory {
             return false;
         }
 
-        for (Subfield subfield : field.getSubfields()) {
+        for (final Subfield subfield : field.getSubfields()) {
             if (!validateSubField(subfield)) {
                 return false;
             }
@@ -317,11 +316,11 @@ public abstract class MarcFactory {
     /**
      * Returns <code>true</code> if the supplied {@link Subfield} is value;
      * else, <code>false</code>.
-     * 
+     *
      * @param subfield
      * @return
      */
-    public boolean validateSubField(Subfield subfield) {
+    public boolean validateSubField(final Subfield subfield) {
         return subfield.getCode() != 0 && subfield.getData() != null;
     }
 

@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -32,25 +33,25 @@ import org.marc4j.marc.Subfield;
 
 /**
  * Read data fields.
- * 
+ *
  * @author Bas Peters
  */
 public class DataFieldExample {
 
     /**
      * The main class for DataFieldExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        InputStream input = DataFieldExample.class.getResourceAsStream("resources/summerland.mrc");
-        MarcReader reader = new MarcStreamReader(input);
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
 
-            // get the first field occurence for a given tag
+            // get the first field occurrence for a given tag
             DataField dataField = (DataField) record.getVariableField("245");
             System.out.println(dataField.toString() + '\n');
 
@@ -66,7 +67,7 @@ public class DataFieldExample {
             System.out.print('\n');
 
             // get all occurences for a given list of tags
-            String[] tags = { "010", "100", "245", "250", "260", "300" };
+            final String[] tags = { "010", "100", "245", "250", "260", "300" };
             dataFields = record.getVariableFields(tags);
             i = dataFields.iterator();
 
@@ -80,19 +81,19 @@ public class DataFieldExample {
             // read indicators and subfields
             dataField = (DataField) record.getVariableField("245");
 
-            String tag = dataField.getTag();
-            char ind1 = dataField.getIndicator1();
-            char ind2 = dataField.getIndicator2();
+            final String tag = dataField.getTag();
+            final char ind1 = dataField.getIndicator1();
+            final char ind2 = dataField.getIndicator2();
 
             System.out.println("Tag: " + tag + " Indicator 1: " + ind1 + " Indicator 2: " + ind2);
 
-            List subfields = dataField.getSubfields();
+            final List subfields = dataField.getSubfields();
             i = subfields.iterator();
 
             while (i.hasNext()) {
-                Subfield subfield = (Subfield) i.next();
-                char code = subfield.getCode();
-                String data = subfield.getData();
+                final Subfield subfield = (Subfield) i.next();
+                final char code = subfield.getCode();
+                final String data = subfield.getData();
 
                 System.out.println("Subfield code: " + code + " Data element: " + data);
             }
@@ -100,7 +101,7 @@ public class DataFieldExample {
             System.out.print('\n');
 
             // retrieve the first occurrence of subfield with code 'a'
-            Subfield subfield = dataField.getSubfield('a');
+            final Subfield subfield = dataField.getSubfield('a');
             System.out.println("Title proper: " + subfield.getData());
 
         }

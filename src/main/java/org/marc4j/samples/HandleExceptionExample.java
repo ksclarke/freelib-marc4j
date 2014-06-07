@@ -17,8 +17,10 @@
  * License along with MARC4J; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcException;
@@ -28,34 +30,32 @@ import org.marc4j.marc.Record;
 
 /**
  * Reads MARC input.
- * 
+ *
  * @author Bas Peters
  */
 public class HandleExceptionExample {
 
     /**
      * The main class for the HandleExceptionExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-
-        InputStream input = HandleExceptionExample.class
-                .getResourceAsStream("resources/error.mrc");
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/error.mrc");
 
         try {
-            MarcReader reader = new MarcStreamReader(input);
+            final MarcReader reader = new MarcStreamReader(input);
+
             while (reader.hasNext()) {
-                Record record = reader.next();
+                final Record record = reader.next();
                 System.out.println(record.toString());
             }
-        } catch (MarcException e) {
-            System.out.println("something went wrong man!");
 
+            throw new RuntimeException("Failed to catch error");
+        } catch (final MarcException e) {
+            // an error is expected
         }
-
-        System.out.println("damn!");
     }
 
 }

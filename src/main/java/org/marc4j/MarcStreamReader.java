@@ -30,7 +30,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import org.marc4j.converter.CharConverter;
-import info.freelibrary.marc.converter.impl.AnselToUnicode;
+
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
 
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;

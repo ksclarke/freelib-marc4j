@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -28,21 +29,21 @@ import org.marc4j.marc.Record;
 
 /**
  * Reads a single record.
- * 
+ *
  * @author Bas Peters
  */
 public class ReadSingleRecordExample {
 
     /**
      * The main class for ReadSingleRecordExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        InputStream input = ReadSingleRecordExample.class.getResourceAsStream("resources/summerland.mrc");
-        MarcReader reader = new MarcStreamReader(input);
-        Record record = reader.next();
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
+        final Record record = reader.next();
 
         System.out.println(record.toString());
     }

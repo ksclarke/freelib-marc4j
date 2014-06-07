@@ -37,7 +37,7 @@ public class PermissiveReaderExample {
      * Shown below is the output generated when the program is run on the file error.mrc found in the resources
      * sub-directory in the samples directory:
      * </p>
-     * 
+     *
      * <pre>
      *  Fatal Exception: error parsing data field for tag: 250 with data:    a1st ed.
      *  Typo         : Record terminator character not found at end of record length --- [ n/a : n/a ]
@@ -62,53 +62,52 @@ public class PermissiveReaderExample {
      * </pre>
      */
     public static void main(String[] args) {
-        PrintStream out = System.out;
+        final PrintStream out = System.out;
 
         boolean verbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
         boolean veryverbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
 
-        if (args[0].equals("-v")) {
+        if (args != null && args.length > 0 && args[0].equals("-v")) {
             verbose = true;
-            String newArgs[] = new String[args.length - 1];
+            final String newArgs[] = new String[args.length - 1];
             System.arraycopy(args, 1, newArgs, 0, args.length - 1);
             args = newArgs;
         }
 
-        if (args[0].equals("-vv")) {
+        if (args != null && args.length > 0 && args[0].equals("-vv")) {
             verbose = true;
             veryverbose = true;
-            String newArgs[] = new String[args.length - 1];
+            final String newArgs[] = new String[args.length - 1];
             System.arraycopy(args, 1, newArgs, 0, args.length - 1);
             args = newArgs;
         }
 
-        String fileStr = args[0];
-        File file = new File(fileStr);
+        final File file = new File("src/test/resources/summerland.mrc");
         MarcReader readerNormal = null;
         MarcReader readerPermissive = null;
-        boolean to_utf_8 = true;
+        final boolean to_utf_8 = true;
 
         InputStream inNorm;
         InputStream inPerm;
         OutputStream patchedRecStream = null;
         MarcWriter patchedRecs = null;
-        ErrorHandler errorHandler = new ErrorHandler();
+        final ErrorHandler errorHandler = new ErrorHandler();
 
         try {
             inNorm = new FileInputStream(file);
             readerNormal = new MarcPermissiveStreamReader(inNorm, false, to_utf_8);
             inPerm = new FileInputStream(file);
             readerPermissive = new MarcPermissiveStreamReader(inPerm, errorHandler, to_utf_8, "BESTGUESS");
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        if (args.length > 1) {
+        if (args != null && args.length > 1) {
             try {
                 patchedRecStream = new FileOutputStream(new File(args[1]));
                 patchedRecs = new MarcStreamWriter(patchedRecStream);
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -118,11 +117,11 @@ public class PermissiveReaderExample {
             Record recNorm;
             Record recPerm;
             recPerm = readerPermissive.next();
-            String strPerm = recPerm.toString();
+            final String strPerm = recPerm.toString();
 
             try {
                 recNorm = readerNormal.next();
-            } catch (MarcException me) {
+            } catch (final MarcException me) {
                 if (verbose) {
                     out.println("Fatal Exception: " + me.getMessage());
                     dumpErrors(out, errorHandler);
@@ -133,7 +132,7 @@ public class PermissiveReaderExample {
                 continue;
             }
 
-            String strNorm = recNorm.toString();
+            final String strNorm = recNorm.toString();
 
             if (!strNorm.equals(strPerm)) {
                 if (verbose) {
@@ -165,15 +164,15 @@ public class PermissiveReaderExample {
 
     /**
      * Normalizes strings to be able to show diffs.
-     * 
+     *
      * @param out The output diff stream
      * @param strNorm The normalized string
      * @param strPerm The perm string
      */
-    public static void showDiffs(PrintStream out, String strNorm, String strPerm) {
+    public static void showDiffs(final PrintStream out, final String strNorm, final String strPerm) {
         if (strNorm != null) {
-            String normLines[] = strNorm.split("\n");
-            String permLines[] = strPerm.split("\n");
+            final String normLines[] = strNorm.split("\n");
+            final String permLines[] = strPerm.split("\n");
 
             if (normLines.length == permLines.length) {
                 for (int i = 0; i < normLines.length; i++) {
@@ -186,7 +185,7 @@ public class PermissiveReaderExample {
                 }
             }
         } else {
-            String permLines[] = strPerm.split("\n");
+            final String permLines[] = strPerm.split("\n");
 
             for (int i = 0; i < permLines.length; i++) {
                 out.println("   " + permLines[i]);
@@ -196,19 +195,19 @@ public class PermissiveReaderExample {
 
     /**
      * Dumps errors from the supplied error handler to the supplied print stream.
-     * 
+     *
      * @param out The stream to which to write errors
      * @param errorHandler The error handler with the errors to be written to the out stream
      */
     @SuppressWarnings("unchecked")
-    public static void dumpErrors(PrintStream out, ErrorHandler errorHandler) {
-        List<Object> errors = errorHandler.getErrors();
+    public static void dumpErrors(final PrintStream out, final ErrorHandler errorHandler) {
+        final List<Object> errors = errorHandler.getErrors();
 
         if (errors != null) {
-            Iterator<Object> iter = errors.iterator();
+            final Iterator<Object> iter = errors.iterator();
 
             while (iter.hasNext()) {
-                Object error = iter.next();
+                final Object error = iter.next();
                 out.println(error.toString());
             }
         }

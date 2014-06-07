@@ -21,56 +21,50 @@ import org.marc4j.marc.Record;
 
 /**
  * Transformation with compiled stylesheet.
- * 
+ *
  * @author Bas Peters
  */
 public class TemplatesExample {
 
     /**
      * The main class for TemplateExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        if (args.length != 1) {
-            throw new Exception("Usage: TemplatesExample: <input-dir>");
-        }
-
-        String inputDir = args[0];
-
-        TransformerFactory tFactory = TransformerFactory.newInstance();
+    public static void main(final String args[]) throws Exception {
+        final String inputDir = new File("src/test/resources/").getAbsolutePath();
+        final TransformerFactory tFactory = TransformerFactory.newInstance();
 
         if (tFactory.getFeature(SAXSource.FEATURE) && tFactory.getFeature(SAXResult.FEATURE)) {
 
             // cast the transformer handler to a sax transformer handler
-            SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
-
-            Source stylesheet = new StreamSource("http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl");
+            final SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
+            final Source stylesheet = new StreamSource("http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl");
 
             // create an in-memory stylesheet representation
-            Templates templates = tFactory.newTemplates(stylesheet);
+            final Templates templates = tFactory.newTemplates(stylesheet);
 
-            File dir = new File(inputDir);
+            final File dir = new File(inputDir);
 
             // create a filter to include only .xml files
-            FilenameFilter filter = new FilenameFilter() {
+            final FilenameFilter filter = new FilenameFilter() {
 
-                public boolean accept(File dir, String name) {
+                public boolean accept(final File dir, final String name) {
                     return name.endsWith(".xml");
                 }
             };
-            File[] files = dir.listFiles(filter);
+            final File[] files = dir.listFiles(filter);
 
             for (int i = 0; i < files.length; i++) {
-                InputStream input = new FileInputStream(files[i]);
+                final InputStream input = new FileInputStream(files[i]);
 
-                TransformerHandler handler = saxTFactory.newTransformerHandler(templates);
+                final TransformerHandler handler = saxTFactory.newTransformerHandler(templates);
 
                 // parse the input
-                MarcReader reader = new MarcXmlReader(input, handler);
+                final MarcReader reader = new MarcXmlReader(input, handler);
                 while (reader.hasNext()) {
-                    Record record = reader.next();
+                    final Record record = reader.next();
                     System.out.println(record.toString());
                 }
             }

@@ -20,6 +20,9 @@
 
 package org.marc4j;
 
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
+import info.freelibrary.marc4j.converter.impl.Iso5426ToUnicode;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -34,8 +37,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.marc4j.converter.CharConverter;
-import info.freelibrary.marc.converter.impl.AnselToUnicode;
-import info.freelibrary.marc.converter.impl.Iso5426ToUnicode;
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
@@ -56,7 +57,7 @@ import org.marc4j.util.Normalizer;
  * UTF-8 or MARC8 encoded and you are seeing gibberish in the output, or if the reader is throwing an exception in
  * trying to read a record, then this reader may be able to produce a usable record from the bad data you have. The
  * ability to directly translate the record to UTF-8 as it is being read in is useful in cases where the UTF-8 version
- * of the record will be used directly by the program that is reading the MARC data, for instance if the MARC records
+ * of the record will be used directly by the program that is reading the MARC data, for instance if the marc records
  * are to be indexed into a SOLR search engine. Previously the MARC record could only be translated to UTF-8 as it was
  * being written out via a MarcStreamWriter or a MarcXmlWriter.
  * <p>
@@ -108,7 +109,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
 
     private int marc_file_lookahead_buffer = 200000;
 
-    private CharConverter converterAnsel = null;
+    private AnselToUnicode converterAnsel = null;
 
     private CharConverter converterUnimarc = null;
 
@@ -124,7 +125,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
 
     static String validSubfieldCodes = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-    static String ucsProperty = "org.marc4j.MarcPermissiveStreamReader.upperCaseSubfields";
+    static String upperCaseSubfieldsProperty = "org.marc4j.MarcPermissiveStreamReader.upperCaseSubfields";
 
     /**
      * Constructs an instance with the specified input stream with possible additional functionality being enabled by
@@ -217,7 +218,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
     }
 
     /**
-     * Enable conversion of numeric code references into their corresponding code points when converting to unicode
+     * Enable convesion of numeric code references into their corresponding code points when converting to unicode
      *
      * @param translateLosslessUnicodeNumericCodeReferencesEnabled
      */
@@ -286,9 +287,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
             } else {
                 input.readFully(recordBuf);
             }
-
-            final String tmp = new String(recordBuf);
-
+            // final String tmp = new String(recordBuf);
             parseRecord(record, byteArray, recordBuf, recordLength);
 
             if (this.convertToUTF8) {
@@ -307,15 +306,16 @@ public class MarcPermissiveStreamReader implements MarcReader {
     private byte[] rereadPermissively(final DataInputStream input, byte[] recordBuf, int recordLength)
             throws IOException {
         int loc = arrayContainsAt(recordBuf, Constants.RT);
-
-        if (loc != -1) { // stated record length is too long
+        if (loc != -1) {
+            // stated record length is too long
             errors.addError("unknown", "n/a", "n/a", ErrorHandler.MAJOR_ERROR,
                     "Record terminator appears before stated record length, using shorter record");
             recordLength = loc + 24;
             input.reset();
             recordBuf = new byte[recordLength - 24];
             input.readFully(recordBuf);
-        } else { // stated record length is too short read ahead
+        } else {
+            // stated record length is too short read ahead
             loc = recordLength - 24;
             boolean done = false;
             while (!done) {
@@ -361,10 +361,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
         ldr = factory.newLeader();
         ldr.setRecordLength(recordLength);
         int directoryLength = 0;
-        // These variables are used when the permissive reader is trying to make
-        // its best guess
-        // as to what character encoding is actually used in the record being
-        // processed.
+        // These variables are used when the permissive reader is trying to make its best guess
+        // as to what character encoding is actually used in the record being processed.
         conversionCheck1 = "";
         conversionCheck2 = "";
         conversionCheck3 = "";
@@ -389,8 +387,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
                         offset++;
                     }
                     if (offset % 12 == 1) {
-                        // move one byte from body to leader, make new leader,
-                        // and try again
+                        // move one byte from body to leader, make new leader, and try again
                         errors.addError("unknown", "n/a", "n/a", ErrorHandler.MAJOR_ERROR,
                                 "Leader appears to be too short, moving one byte from record body to leader, "
                                         + "and trying again");
@@ -404,9 +401,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                         ldr.setImplDefined2(("" + (char) byteArray[18] + (char) byteArray[19] + (char) byteArray[20])
                                 .toCharArray());
                         ldr.setEntryMap("4500".toCharArray());
-                        if (byteArray[10] == (byte) ' ' || byteArray[10] == (byte) 'a') {
-                            // if its ' ' or
-                            // 'a'
+                        if (byteArray[10] == (byte) ' ' || byteArray[10] == (byte) 'a') // if its ' ' or 'a'
+                        {
                             ldr.setCharCodingScheme((char) byteArray[10]);
                         }
                     } else if (offset % 12 == 11) {
@@ -428,8 +424,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                         {
                             ldr.setCharCodingScheme((char) byteArray[10]);
                         }
-                        if (byteArray[10] == (byte) ' ' || byteArray[10] == (byte) 'a') {
-                            // if its ' ' or 'a'
+                        if (byteArray[10] == (byte) ' ' || byteArray[10] == (byte) 'a') // if its ' ' or 'a'
+                        {
                             ldr.setCharCodingScheme((char) byteArray[10]);
                         }
                     } else {
@@ -488,22 +484,21 @@ public class MarcPermissiveStreamReader implements MarcReader {
         if (encoding.equalsIgnoreCase("BESTGUESS")) {
             try {
                 final String marc8EscSeqCheck = new String(recordBuf, "ISO-8859-1");
-                // If record has MARC8 character set selection strings, it must
-                // be MARC8 encoded
+                // If record has MARC8 character set selection strings, it must be MARC8 encoded
                 if (marc8EscSeqCheck.split("\\e[-(,)$bsp]", 2).length > 1) {
                     encoding = "MARC8";
                 } else {
                     boolean hasHighBitChars = false;
                     for (int i = 0; i < recordBuf.length; i++) {
-                        if (recordBuf[i] < 0) { // the high bit is set
+                        if (recordBuf[i] < 0) {
+                            // the high bit is set
                             hasHighBitChars = true;
                             break;
                         }
                     }
                     if (!hasHighBitChars) {
-                        encoding = "ISO8859_1"; // You can choose any encoding
-                                                // you want here, the results
-                                                // will be the same.
+                        encoding = "ISO8859_1"; // You can choose any encoding you want here, the results will be the
+                                                // same.
                     } else {
                         utfCheck = new String(recordBuf, "UTF-8");
                         final byte byteCheck[] = utfCheck.getBytes("UTF-8");
@@ -552,8 +547,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                 if (utfCheck.contains("a$1!")) {
                     encoding = "MARC8-Broken";
                     errors.addError("unknown", "n/a", "n/a", ErrorHandler.MAJOR_ERROR,
-                            "Record claims to be UTF-8, but its not. It seems to be MARC8-encoded but with missing "
-                                    + "escape codes.");
+                            "Record claims to be UTF-8, but its not. It seems to be MARC8-encoded but with "
+                                    + "missing escape codes.");
                 }
             } catch (final UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
@@ -565,8 +560,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                 final byte byteCheck[] = utfCheck.getBytes("UTF-8");
                 if (recordBuf.length == byteCheck.length) {
                     for (int i = 0; i < recordBuf.length; i++) {
-                        // need to check for byte < 0 to see if the high bit is
-                        // set, because Java doesn't have unsigned types.
+                        // need to check for byte < 0 to see if the high bit is set, because Java doesn't have unsigned
+                        // types.
                         if (recordBuf[i] < 0x00 || byteCheck[i] != recordBuf[i]) {
                             errors.addError("unknown", "n/a", "n/a", ErrorHandler.MINOR_ERROR,
                                     "Record claims not to be UTF-8, but it seems to be.");
@@ -586,9 +581,10 @@ public class MarcPermissiveStreamReader implements MarcReader {
         boolean discardOneSomewhereInDirectory = false;
 
         if ((directoryLength % 12) != 0) {
-            // which equals 99999 - (24 + 1) its a BIG record (its directory is
-            // over 100000 bytes)
-            if (permissive && directoryLength == 99974 && recordLength > 200000) {
+            if (permissive && directoryLength == 99974 && recordLength > 200000) // which equals 99999 - (24 + 1) its a
+                                                                                 // BIG record (its directory is over
+                                                                                 // 100000 bytes)
+            {
                 directoryLength = 0;
                 int tmpLength = 0;
                 for (tmpLength = 0; tmpLength < recordLength; tmpLength += 12) {
@@ -661,16 +657,16 @@ public class MarcPermissiveStreamReader implements MarcReader {
                     final byte lenCheck[] = new byte[10];
                     inputrec.mark(20);
                     inputrec.readFully(lenCheck);
-
-                    if (byteCompare(lenCheck, 4, 5, totalOffset)) {
+                    if (byteCompare(lenCheck, 4, 5, totalOffset)) // proceed normally
+                    {
                         proceedNormally = true;
-                    } else if (byteCompare(lenCheck, 5, 5, totalOffset)) {
-                        // field length is 5 bytes! Bad MARC record, proceed
-                        // normally
+                    } else if (byteCompare(lenCheck, 5, 5, totalOffset)) // field length is 5 bytes! Bad Marc record,
+                                                                         // proceed normally
+                    {
                         discardOneSomewhereInDirectory = false;
                         errors.addError("unknown", "n/a", "n/a", ErrorHandler.FATAL,
-                                "Field is longer than 9999 bytes.  Writing this record out will result in a "
-                                        + "bad record.");
+                                "Field is longer than 9999 bytes.  Writing this record out will result in a bad "
+                                        + "record.");
                         proceedNormally = false;
                     } else {
                         errors.addError("unknown", "n/a", "n/a", ErrorHandler.FATAL,
@@ -686,7 +682,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                     lengths[i] = Integer.parseInt(tmpStr);
 
                     inputrec.readFully(start);
-                } else { // length is 5 bytes long
+                } else {
+                    // length is 5 bytes long
                     inputrec.readFully(start);
                     tmpStr = new String(start);
                     lengths[i] = Integer.parseInt(tmpStr);
@@ -696,8 +693,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
                 totalOffset += lengths[i];
             }
 
-            // If we still haven't found the extra byte, throw out the last byte
-            // and try to continue;
+            // If we still haven't found the extra byte, throw out the last byte and try to continue;
             if (discardOneSomewhereInDirectory) {
                 inputrec.read();
             }
@@ -736,9 +732,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
 
                     }
                 }
-
                 totalLength += lengths[i];
-
                 if (Constants.CF_TAG_PATTERN.matcher(tags[i]).find()) {
                     byteArray = new byte[lengths[i] - 1];
                     inputrec.readFully(byteArray);
@@ -766,10 +760,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                 }
             }
 
-            // We've determined that although the record says it is UTF-8, it is
-            // not.
-            // Here we make an attempt to determine the actual encoding of the
-            // data in the record.
+            // We've determined that although the record says it is UTF-8, it is not.
+            // Here we make an attempt to determine the actual encoding of the data in the record.
             if (permissive && conversionCheck1.length() > 1 && conversionCheck2.length() > 1 &&
                     conversionCheck3.length() > 1) {
                 guessAndSelectCorrectNonUTF8Encoding();
@@ -970,14 +962,14 @@ public class MarcPermissiveStreamReader implements MarcReader {
                                         + "subfield tag.");
                     } else if (permissive && validSubfieldCodes.indexOf(code) == -1) {
                         if (code >= 'A' && code <= 'Z') {
-                            if (Boolean.parseBoolean(System.getProperty(ucsProperty, "false")) == false) {
+                            final String ucSubfields = System.getProperty(upperCaseSubfieldsProperty, "false");
+                            if (Boolean.parseBoolean(ucSubfields) == false) {
                                 code = Character.toLowerCase(code);
                                 errors.addError(ErrorHandler.MINOR_ERROR,
                                         "Subfield tag is an invalid uppercase character, changing it to lower case.");
                             } else {
-                                // the System Property
-                                // org.marc4j.MarcPermissiveStreamReader.upperCaseSubfields
-                                // is defined to allow upperCaseSubfields
+                                // the System Property org.marc4j.MarcPermissiveStreamReader.upperCaseSubfields is
+                                // defined to allow upperCaseSubfields
                                 // therefore do nothing and be happy
                             }
                         } else if (code > 0x7f) {
@@ -1021,12 +1013,19 @@ public class MarcPermissiveStreamReader implements MarcReader {
         boolean inMultiByte = false;
         boolean justCleaned = false;
         int mbOffset = 0;
+        boolean inCyrillic = false;
+        int flen = 0;
 
         for (int i = 0; i < field.length - 1; i++) {
             if (field[i] == 0x1B) {
                 hasEsc = true;
                 if ("(,)-'".indexOf((char) field[i + 1]) != -1) {
                     inMultiByte = false;
+                    if (i + 2 < field.length && (char) field[i + 2] == 'N') {
+                        inCyrillic = true;
+                    } else {
+                        inCyrillic = false;
+                    }
                 } else if (i + 2 < field.length && field[i + 1] == '$' && field[i + 2] == '1') {
                     inMultiByte = true;
                     mbOffset = 3;
@@ -1039,7 +1038,6 @@ public class MarcPermissiveStreamReader implements MarcReader {
             } else if (inMultiByte && field[i] != 0x20) {
                 mbOffset = (mbOffset == 0) ? 2 : mbOffset - 1;
             }
-
             if (inMultiByte && mbOffset == 0 && i + 2 < field.length) {
                 char c;
                 final byte f1 = field[i];
@@ -1068,12 +1066,8 @@ public class MarcPermissiveStreamReader implements MarcReader {
                     }
                 }
             }
-
             justCleaned = false;
-
             if (field[i] == Constants.US) {
-                final byte b = field[i + 1];
-
                 if (inMultiByte && mbOffset != 0) {
                     field[i] = 0x7C;
                     errors.addError(ErrorHandler.MAJOR_ERROR,
@@ -1093,7 +1087,17 @@ public class MarcPermissiveStreamReader implements MarcReader {
                         }
                     }
                     justCleaned = true;
-                } else if (hasEsc && !((b >= 'a' && b <= 'z') || (b >= '0' && b <= '9'))) {
+                } else if (hasEsc && inCyrillic) {
+                    final String prev = new String(field, i - (flen - 1), flen - 1);
+
+                    if (!(field[i + 1] >= 'a' && field[i + 1] <= 'z') || prev.equals("\u001b(N")) {
+                        errors.addError(ErrorHandler.MINOR_ERROR,
+                                "Subfield separator found in Cyrillic string, changing separator to a vertical bar, "
+                                        + "and continuing");
+                        field[i] = 0x7C;
+                        justCleaned = true;
+                    }
+                } else if (hasEsc && !checkSubfieldByte(field[i + 1])) {
                     errors.addError(ErrorHandler.MAJOR_ERROR,
                             "Subfield separator followed by invalid subfield tag, changing separator to a vertical "
                                     + "bar, and continuing");
@@ -1122,7 +1126,16 @@ public class MarcPermissiveStreamReader implements MarcReader {
                     justCleaned = true;
                 }
             }
+            if (field[i] == Constants.US) {
+                flen = 0;
+            } else {
+                flen++;
+            }
         }
+    }
+
+    private boolean checkSubfieldByte(final byte aByte) {
+        return (aByte >= 'a' && aByte <= 'z') || (aByte >= '0' && aByte <= '9');
     }
 
     private int getFieldLength(final DataInputStream bais) throws IOException {
@@ -1188,13 +1201,10 @@ public class MarcPermissiveStreamReader implements MarcReader {
     }
 
     private void parseLeader(final Leader ldr, final byte[] leaderData) throws IOException {
-        // System.err.println("leader is: ("+new String(leaderData,
-        // "ISO-8859-1")+")");
         final InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(leaderData), "ISO-8859-1");
         char[] tmp = new char[5];
         isr.read(tmp);
-        // Skip over bytes for record length, If we get here, its already been
-        // computed.
+        // Skip over bytes for record length, If we get here, its already been computed.
         ldr.setRecordStatus((char) isr.read());
         ldr.setTypeOfRecord((char) isr.read());
         tmp = new char[2];
@@ -1367,7 +1377,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
             converterAnsel = new AnselToUnicode(errors);
         }
         if (isTranslateLosslessUnicodeNumericCodeReferencesEnabled()) {
-            final AnselToUnicode anselConverter = (AnselToUnicode) converterAnsel;
+            final AnselToUnicode anselConverter = converterAnsel;
             anselConverter.setTranslateNCR(isTranslateLosslessUnicodeNumericCodeReferencesEnabled());
         }
         if (permissive && (byteArrayContains(bytes, badEsc) || byteArrayContains(bytes, overbar))) {
@@ -1394,7 +1404,28 @@ public class MarcPermissiveStreamReader implements MarcReader {
         } else {
             dataElement = converterAnsel.convert(bytes);
         }
-
+        if (isTranslateLosslessUnicodeNumericCodeReferencesEnabled()) {
+            // This code handles malformed Numeric Character references that either contain
+            // an extraneous %x or which are missing the final semicolon
+            if (permissive && dataElement.matches("[^&]*&#x[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][^;].*")) {
+                final Pattern pattern = Pattern.compile("&#x([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])(%x)?;?");
+                final Matcher matcher = pattern.matcher(dataElement);
+                final StringBuffer newElement = new StringBuffer();
+                int prevEnd = 0;
+                while (matcher.find()) {
+                    newElement.append(dataElement.substring(prevEnd, matcher.start()));
+                    newElement.append(getChar(matcher.group(1)));
+                    if (matcher.group(1).contains("%x") || !matcher.group(1).endsWith(";")) {
+                        errors.addError(ErrorHandler.MINOR_ERROR,
+                                "Subfield contains malformed Unicode Numeric Character Reference : " +
+                                        matcher.group(0));
+                    }
+                    prevEnd = matcher.end();
+                }
+                newElement.append(dataElement.substring(prevEnd));
+                dataElement = newElement.toString();
+            }
+        }
         return (dataElement);
     }
 
@@ -1405,20 +1436,7 @@ public class MarcPermissiveStreamReader implements MarcReader {
         String dataElement = converterUnimarc.convert(bytes);
         dataElement = dataElement.replaceAll("\u0088", "");
         dataElement = dataElement.replaceAll("\u0089", "");
-        // for ( int i = 0 ; i < bytes.length; i++)
-        // {
-        // if (bytes[i] == -120 || bytes[i] == -119)
-        // {
-        // char tmp = (char)bytes[i];
-        // char temp2 = dataElement.charAt(0);
-        // char temp3 = dataElement.charAt(4);
-        // int tmpi = (int)tmp;
-        // int tmp2 = (int)temp2;
-        // int tmp3 = (int)temp3;
-        // i = i;
-        //
-        // }
-        // }
+
         if (dataElement.matches("[^<]*<U[+][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]>.*")) {
             final Pattern pattern = Pattern.compile("<U[+]([0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f])>");
             final Matcher matcher = pattern.matcher(dataElement);

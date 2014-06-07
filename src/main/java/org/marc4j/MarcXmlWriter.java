@@ -20,31 +20,12 @@
 
 package org.marc4j;
 
-import java.io.Writer;
-
-import java.io.IOException;
-
-import java.io.UnsupportedEncodingException;
-
 import java.io.BufferedWriter;
-
-import java.io.OutputStreamWriter;
-
+import java.io.IOException;
 import java.io.OutputStream;
-
-import org.marc4j.marc.MarcFactory;
-import org.marc4j.marc.Subfield;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.Leader;
-import org.marc4j.marc.ControlField;
-import org.marc4j.marc.Record;
-
-import org.marc4j.converter.CharConverter;
-
-import org.marc4j.util.Normalizer;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
@@ -54,6 +35,17 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.marc4j.converter.CharConverter;
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.Leader;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.Subfield;
+import org.marc4j.util.Normalizer;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Class for writing MARC record objects in MARCXML format. This class outputs a
@@ -71,7 +63,7 @@ import javax.xml.transform.stream.StreamSource;
  * records in UTF-8 encoding to the console:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -91,7 +83,7 @@ import javax.xml.transform.stream.StreamSource;
  * <code>CharConverter</code>:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  * writer.setConverter(new AnselToUnicode());
  * </pre>
@@ -104,7 +96,7 @@ import javax.xml.transform.stream.StreamSource;
  * normalization to true:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  * writer.setUnicodeNormalization(true);
  * </pre>
@@ -112,7 +104,7 @@ import javax.xml.transform.stream.StreamSource;
  * <p>
  * Please note that it's not garanteed to work if you try to convert normalized
  * Unicode back to MARC-8 encoding using
- * {@link info.freelibrary.marc.converter.impl.UnicodeToAnsel}.
+ * {@link info.freelibrary.marc4j.converter.impl.UnicodeToAnsel}.
  * </p>
  * <p>
  * This class provides very basic formatting options. For more advanced options
@@ -128,7 +120,7 @@ import javax.xml.transform.stream.StreamSource;
  * XML using MARC-8 to UCS/Unicode conversion and Unicode normalization:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -157,7 +149,7 @@ import javax.xml.transform.stream.StreamSource;
  * Library of Congress:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  *
  *      String stylesheetUrl = &quot;http://www.loc.gov/standards/mods/v3/MARC21slim2MODS3.xsl&quot;;
@@ -181,7 +173,7 @@ import javax.xml.transform.stream.StreamSource;
  * It is also possible to write the result into a DOM Node:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -198,7 +190,7 @@ import javax.xml.transform.stream.StreamSource;
  *      Document doc = (Document) result.getNode();
  *
  * </pre>
- * 
+ *
  * @author Bas Peters
  */
 public class MarcXmlWriter implements MarcWriter {
@@ -234,10 +226,10 @@ public class MarcXmlWriter implements MarcWriter {
      * Constructs an instance with the specified output stream.
      * <p/>
      * The default character encoding for UTF-8 is used.
-     * 
+     *
      * @throws MarcException
      */
-    public MarcXmlWriter(OutputStream out) {
+    public MarcXmlWriter(final OutputStream out) {
         this(out, false);
     }
 
@@ -245,30 +237,30 @@ public class MarcXmlWriter implements MarcWriter {
      * Constructs an instance with the specified output stream and indentation.
      * <p/>
      * The default character encoding for UTF-8 is used.
-     * 
+     *
      * @throws MarcException
      */
-    public MarcXmlWriter(OutputStream out, boolean indent) {
+    public MarcXmlWriter(final OutputStream out, final boolean indent) {
         this(out, "UTF8", indent);
     }
 
     /**
      * Constructs an instance with the specified output stream and character
      * encoding.
-     * 
+     *
      * @throws MarcException
      */
-    public MarcXmlWriter(OutputStream out, String encoding) {
+    public MarcXmlWriter(final OutputStream out, final String encoding) {
         this(out, encoding, false);
     }
 
     /**
      * Constructs an instance with the specified output stream, character
      * encoding and indentation.
-     * 
+     *
      * @throws MarcException
      */
-    public MarcXmlWriter(OutputStream out, String encoding, boolean indent) {
+    public MarcXmlWriter(final OutputStream out, final String encoding, final boolean indent) {
         this.encoding = encoding;
         if (out == null) {
             throw new NullPointerException("null OutputStream");
@@ -281,7 +273,7 @@ public class MarcXmlWriter implements MarcWriter {
             writer = new OutputStreamWriter(out, encoding);
             writer = new BufferedWriter(writer);
             setHandler(new StreamResult(writer), null);
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             throw new MarcException(e.getMessage(), e);
         }
         writeStartDocument();
@@ -289,11 +281,11 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Constructs an instance with the specified result.
-     * 
+     *
      * @param result
      * @throws SAXException
      */
-    public MarcXmlWriter(Result result) {
+    public MarcXmlWriter(final Result result) {
         if (result == null) {
             throw new NullPointerException("null Result");
         }
@@ -303,21 +295,21 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Constructs an instance with the specified stylesheet location and result.
-     * 
+     *
      * @param result
      * @throws SAXException
      */
-    public MarcXmlWriter(Result result, String stylesheetUrl) {
+    public MarcXmlWriter(final Result result, final String stylesheetUrl) {
         this(result, new StreamSource(stylesheetUrl));
     }
 
     /**
      * Constructs an instance with the specified stylesheet source and result.
-     * 
+     *
      * @param result
      * @throws SAXException
      */
-    public MarcXmlWriter(Result result, Source stylesheet) {
+    public MarcXmlWriter(final Result result, final Source stylesheet) {
         if (stylesheet == null) {
             throw new NullPointerException("null Source");
         }
@@ -334,16 +326,18 @@ public class MarcXmlWriter implements MarcWriter {
     public void close() {
         writeEndDocument();
         try {
-            writer.write("\n");
-            writer.close();
-        } catch (IOException e) {
+            if (writer != null) {
+                writer.write("\n");
+                writer.close();
+            }
+        } catch (final IOException e) {
             throw new MarcException(e.getMessage(), e);
         }
     }
 
     /**
      * Returns the character converter.
-     * 
+     *
      * @return CharConverter the character converter
      */
     public CharConverter getConverter() {
@@ -352,10 +346,10 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Sets the character converter.
-     * 
+     *
      * @param converter the character converter
      */
-    public void setConverter(CharConverter converter) {
+    public void setConverter(final CharConverter converter) {
         this.converter = converter;
     }
 
@@ -365,18 +359,18 @@ public class MarcXmlWriter implements MarcWriter {
      * <p/>
      * The implementation used is ICU4J 2.6. This version is based on Unicode
      * 4.0.
-     * 
+     *
      * @param normalize true if this writer performs Unicode normalization,
      *        false otherwise
      */
-    public void setUnicodeNormalization(boolean normalize) {
+    public void setUnicodeNormalization(final boolean normalize) {
         this.normalize = normalize;
     }
 
     /**
      * Returns true if this writer will perform Unicode normalization, false
      * otherwise.
-     * 
+     *
      * @return boolean - true if this writer performs Unicode normalization,
      *         false otherwise.
      */
@@ -384,16 +378,16 @@ public class MarcXmlWriter implements MarcWriter {
         return normalize;
     }
 
-    protected void setHandler(Result result, Source stylesheet)
+    protected void setHandler(final Result result, final Source stylesheet)
             throws MarcException {
         try {
-            TransformerFactory factory = TransformerFactory.newInstance();
+            final TransformerFactory factory = TransformerFactory.newInstance();
             if (!factory.getFeature(SAXTransformerFactory.FEATURE)) {
                 throw new UnsupportedOperationException(
                         "SAXTransformerFactory is not supported");
             }
 
-            SAXTransformerFactory saxFactory = (SAXTransformerFactory) factory;
+            final SAXTransformerFactory saxFactory = (SAXTransformerFactory) factory;
             if (stylesheet == null) {
                 handler = saxFactory.newTransformerHandler();
             } else {
@@ -403,23 +397,23 @@ public class MarcXmlWriter implements MarcWriter {
                     .setOutputProperty(OutputKeys.METHOD, "xml");
             handler.setResult(result);
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MarcException(e.getMessage(), e);
         }
     }
 
     /**
      * Writes the root start tag to the result.
-     * 
+     *
      * @throws SAXException
      */
     protected void writeStartDocument() {
         try {
-            AttributesImpl atts = new AttributesImpl();
+            final AttributesImpl atts = new AttributesImpl();
             handler.startDocument();
             handler.startElement(Constants.MARCXML_NS_URI, COLLECTION,
                     COLLECTION, atts);
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new MarcException(
                     "SAX error occured while writing start document", e);
         }
@@ -427,7 +421,7 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Writes the root end tag to the result.
-     * 
+     *
      * @throws SAXException
      */
     protected void writeEndDocument() {
@@ -439,7 +433,7 @@ public class MarcXmlWriter implements MarcWriter {
             handler.endElement(Constants.MARCXML_NS_URI, COLLECTION, COLLECTION);
             handler.endPrefixMapping("");
             handler.endDocument();
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new MarcException(
                     "SAX error occured while writing end document", e);
         }
@@ -447,21 +441,21 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Writes a Record object to the result.
-     * 
+     *
      * @param record - the <code>Record</code> object
      * @throws SAXException
      */
-    public void write(Record record) {
+    public void write(final Record record) {
         try {
             toXml(record);
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new MarcException("SAX error occured while writing record", e);
         }
     }
 
     /**
      * Returns true if indentation is active, false otherwise.
-     * 
+     *
      * @return boolean
      */
     public boolean hasIndent() {
@@ -470,14 +464,14 @@ public class MarcXmlWriter implements MarcWriter {
 
     /**
      * Activates or deactivates indentation. Default value is false.
-     * 
+     *
      * @param indent
      */
-    public void setIndent(boolean indent) {
+    public void setIndent(final boolean indent) {
         this.indent = indent;
     }
 
-    protected void toXml(Record record) throws SAXException {
+    protected void toXml(final Record record) throws SAXException {
         if (!MarcFactory.newInstance().validateRecord(record)) {
             throw new MarcException("Marc record didn't validate");
         }
@@ -494,12 +488,12 @@ public class MarcXmlWriter implements MarcWriter {
         }
 
         handler.startElement(Constants.MARCXML_NS_URI, LEADER, LEADER, atts);
-        Leader leader = record.getLeader();
+        final Leader leader = record.getLeader();
         temp = leader.toString().toCharArray();
         handler.characters(temp, 0, temp.length);
         handler.endElement(Constants.MARCXML_NS_URI, LEADER, LEADER);
 
-        for (ControlField field : record.getControlFields()) {
+        for (final ControlField field : record.getControlFields()) {
             atts = new AttributesImpl();
             atts.addAttribute("", "tag", "tag", "CDATA", field.getTag());
 
@@ -515,7 +509,7 @@ public class MarcXmlWriter implements MarcWriter {
                     CONTROL_FIELD);
         }
 
-        for (DataField field : record.getDataFields()) {
+        for (final DataField field : record.getDataFields()) {
             atts = new AttributesImpl();
             atts.addAttribute("", "tag", "tag", "CDATA", field.getTag());
             atts.addAttribute("", "ind1", "ind1", "CDATA", String.valueOf(field
@@ -529,7 +523,7 @@ public class MarcXmlWriter implements MarcWriter {
 
             handler.startElement(Constants.MARCXML_NS_URI, DATA_FIELD,
                     DATA_FIELD, atts);
-            for (Subfield subfield : field.getSubfields()) {
+            for (final Subfield subfield : field.getSubfields()) {
                 atts = new AttributesImpl();
                 atts.addAttribute("", "code", "code", "CDATA", String
                         .valueOf(subfield.getCode()));
@@ -559,7 +553,7 @@ public class MarcXmlWriter implements MarcWriter {
         handler.endElement(Constants.MARCXML_NS_URI, RECORD, RECORD);
     }
 
-    protected char[] getDataElement(String data) {
+    protected char[] getDataElement(final String data) {
         String dataElement = null;
         if (converter == null) {
             dataElement = data;

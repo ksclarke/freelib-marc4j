@@ -20,6 +20,8 @@
 
 package org.marc4j.samples;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -28,25 +30,26 @@ import org.marc4j.marc.Record;
 
 /**
  * Writes MARC from MODS to standard output.
- * 
+ *
  * @author Bas Peters
  */
 public class ModsToMarc21lExample {
 
     /**
      * The main class for the ModsToMarc21lExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
 
-        InputStream input = ModsToMarc21lExample.class.getResourceAsStream("resources/modsoutput.xml");
+        final InputStream input = new FileInputStream("src/test/resources/modsoutput.xml");
 
-        MarcReader reader = new MarcXmlReader(input, "http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl");
+        final MarcReader reader =
+                new MarcXmlReader(input, new File("src/test/resources/MODS2MARC21slim.xsl").getAbsolutePath());
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             System.out.println(record.toString());
 
         }

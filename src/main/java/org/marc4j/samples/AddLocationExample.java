@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -30,25 +31,25 @@ import org.marc4j.marc.Record;
 
 /**
  * Reads MARC input.
- * 
+ *
  * @author Bas Peters
  */
 public class AddLocationExample {
 
     /**
      * The main class for AddLocationExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        InputStream input = AddLocationExample.class.getResourceAsStream("resources/summerland.mrc");
-        MarcFactory factory = MarcFactory.newInstance();
-        MarcReader reader = new MarcStreamReader(input);
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
+        final MarcFactory factory = MarcFactory.newInstance();
+        final MarcReader reader = new MarcStreamReader(input);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
-            DataField field = factory.newDataField("856", '4', '2');
+            final Record record = reader.next();
+            final DataField field = factory.newDataField("856", '4', '2');
 
             field.addSubfield(factory.newSubfield('3', "Contributor biographical information"));
             field.addSubfield(factory.newSubfield('u', "http://en.wikipedia.org/wiki/Michael_Chabon"));

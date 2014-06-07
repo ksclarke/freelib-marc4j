@@ -23,8 +23,8 @@
       <smoothScroll>true</smoothScroll>
       <theme>site</theme>
       <brand>
-        <name>FreeLib-MARC4J </name>
-        <href>http://projects.freelibrary.info/freelib-marc4j/</href>
+        <name>FreeLibrary Projects</name>
+        <href>http://projects.freelibrary.info</href>
       </brand>
       <slogan>An easy to use API for working with MARC and MARCXML in
         Java</slogan>

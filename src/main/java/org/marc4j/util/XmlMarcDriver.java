@@ -34,9 +34,11 @@ import org.marc4j.Constants;
 import org.marc4j.MarcStreamWriter;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.converter.CharConverter;
-import info.freelibrary.marc.converter.impl.UnicodeToAnsel;
-import info.freelibrary.marc.converter.impl.UnicodeToIso5426;
-import info.freelibrary.marc.converter.impl.UnicodeToIso6937;
+
+import info.freelibrary.marc4j.converter.impl.UnicodeToAnsel;
+import info.freelibrary.marc4j.converter.impl.UnicodeToIso5426;
+import info.freelibrary.marc4j.converter.impl.UnicodeToIso6937;
+
 import org.marc4j.marc.Record;
 
 /**

@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -27,27 +28,25 @@ import org.marc4j.marc.Record;
 
 /**
  * Reads personal names from a Tab-separated file.
- * 
+ *
  * @author Bas Peters
  */
 public class PersonalNamesExample {
 
     /**
      * The main class for the PersonalNamesExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/names.txt");
+        final MarcReader reader = new PersonalNamesReader(input);
 
-        InputStream input = PersonalNamesExample.class.getResourceAsStream("resources/names.txt");
-
-        MarcReader reader = new PersonalNamesReader(input);
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             System.out.println(record.toString());
         }
-
     }
 
 }

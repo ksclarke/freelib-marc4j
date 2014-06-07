@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -30,26 +31,26 @@ import org.marc4j.marc.Record;
 
 /**
  * Demostrates the use of the find method.
- * 
+ *
  * @author Bas Peters
  */
 public class CheckAgencyExample {
 
     /**
      * The main class for CheckAgencyExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        InputStream input = ReadMarcExample.class.getResourceAsStream("resources/summerland.mrc");
-        MarcReader reader = new MarcStreamReader(input);
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
 
             // check if the cataloging agency is DLC
-            List result = record.find("040", "DLC");
+            final List result = record.find("040", "DLC");
 
             if (result.size() > 0) {
                 System.out.println("Agency for this record is DLC");
@@ -57,8 +58,8 @@ public class CheckAgencyExample {
 
             // there is no specific find for a specific subfield
             // so to check if it is the orignal cataloging agency
-            DataField field = (DataField) result.get(0);
-            String agency = field.getSubfield('a').getData();
+            final DataField field = (DataField) result.get(0);
+            final String agency = field.getSubfield('a').getData();
 
             if (agency.matches("DLC")) {
                 System.out.println("DLC is the original agency");

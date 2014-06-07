@@ -19,7 +19,9 @@ package org.marc4j;
  */
 
 import org.marc4j.converter.CharConverter;
-import info.freelibrary.marc.converter.impl.AnselToUnicode;
+
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
+
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;

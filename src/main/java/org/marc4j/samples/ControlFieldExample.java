@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -29,33 +30,32 @@ import org.marc4j.marc.Record;
 
 /**
  * Read the language code from a 008 control field.
- * 
+ *
  * @author Bas Peters
  */
 public class ControlFieldExample {
 
     /**
      * The main class for the ControlFieldExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/chabon.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
 
-        InputStream input = ReadMarcExample.class.getResourceAsStream("resources/chabon.mrc");
-
-        MarcReader reader = new MarcStreamReader(input);
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
 
             // get control field with tag 008
-            ControlField controlField = (ControlField) record.getVariableField("008");
+            final ControlField controlField = (ControlField) record.getVariableField("008");
 
-            String data = controlField.getData();
+            final String data = controlField.getData();
 
             // the three-character MARC language code takes character
             // positions 35-37
-            String lang = data.substring(35, 38);
+            final String lang = data.substring(35, 38);
             System.out.println("Language code (008 35-37): " + lang);
         }
 

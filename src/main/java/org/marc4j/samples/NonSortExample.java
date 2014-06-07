@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -30,38 +31,39 @@ import org.marc4j.marc.Subfield;
 
 /**
  * Demonstrates getting the title without non-sorting characters.
- * 
+ *
  * @author Bas Peters
  */
 public class NonSortExample {
 
     /**
      * The main class for NonSortExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/chabon.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
 
-        InputStream input = DataFieldExample.class.getResourceAsStream("resources/chabon.mrc");
-
-        MarcReader reader = new MarcStreamReader(input);
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
 
             // get data field 245
-            DataField dataField = (DataField) record.getVariableField("245");
+            final DataField dataField = (DataField) record.getVariableField("245");
 
             // get indicator as int value
-            char ind2 = dataField.getIndicator2();
+            final char ind2 = dataField.getIndicator2();
 
             // get the title proper
-            Subfield subfield = dataField.getSubfield('a');
+            final Subfield subfield = dataField.getSubfield('a');
+
             String title = subfield.getData();
             System.out.println("Title proper: " + title);
 
             // remove the non sorting characters
-            int nonSort = Character.digit(ind2, 10);
+            final int nonSort = Character.digit(ind2, 10);
+
             title = title.substring(nonSort);
             System.out.println("Title non-sort (" + nonSort + "): " + title + '\n');
         }

@@ -1,6 +1,8 @@
 
 package org.marc4j.samples;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,56 +24,56 @@ import org.marc4j.marc.Record;
 
 /**
  * A chain of transformation stages.
- * 
+ *
  * @author Bas Peters
  */
 public class StylesheetChainExample {
 
     /**
      * The main class for StylesheetChainExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
 
-        TransformerFactory tFactory = TransformerFactory.newInstance();
+        final TransformerFactory tFactory = TransformerFactory.newInstance();
 
         if (tFactory.getFeature(SAXSource.FEATURE) && tFactory.getFeature(SAXResult.FEATURE)) {
 
             // cast the transformer handler to a sax transformer handler
-            SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
+            final SAXTransformerFactory saxTFactory = ((SAXTransformerFactory) tFactory);
 
             // create a TransformerHandler for each stylesheet.
-            TransformerHandler tHandler1 =
-                    saxTFactory.newTransformerHandler(new StreamSource(
-                            "http://www.loc.gov/standards/mods/v3/MARC21slim2MODS3.xsl"));
-            TransformerHandler tHandler2 =
-                    saxTFactory.newTransformerHandler(new StreamSource(
-                            "http://www.loc.gov/standards/marcxml/xslt/MODS2MARC21slim.xsl"));
-            TransformerHandler tHandler3 =
-                    saxTFactory.newTransformerHandler(new StreamSource(
-                            "http://www.loc.gov/standards/marcxml/xslt/MARC21slim2HTML.xsl"));
+            final TransformerHandler tHandler1 =
+                    saxTFactory.newTransformerHandler(new StreamSource(new File(
+                            "src/test/resources/MARC21slim2MODS3.xsl")));
+            final TransformerHandler tHandler2 =
+                    saxTFactory.newTransformerHandler(new StreamSource(new File(
+                            "src/test/resources/MODS2MARC21slim.xsl")));
+            final TransformerHandler tHandler3 =
+                    saxTFactory.newTransformerHandler(new StreamSource(new File(
+                            "src/test/resources/MARC21slim2HTML.xsl")));
 
             // chain the transformer handlers
             tHandler1.setResult(new SAXResult(tHandler2));
             tHandler2.setResult(new SAXResult(tHandler3));
 
-            OutputStream out = new FileOutputStream("c:/temp/output.html");
+            final OutputStream out = new FileOutputStream(System.getProperty("java.io.tmpdir") + "/output.html");
             tHandler3.setResult(new StreamResult(out));
 
             // create a SAXResult with the first handler
-            Result result = new SAXResult(tHandler1);
+            final Result result = new SAXResult(tHandler1);
 
             // create the input stream
-            InputStream input = ReadMarcExample.class.getResourceAsStream("resources/summerland.mrc");
+            final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
 
             // parse the input
-            MarcReader reader = new MarcStreamReader(input);
-            MarcWriter writer = new MarcXmlWriter(result);
+            final MarcReader reader = new MarcStreamReader(input);
+            final MarcWriter writer = new MarcXmlWriter(result);
 
             while (reader.hasNext()) {
-                Record record = reader.next();
+                final Record record = reader.next();
                 writer.write(record);
             }
 

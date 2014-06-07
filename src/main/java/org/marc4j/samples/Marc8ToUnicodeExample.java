@@ -20,38 +20,40 @@
 
 package org.marc4j.samples;
 
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
+
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.MarcStreamWriter;
 import org.marc4j.MarcWriter;
-import info.freelibrary.marc.converter.impl.AnselToUnicode;
 import org.marc4j.marc.Record;
 
 /**
  * Writes MARC ISO 2709 in UTF-8 to standard output.
- * 
+ *
  * @author Bas Peters
  */
 public class Marc8ToUnicodeExample {
 
     /**
      * The main class for Marc8ToUnicodeExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        InputStream input = ReadMarcExample.class.getResourceAsStream("resources/brkrtest.mrc");
-        MarcReader reader = new MarcStreamReader(input);
-        MarcWriter writer = new MarcStreamWriter(System.out, "UTF8");
-        AnselToUnicode converter = new AnselToUnicode();
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/brkrtest.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
+        final MarcWriter writer = new MarcStreamWriter(System.out, "UTF8");
+        final AnselToUnicode converter = new AnselToUnicode();
 
         writer.setConverter(converter);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             writer.write(record);
         }
 

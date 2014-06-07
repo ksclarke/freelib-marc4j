@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -33,39 +34,38 @@ import org.marc4j.marc.Record;
 
 /**
  * Removes local field (tag 9XX).
- * 
+ *
  * @author Bas Peters
  */
 public class RemoveLocalFieldsExample {
 
     /**
      * The main class for RemoveLocalFieldsExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-
-        InputStream input = RemoveLocalFieldsExample.class.getResourceAsStream("resources/chabon-loc.mrc");
-
-        MarcReader reader = new MarcStreamReader(input);
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/chabon-loc.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             System.out.println(record.toString());
 
-            Pattern pattern = Pattern.compile("9\\d\\d");
-            List fields = record.getDataFields();
-            Iterator i = fields.iterator();
+            final Pattern pattern = Pattern.compile("9\\d\\d");
+            final List fields = record.getDataFields();
+            final Iterator i = fields.iterator();
 
             while (i.hasNext()) {
-                DataField field = (DataField) i.next();
-                Matcher matcher = pattern.matcher(field.getTag());
+                final DataField field = (DataField) i.next();
+                final Matcher matcher = pattern.matcher(field.getTag());
 
                 if (matcher.matches()) {
                     i.remove();
                 }
             }
+
             System.out.println(record.toString());
         }
 

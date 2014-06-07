@@ -20,6 +20,7 @@
 
 package org.marc4j.samples;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.marc4j.MarcReader;
@@ -30,27 +31,27 @@ import org.marc4j.marc.Record;
 
 /**
  * Writes MARC to standard output.
- * 
+ *
  * @author Bas Peters
  */
 public class WriteMarcExample {
 
     /**
      * The main class for WriteMarcExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
+        final InputStream input = new FileInputStream("src/test/resources/summerland.mrc");
+        final MarcReader reader = new MarcStreamReader(input);
+        final MarcWriter writer = new MarcStreamWriter(System.out);
 
-        InputStream input = ReadMarcExample.class.getResourceAsStream("resources/summerland.mrc");
-
-        MarcReader reader = new MarcStreamReader(input);
-        MarcWriter writer = new MarcStreamWriter(System.out);
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             writer.write(record);
         }
+
         writer.close();
     }
 }
