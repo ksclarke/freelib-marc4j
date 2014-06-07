@@ -30,7 +30,7 @@ If you want to create the Javadocs for the project, you can type:
 
 and they will be created in `freelib-marc4j/target/site/apidocs`
 
-If you just want to include MARC4J as a dependency in your Maven-managed project, you can by adding the following to your project's dependencies:
+If you just want to include MARC4J as a dependency in your own Maven-managed project, you can by adding the following to your project's dependencies:
 
     <dependency>
         <groupId>info.freelibrary</groupId>
