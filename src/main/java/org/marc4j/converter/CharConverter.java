@@ -47,10 +47,10 @@ public abstract class CharConverter {
      * @param dataElement the data to convert
      * @return String the conversion result
      */
-    final public String convert(byte[] dataElement) {
-        char cData[] = new char[dataElement.length];
+    final public String convert(final byte[] dataElement) {
+        final char cData[] = new char[dataElement.length];
         for (int i = 0; i < dataElement.length; i++) {
-            byte b = dataElement[i];
+            final byte b = dataElement[i];
             cData[i] = (char) (b >= 0 ? b : 256 + b);
         }
         return convert(cData);
@@ -64,7 +64,7 @@ public abstract class CharConverter {
      * @param dataElement the data to convert
      * @return String the conversion result
      */
-    final public String convert(String dataElement) {
+    final public String convert(final String dataElement) {
         char[] data = null;
         data = dataElement.toCharArray();
         return (convert(data));

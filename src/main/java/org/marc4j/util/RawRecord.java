@@ -27,10 +27,10 @@ public class RawRecord {
 
     /**
      * Creates a RawRecord from the supplied {@link DataInputStream}.
-     * 
+     *
      * @param ds
      */
-    public RawRecord(DataInputStream ds) {
+    public RawRecord(final DataInputStream ds) {
         init(ds);
 
         if (rawRecordData != null) {
@@ -38,7 +38,7 @@ public class RawRecord {
         }
     }
 
-    private void init(DataInputStream ds) {
+    private void init(final DataInputStream ds) {
         id = null;
         ds.mark(24);
 
@@ -55,7 +55,7 @@ public class RawRecord {
 
             try {
                 ds.readFully(rawRecordData);
-            } catch (EOFException e) {
+            } catch (final EOFException e) {
                 ds.reset();
                 int c;
                 int cnt = 0;
@@ -64,7 +64,7 @@ public class RawRecord {
                     rawRecordData[cnt++] = (byte) c;
                 }
 
-                int location = byteArrayContains(rawRecordData, Constants.RT);
+                final int location = byteArrayContains(rawRecordData, Constants.RT);
 
                 if (location != -1) {
                     length = location + 1;
@@ -74,7 +74,7 @@ public class RawRecord {
             }
 
             if (rawRecordData[length - 1] != Constants.RT) {
-                int location = byteArrayContains(rawRecordData, Constants.RT);
+                final int location = byteArrayContains(rawRecordData, Constants.RT);
 
                 // Specified length was longer that actual length
                 if (location != -1) {
@@ -83,13 +83,13 @@ public class RawRecord {
                     ds.readFully(rawRecordData);
                 } else {
                     // keep reading until end of record found
-                    ArrayList<Byte> recBuf = new ArrayList<Byte>();
+                    final ArrayList<Byte> recBuf = new ArrayList<Byte>();
                     ds.reset();
 
-                    byte byteRead[] = new byte[1];
+                    final byte byteRead[] = new byte[1];
 
                     while (true) {
-                        int numRead = ds.read(byteRead);
+                        final int numRead = ds.read(byteRead);
 
                         if (numRead == -1) {
                             break; // probably should throw
@@ -110,17 +110,17 @@ public class RawRecord {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             try {
                 rawRecordData = null;
                 ds.reset();
-            } catch (IOException e1) {
+            } catch (final IOException e1) {
             }
         }
 
     }
 
-    private static int byteArrayContains(byte data[], int value) {
+    private static int byteArrayContains(final byte data[], final int value) {
         for (int i = 0; i < data.length; i++) {
             if (data[i] == value) {
                 return (i);
@@ -131,11 +131,11 @@ public class RawRecord {
 
     /**
      * Creates a new raw record from the two supplied raw records.
-     * 
+     *
      * @param a1stRawRecord
      * @param a2ndRawRecord
      */
-    public RawRecord(RawRecord a1stRawRecord, RawRecord a2ndRawRecord) {
+    public RawRecord(final RawRecord a1stRawRecord, final RawRecord a2ndRawRecord) {
         rawRecordData =
                 new byte[a1stRawRecord.getRecordBytes().length +
                         a2ndRawRecord.getRecordBytes().length];
@@ -151,7 +151,7 @@ public class RawRecord {
 
     /**
      * Gets the record ID.
-     * 
+     *
      * @return The record ID
      */
     public String getRecordId() {
@@ -164,32 +164,32 @@ public class RawRecord {
 
     /**
      * Gets the value of the field with the supplied ID.
-     * 
+     *
      * @param idField
      * @return The value of the field with the supplied ID
      */
-    public String getFieldVal(String idField) {
+    public String getFieldVal(final String idField) {
         String recordStr = null;
 
         try {
             recordStr = new String(rawRecordData, "ISO-8859-1");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        int offset = Integer.parseInt(recordStr.substring(12, 17));
+        final int offset = Integer.parseInt(recordStr.substring(12, 17));
         int dirOffset = 24;
         String fieldNum = recordStr.substring(dirOffset, dirOffset + 3);
 
         while (dirOffset < offset) {
             if (fieldNum.equals(idField)) {
-                int length =
+                final int length =
                         Integer.parseInt(recordStr.substring(dirOffset + 3,
                                 dirOffset + 7));
-                int offset2 =
+                final int offset2 =
                         Integer.parseInt(recordStr.substring(dirOffset + 7,
                                 dirOffset + 12));
-                String id =
+                final String id =
                         recordStr.substring(offset + offset2,
                                 offset + offset2 + length - 1).trim();
                 return id;
@@ -204,7 +204,7 @@ public class RawRecord {
 
     /**
      * Gets the record in byte form.
-     * 
+     *
      * @return
      */
     public byte[] getRecordBytes() {
@@ -213,28 +213,28 @@ public class RawRecord {
 
     /**
      * Gets the raw record as a {@link Record}.
-     * 
+     *
      * @param permissive
      * @param toUtf8
      * @param combinePartials
      * @param defaultEncoding
      * @return
      */
-    public Record getAsRecord(boolean permissive, boolean toUtf8,
-            String combinePartials, String defaultEncoding) {
-        ByteArrayInputStream bais = new ByteArrayInputStream(rawRecordData);
-        MarcPermissiveStreamReader reader =
+    public Record getAsRecord(final boolean permissive, final boolean toUtf8,
+            final String combinePartials, final String defaultEncoding) {
+        final ByteArrayInputStream bais = new ByteArrayInputStream(rawRecordData);
+        final MarcPermissiveStreamReader reader =
                 new MarcPermissiveStreamReader(bais, permissive, toUtf8,
                         defaultEncoding);
-        Record next = reader.next();
+        final Record next = reader.next();
         if (combinePartials != null) {
             while (reader.hasNext()) {
-                Record nextNext = reader.next();
-                List<VariableField> fieldsAll =
-                        (List<VariableField>) nextNext.getVariableFields();
-                Iterator<VariableField> fieldIter = fieldsAll.iterator();
+                final Record nextNext = reader.next();
+                final List<VariableField> fieldsAll =
+                        nextNext.getVariableFields();
+                final Iterator<VariableField> fieldIter = fieldsAll.iterator();
                 while (fieldIter.hasNext()) {
-                    VariableField vf = fieldIter.next();
+                    final VariableField vf = fieldIter.next();
                     if (combinePartials.contains(vf.getTag())) {
                         next.addVariableField(vf);
                     }
@@ -244,15 +244,15 @@ public class RawRecord {
         return (next);
     }
 
-    private static int parseRecordLength(byte[] leaderData) throws IOException {
-        InputStreamReader isr =
+    private static int parseRecordLength(final byte[] leaderData) throws IOException {
+        final InputStreamReader isr =
                 new InputStreamReader(new ByteArrayInputStream(leaderData));
         int length = -1;
-        char[] tmp = new char[5];
+        final char[] tmp = new char[5];
         isr.read(tmp);
         try {
             length = Integer.parseInt(new String(tmp));
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new IOException("unable to parse record length");
         }
         return (length);

@@ -74,7 +74,7 @@ public class LeaderImpl implements Leader {
      * 
      * @param ldr the leader string value
      */
-    public LeaderImpl(String ldr) {
+    public LeaderImpl(final String ldr) {
         unmarshal(ldr);
     }
 
@@ -83,7 +83,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param recordLength integer representing the record length
      */
-    public void setRecordLength(int recordLength) {
+    @Override
+    public void setRecordLength(final int recordLength) {
         this.recordLength = recordLength;
     }
 
@@ -92,7 +93,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param recordStatus character representing the record status
      */
-    public void setRecordStatus(char recordStatus) {
+    @Override
+    public void setRecordStatus(final char recordStatus) {
         this.recordStatus = recordStatus;
     }
 
@@ -101,7 +103,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param typeOfRecord character representing the type of record
      */
-    public void setTypeOfRecord(char typeOfRecord) {
+    @Override
+    public void setTypeOfRecord(final char typeOfRecord) {
         this.typeOfRecord = typeOfRecord;
     }
 
@@ -111,7 +114,8 @@ public class LeaderImpl implements Leader {
      * @param implDefined1 character array representing the implementation
      *        defined data
      */
-    public void setImplDefined1(char[] implDefined1) {
+    @Override
+    public void setImplDefined1(final char[] implDefined1) {
         this.implDefined1 = implDefined1;
     }
 
@@ -120,7 +124,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param charCodingScheme character representing the character encoding
      */
-    public void setCharCodingScheme(char charCodingScheme) {
+    @Override
+    public void setCharCodingScheme(final char charCodingScheme) {
         this.charCodingScheme = charCodingScheme;
     }
 
@@ -130,7 +135,8 @@ public class LeaderImpl implements Leader {
      * @param indicatorCount integer representing the number of indicators
      *        present in a data field
      */
-    public void setIndicatorCount(int indicatorCount) {
+    @Override
+    public void setIndicatorCount(final int indicatorCount) {
         this.indicatorCount = indicatorCount;
     }
 
@@ -139,7 +145,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param subfieldCodeLength integer representing the subfield code length
      */
-    public void setSubfieldCodeLength(int subfieldCodeLength) {
+    @Override
+    public void setSubfieldCodeLength(final int subfieldCodeLength) {
         this.subfieldCodeLength = subfieldCodeLength;
     }
 
@@ -148,7 +155,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param baseAddressOfData integer representing the base address of data
      */
-    public void setBaseAddressOfData(int baseAddressOfData) {
+    @Override
+    public void setBaseAddressOfData(final int baseAddressOfData) {
         this.baseAddressOfData = baseAddressOfData;
     }
 
@@ -158,7 +166,8 @@ public class LeaderImpl implements Leader {
      * @param implDefined2 character array representing the implementation
      *        defined data
      */
-    public void setImplDefined2(char[] implDefined2) {
+    @Override
+    public void setImplDefined2(final char[] implDefined2) {
         this.implDefined2 = implDefined2;
     }
 
@@ -167,7 +176,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param entryMap character array representing the entry map
      */
-    public void setEntryMap(char[] entryMap) {
+    @Override
+    public void setEntryMap(final char[] entryMap) {
         this.entryMap = entryMap;
     }
 
@@ -176,6 +186,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>int</code>- the record length
      */
+    @Override
     public int getRecordLength() {
         return recordLength;
     }
@@ -185,6 +196,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char</code>- the record status
      */
+    @Override
     public char getRecordStatus() {
         return recordStatus;
     }
@@ -194,6 +206,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char</code>- the record type
      */
+    @Override
     public char getTypeOfRecord() {
         return typeOfRecord;
     }
@@ -203,6 +216,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char[]</code>- implementation defined values
      */
+    @Override
     public char[] getImplDefined1() {
         return implDefined1;
     }
@@ -212,6 +226,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char</code>- the character coding scheme
      */
+    @Override
     public char getCharCodingScheme() {
         return charCodingScheme;
     }
@@ -221,6 +236,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>int</code>- the indicator count
      */
+    @Override
     public int getIndicatorCount() {
         return indicatorCount;
     }
@@ -230,6 +246,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>int</code>- the subfield code length
      */
+    @Override
     public int getSubfieldCodeLength() {
         return subfieldCodeLength;
     }
@@ -239,6 +256,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>int</code>- the base address of data
      */
+    @Override
     public int getBaseAddressOfData() {
         return baseAddressOfData;
     }
@@ -248,6 +266,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char[]</code>- implementation defined values
      */
+    @Override
     public char[] getImplDefined2() {
         return implDefined2;
     }
@@ -257,6 +276,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return <code>char[]</code>- the entry map
      */
+    @Override
     public char[] getEntryMap() {
         return entryMap;
     }
@@ -272,7 +292,8 @@ public class LeaderImpl implements Leader {
      * 
      * @param ldr the leader
      */
-    public void unmarshal(String ldr) {
+    @Override
+    public void unmarshal(final String ldr) {
         try {
             String s;
             s = ldr.substring(0, 5);
@@ -305,7 +326,7 @@ public class LeaderImpl implements Leader {
             }
             setImplDefined2(ldr.substring(17, 20).toCharArray());
             setEntryMap(ldr.substring(20, 24).toCharArray());
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             throw new RuntimeException("Unable to parse leader", e);
         }
     }
@@ -315,6 +336,7 @@ public class LeaderImpl implements Leader {
      * 
      * @return String - the string object from this leader object
      */
+    @Override
     public String marshal() {
         return this.toString();
     }
@@ -328,6 +350,7 @@ public class LeaderImpl implements Leader {
      *  00714cam a2200205 a 4500
      * </pre>
      */
+    @Override
     public String toString() {
         return new StringBuffer().append(format5.format(getRecordLength()))
                 .append(getRecordStatus()).append(getTypeOfRecord()).append(
@@ -337,8 +360,8 @@ public class LeaderImpl implements Leader {
                         getImplDefined2()).append(getEntryMap()).toString();
     }
 
-    private boolean isInteger(String value) {
-        int len = value.length();
+    private boolean isInteger(final String value) {
+        final int len = value.length();
         if (len == 0) {
             return false;
         }
@@ -369,13 +392,15 @@ public class LeaderImpl implements Leader {
     /**
      * Sets the ID for the leader.
      */
-    public void setId(Long id) {
+    @Override
+    public void setId(final Long id) {
         this.id = id;
     }
 
     /**
      * Gets the ID of the leader.
      */
+    @Override
     public Long getId() {
         return id;
     }

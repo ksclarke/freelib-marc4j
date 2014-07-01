@@ -21,6 +21,9 @@ import org.marc4j.marc.Record;
 
 public class PermissiveReaderExample {
 
+    private PermissiveReaderExample() {
+    }
+
     /**
      * This test program demonstrates the use of the MarcPermissiveStreamReader to read Marc records, with the
      * permissive setting turned on. It also demonstrates the capability of printing out the error messages that are
@@ -61,37 +64,39 @@ public class PermissiveReaderExample {
      *     650  1$aMagic$vFiction.
      * </pre>
      */
-    public static void main(String[] args) {
+    public static void main(final String[] aArgsArray) {
         final PrintStream out = System.out;
 
         boolean verbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
         boolean veryverbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
+        String[] args;
 
-        if (args != null && args.length > 0 && args[0].equals("-v")) {
+        if (aArgsArray != null && aArgsArray.length > 0) {
             verbose = true;
-            final String newArgs[] = new String[args.length - 1];
-            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+            final String newArgs[] = new String[aArgsArray.length - 1];
+            System.arraycopy(aArgsArray, 1, newArgs, 0, aArgsArray.length - 1);
             args = newArgs;
-        }
 
-        if (args != null && args.length > 0 && args[0].equals("-vv")) {
-            verbose = true;
-            veryverbose = true;
-            final String newArgs[] = new String[args.length - 1];
-            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
-            args = newArgs;
+            if (args[0].equals("-vv")) {
+                veryverbose = true;
+            } else if (args[0].equals("-v")) {
+                verbose = true;
+            }
+        } else {
+            args = aArgsArray;
         }
 
         final File file = new File("src/test/resources/summerland.mrc");
+        final ErrorHandler errorHandler = new ErrorHandler();
+        final boolean to_utf_8 = true;
+
         MarcReader readerNormal = null;
         MarcReader readerPermissive = null;
-        final boolean to_utf_8 = true;
+        OutputStream patchedRecStream = null;
+        MarcWriter patchedRecs = null;
 
         InputStream inNorm;
         InputStream inPerm;
-        OutputStream patchedRecStream = null;
-        MarcWriter patchedRecs = null;
-        final ErrorHandler errorHandler = new ErrorHandler();
 
         try {
             inNorm = new FileInputStream(file);

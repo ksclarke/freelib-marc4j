@@ -40,6 +40,9 @@ import org.marc4j.marc.Record;
  */
 public class Marc8ToMarcXmlExample {
 
+    private Marc8ToMarcXmlExample() {
+    }
+
     /**
      * The main class for Marc8ToMarcXmlExample.
      *

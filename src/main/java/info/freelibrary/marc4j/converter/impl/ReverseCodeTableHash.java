@@ -31,7 +31,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.marc4j.MarcException;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -42,7 +41,6 @@ import org.xml.sax.XMLReader;
  * </p>
  * 
  * @author Corey Keith
- * @see DefaultHandler
  */
 public class ReverseCodeTableHash extends ReverseCodeTable {
 
@@ -57,7 +55,8 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
      * @param c
      * @return
      */
-    public boolean isCombining(Character c) {
+    @Override
+    public boolean isCombining(final Character c) {
         return combining.contains(c);
     }
 
@@ -67,7 +66,8 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
      * @param c
      * @return The character table for the supplied {@link Character}
      */
-    public Hashtable<Integer, char[]> getCharTable(Character c) {
+    @Override
+    public Hashtable<Integer, char[]> getCharTable(final Character c) {
         return charsets.get(c);
     }
 
@@ -76,17 +76,17 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
      * 
      * @param byteStream
      */
-    public ReverseCodeTableHash(InputStream byteStream) {
+    public ReverseCodeTableHash(final InputStream byteStream) {
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
-            SAXParser saxParser = factory.newSAXParser();
-            XMLReader rdr = saxParser.getXMLReader();
+            final SAXParser saxParser = factory.newSAXParser();
+            final XMLReader rdr = saxParser.getXMLReader();
 
-            InputSource src = new InputSource(byteStream);
+            final InputSource src = new InputSource(byteStream);
 
-            ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
+            final ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
 
             rdr.setContentHandler(saxUms);
             rdr.parse(src);
@@ -94,7 +94,7 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
             charsets = saxUms.getCharSets();
             combining = saxUms.getCombiningChars();
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MarcException(e.getMessage(), e);
         }
 
@@ -105,18 +105,18 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
      * 
      * @param filename
      */
-    public ReverseCodeTableHash(String filename) {
+    public ReverseCodeTableHash(final String filename) {
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
-            SAXParser saxParser = factory.newSAXParser();
-            XMLReader rdr = saxParser.getXMLReader();
+            final SAXParser saxParser = factory.newSAXParser();
+            final XMLReader rdr = saxParser.getXMLReader();
 
-            File file = new File(filename);
-            InputSource src = new InputSource(new FileInputStream(file));
+            final File file = new File(filename);
+            final InputSource src = new InputSource(new FileInputStream(file));
 
-            ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
+            final ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
 
             rdr.setContentHandler(saxUms);
             rdr.parse(src);
@@ -124,7 +124,7 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
             charsets = saxUms.getCharSets();
             combining = saxUms.getCombiningChars();
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MarcException(e.getMessage(), e);
         }
     }
@@ -134,17 +134,17 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
      * 
      * @param uri
      */
-    public ReverseCodeTableHash(URI uri) {
+    public ReverseCodeTableHash(final URI uri) {
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
-            SAXParser saxParser = factory.newSAXParser();
-            XMLReader rdr = saxParser.getXMLReader();
+            final SAXParser saxParser = factory.newSAXParser();
+            final XMLReader rdr = saxParser.getXMLReader();
 
-            InputSource src = new InputSource(uri.toURL().openStream());
+            final InputSource src = new InputSource(uri.toURL().openStream());
 
-            ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
+            final ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
 
             rdr.setContentHandler(saxUms);
             rdr.parse(src);
@@ -152,7 +152,7 @@ public class ReverseCodeTableHash extends ReverseCodeTable {
             charsets = saxUms.getCharSets();
             combining = saxUms.getCombiningChars();
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MarcException(e.getMessage(), e);
         }
     }

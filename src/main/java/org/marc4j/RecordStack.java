@@ -21,10 +21,10 @@
 
 package org.marc4j;
 
-import org.marc4j.marc.Record;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.marc4j.marc.Record;
 
 /**
  * Provides <code>push</code> and <code>pop</code> operations for
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class RecordStack {
 
-    private List<Record> list;
+    private final List<Record> list;
 
     private RuntimeException re = null;
 
@@ -52,11 +52,11 @@ public class RecordStack {
      * 
      * @param record the record object
      */
-    public synchronized void push(Record record) {
+    public synchronized void push(final Record record) {
         while (list.size() > 0) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
         }
         list.add(record);
@@ -73,7 +73,7 @@ public class RecordStack {
         while (list.size() <= 0 && (eof != true)) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
         }
         if (re != null) {
@@ -81,7 +81,7 @@ public class RecordStack {
         }
         Record record = null;
         if (list.size() > 0) {
-            record = (Record) list.remove(0);
+            record = list.remove(0);
         }
         notifyAll();
         return record;
@@ -98,7 +98,7 @@ public class RecordStack {
         while (list.size() <= 0 && (eof != true)) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (final Exception e) {
             }
         }
         if (re != null) {
@@ -115,7 +115,7 @@ public class RecordStack {
      * that the next() call that is blocked waiting for this thread, will
      * receive the exception.
      */
-    public synchronized void passException(RuntimeException e) {
+    public synchronized void passException(final RuntimeException e) {
         re = e;
         eof = true;
         notifyAll();

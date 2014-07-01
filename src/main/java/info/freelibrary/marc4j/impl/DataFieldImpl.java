@@ -20,13 +20,13 @@
 
 package info.freelibrary.marc4j.impl;
 
-import org.marc4j.marc.InvalidMARCException;
-import org.marc4j.marc.IllegalAddException;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.Subfield;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.IllegalAddException;
+import org.marc4j.marc.InvalidMARCException;
+import org.marc4j.marc.Subfield;
 
 /**
  * DataField defines behavior for a data field (tag 010-999).
@@ -46,7 +46,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
 
     private char mySecondInd;
 
-    private List<Subfield> mySubfields = new ArrayList<Subfield>();
+    private final List<Subfield> mySubfields = new ArrayList<Subfield>();
 
     /**
      * Creates a new <code>DataField</code>.
@@ -62,7 +62,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * @param aFirstInd The first indicator
      * @param aSecondInd The second indicator
      */
-    DataFieldImpl(String aTag, char aFirstInd, char aSecondInd) {
+    DataFieldImpl(final String aTag, final char aFirstInd, final char aSecondInd) {
         setTag(aTag);
         setIndicator1(aFirstInd);
         setIndicator2(aSecondInd);
@@ -73,7 +73,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aTag The tag of a <code>DataField</code>
      */
-    public void setTag(String aTag) {
+    @Override
+    public void setTag(final String aTag) {
         super.setTag(aTag);
 
         if (aTag.length() == 3) {
@@ -82,7 +83,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
                     throw new InvalidMARCException(aTag +
                             " is not a valid DataField tag");
                 }
-            } catch (NumberFormatException details) {
+            } catch (final NumberFormatException details) {
                 throw new InvalidMARCException(aTag + " is not a number");
             }
         } else {
@@ -95,7 +96,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aFirstInd The first indicator
      */
-    public void setIndicator1(char aFirstInd) {
+    @Override
+    public void setIndicator1(final char aFirstInd) {
         myFirstInd = aFirstInd;
     }
 
@@ -104,6 +106,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @return The field's first indicator
      */
+    @Override
     public char getIndicator1() {
         return myFirstInd;
     }
@@ -113,7 +116,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aSecondInd The field's second indicator
      */
-    public void setIndicator2(char aSecondInd) {
+    @Override
+    public void setIndicator2(final char aSecondInd) {
         mySecondInd = aSecondInd;
     }
 
@@ -122,6 +126,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @return The field's second indicator
      */
+    @Override
     public char getIndicator2() {
         return mySecondInd;
     }
@@ -133,7 +138,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * @throws IllegalAddException when the parameter is not an instance of
      *         <code>SubfieldImpl</code>
      */
-    public void addSubfield(Subfield aSubfield) {
+    @Override
+    public void addSubfield(final Subfield aSubfield) {
         if (aSubfield instanceof SubfieldImpl) {
             mySubfields.add(aSubfield);
         } else {
@@ -150,7 +156,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * @throws IllegalAddException when supplied Subfield isn't an instance of
      *         <code>SubfieldImpl</code>
      */
-    public void addSubfield(int aIndex, Subfield aSubfield) {
+    @Override
+    public void addSubfield(final int aIndex, final Subfield aSubfield) {
         mySubfields.add(aIndex, aSubfield);
     }
 
@@ -159,7 +166,8 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aSubfield The subfield to remove from the field.
      */
-    public void removeSubfield(Subfield aSubfield) {
+    @Override
+    public void removeSubfield(final Subfield aSubfield) {
         mySubfields.remove(aSubfield);
     }
 
@@ -168,6 +176,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @return The list of <code>Subfield</code> objects
      */
+    @Override
     public List<Subfield> getSubfields() {
         // TODO: consistent result/expectation as getSubfields(char)?
         return mySubfields;
@@ -179,10 +188,11 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * @param aCode A subfield code
      * @return A {@link List} of {@link Subfield}s
      */
-    public List<Subfield> getSubfields(char aCode) {
-        List<Subfield> subfields = new ArrayList<Subfield>();
+    @Override
+    public List<Subfield> getSubfields(final char aCode) {
+        final List<Subfield> subfields = new ArrayList<Subfield>();
 
-        for (Subfield subfield : mySubfields) {
+        for (final Subfield subfield : mySubfields) {
             if (subfield.getCode() == aCode) {
                 subfields.add(subfield);
             }
@@ -196,6 +206,7 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @return The number of subfields in this <code>DataField</code>
      */
+    @Override
     public int countSubfields() {
         return mySubfields != null ? mySubfields.size() : 0;
     }
@@ -206,8 +217,9 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aCode A code for the subfield to be returned
      */
-    public Subfield getSubfield(char aCode) {
-        for (Subfield subfield : mySubfields) {
+    @Override
+    public Subfield getSubfield(final char aCode) {
+        for (final Subfield subfield : mySubfields) {
             if (subfield.getCode() == aCode) {
                 return subfield;
             }
@@ -222,8 +234,9 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @param aPattern A regular expression pattern to find in the subfields
      */
-    public boolean find(String aPattern) {
-        for (Subfield subfield : mySubfields) {
+    @Override
+    public boolean find(final String aPattern) {
+        for (final Subfield subfield : mySubfields) {
             if (subfield.find(aPattern)) {
                 return true;
             }
@@ -243,14 +256,15 @@ public class DataFieldImpl extends VariableFieldImpl implements DataField {
      * 
      * @return A string representation of this data field
      */
+    @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append(super.toString());
         sb.append(' ');
         sb.append(getIndicator1());
         sb.append(getIndicator2());
 
-        for (Subfield subfield : mySubfields) {
+        for (final Subfield subfield : mySubfields) {
             sb.append(subfield.toString());
         }
 

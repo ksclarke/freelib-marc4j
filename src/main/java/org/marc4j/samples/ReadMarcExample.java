@@ -34,6 +34,9 @@ import org.marc4j.marc.Record;
  */
 public class ReadMarcExample {
 
+    private ReadMarcExample() {
+    }
+
     /**
      * The main class for the ReadMarcExample.
      *

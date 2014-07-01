@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  */
 public class MarcXmlHandler implements ContentHandler {
 
-    private RecordStack queue;
+    private final RecordStack queue;
 
     // private InputSource input;
 
@@ -103,7 +103,7 @@ public class MarcXmlHandler implements ContentHandler {
      * 
      * @param queue
      */
-    public MarcXmlHandler(RecordStack queue) {
+    public MarcXmlHandler(final RecordStack queue) {
         this.queue = queue;
         factory = MarcFactory.newInstance();
     }
@@ -111,17 +111,19 @@ public class MarcXmlHandler implements ContentHandler {
     /**
      * An event fired at the start of the document.
      */
+    @Override
     public void startDocument() throws SAXException {
     }
 
     /**
      * An event fired at the start of an element.
      */
-    public void startElement(String uri, String name, String qName,
-            Attributes atts) throws SAXException {
+    @Override
+    public void startElement(final String uri, final String name, final String qName,
+            final Attributes atts) throws SAXException {
 
-        String realname = (name.length() == 0) ? qName : name;
-        Integer elementType = (Integer) elementMap.get(realname);
+        final String realname = (name.length() == 0) ? qName : name;
+        final Integer elementType = elementMap.get(realname);
 
         if (elementType == null) {
             return;
@@ -179,7 +181,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param start
      * @param length
      */
-    public void characters(char[] ch, int start, int length)
+    @Override
+    public void characters(final char[] ch, final int start, final int length)
             throws SAXException {
         if (sb != null) {
             sb.append(ch, start, length);
@@ -193,10 +196,11 @@ public class MarcXmlHandler implements ContentHandler {
      * @param name
      * @param qName
      */
-    public void endElement(String uri, String name, String qName)
+    @Override
+    public void endElement(final String uri, final String name, final String qName)
             throws SAXException {
-        String realname = (name.length() == 0) ? qName : name;
-        Integer elementType = (Integer) elementMap.get(realname);
+        final String realname = (name.length() == 0) ? qName : name;
+        final Integer elementType = elementMap.get(realname);
 
         if (elementType == null) {
             return;
@@ -209,7 +213,7 @@ public class MarcXmlHandler implements ContentHandler {
                 queue.push(record);
                 break;
             case LEADER_ID:
-                Leader leader = factory.newLeader(sb.toString());
+                final Leader leader = factory.newLeader(sb.toString());
                 record.setLeader(leader);
                 break;
             case CONTROLFIELD_ID:
@@ -229,6 +233,7 @@ public class MarcXmlHandler implements ContentHandler {
     /**
      * An event fired at the end of the document.
      */
+    @Override
     public void endDocument() throws SAXException {
         queue.end();
     }
@@ -241,7 +246,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param length
      * @throws SAXException
      */
-    public void ignorableWhitespace(char[] data, int offset, int length)
+    @Override
+    public void ignorableWhitespace(final char[] data, final int offset, final int length)
             throws SAXException {
         // not implemented
     }
@@ -252,7 +258,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param prefix
      * @throws SAXException
      */
-    public void endPrefixMapping(String prefix) throws SAXException {
+    @Override
+    public void endPrefixMapping(final String prefix) throws SAXException {
     }
 
     /**
@@ -261,7 +268,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param name
      * @throws SAXException
      */
-    public void skippedEntity(String name) throws SAXException {
+    @Override
+    public void skippedEntity(final String name) throws SAXException {
         // not implemented
     }
 
@@ -270,7 +278,8 @@ public class MarcXmlHandler implements ContentHandler {
      * 
      * @param locator
      */
-    public void setDocumentLocator(Locator locator) {
+    @Override
+    public void setDocumentLocator(final Locator locator) {
         // not implemented
     }
 
@@ -281,7 +290,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param data
      * @throws SAXException
      */
-    public void processingInstruction(String target, String data)
+    @Override
+    public void processingInstruction(final String target, final String data)
             throws SAXException {
         // not implemented
     }
@@ -292,7 +302,8 @@ public class MarcXmlHandler implements ContentHandler {
      * @param prefix
      * @param uri
      */
-    public void startPrefixMapping(String prefix, String uri)
+    @Override
+    public void startPrefixMapping(final String prefix, final String uri)
             throws SAXException {
         // not implemented
     }

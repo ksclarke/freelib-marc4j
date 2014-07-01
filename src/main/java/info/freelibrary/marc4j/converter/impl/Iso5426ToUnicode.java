@@ -41,16 +41,17 @@ public class Iso5426ToUnicode extends CharConverter {
      * @param data - the UNIMARC data in an array of char
      * @return {@link String}- the UCS/Unicode data
      */
-    public String convert(char data[]) {
-        StringBuffer sb = new StringBuffer();
+    @Override
+    public String convert(final char data[]) {
+        final StringBuffer sb = new StringBuffer();
 
         for (int i = 0; i < data.length; i++) {
-            char c = data[i];
-            int len = data.length;
+            final char c = data[i];
+            final int len = data.length;
             if (isAscii(c)) {
                 sb.append(c);
             } else if (isCombining(c) && hasNext(i, len)) {
-                char d = getCombiningChar(c * 256 + data[i + 1]);
+                final char d = getCombiningChar(c * 256 + data[i + 1]);
                 if (d != 0) {
                     sb.append(d);
                     i++;
@@ -64,21 +65,21 @@ public class Iso5426ToUnicode extends CharConverter {
         return sb.toString();
     }
 
-    private boolean hasNext(int pos, int len) {
+    private boolean hasNext(final int pos, final int len) {
         if (pos < (len - 1)) {
             return true;
         }
         return false;
     }
 
-    private boolean isAscii(int i) {
+    private boolean isAscii(final int i) {
         if (i >= 0x00 && i <= 0x7F) {
             return true;
         }
         return false;
     }
 
-    private boolean isCombining(int i) {
+    private boolean isCombining(final int i) {
         // if (i > 0xE0 && i < 0xFF)
         if (i >= 0xC0 && i <= 0xDF) {
             return true;
@@ -93,12 +94,13 @@ public class Iso5426ToUnicode extends CharConverter {
      * @return boolean whether the CharConverter returns Unicode encoded
      *         characters
      */
+    @Override
     public boolean outputsUnicode() {
         return (true);
     }
 
     // Source : http://www.itscj.ipsj.or.jp/ISO-IR/053.pdf
-    private char getChar(int i) {
+    private char getChar(final int i) {
         switch (i) {
             case 0xA1:
                 return 0x00A1; // 2/1 inverted exclamation mark
@@ -215,7 +217,7 @@ public class Iso5426ToUnicode extends CharConverter {
         }
     }
 
-    private char getCombiningChar(int i) {
+    private char getCombiningChar(final int i) {
         switch (i) {
         // 4/0 low rising tone mark
             case 0xC041:

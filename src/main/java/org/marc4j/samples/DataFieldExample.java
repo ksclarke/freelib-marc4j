@@ -38,6 +38,9 @@ import org.marc4j.marc.Subfield;
  */
 public class DataFieldExample {
 
+    private DataFieldExample() {
+    }
+
     /**
      * The main class for DataFieldExample.
      *

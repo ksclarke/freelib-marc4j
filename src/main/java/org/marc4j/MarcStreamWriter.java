@@ -125,6 +125,7 @@ public class MarcStreamWriter implements MarcWriter {
      *
      * @return CharConverter the character converter
      */
+    @Override
     public CharConverter getConverter() {
         return converter;
     }
@@ -134,6 +135,7 @@ public class MarcStreamWriter implements MarcWriter {
      *
      * @param converter the character converter
      */
+    @Override
     public void setConverter(final CharConverter converter) {
         this.converter = converter;
     }
@@ -143,6 +145,7 @@ public class MarcStreamWriter implements MarcWriter {
      *
      * @param record - the <code>Record</code> object
      */
+    @Override
     public void write(final Record record) {
         int previous = 0;
 
@@ -226,6 +229,7 @@ public class MarcStreamWriter implements MarcWriter {
     /**
      * Closes the writer.
      */
+    @Override
     public void close() {
         try {
             out.close();

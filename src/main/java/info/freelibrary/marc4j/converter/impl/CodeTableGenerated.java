@@ -18,7 +18,7 @@ public class CodeTableGenerated implements CodeTableInterface {
      * @param g0
      * @param g1
      */
-    public boolean isCombining(int i, int g0, int g1) {
+    public boolean isCombining(final int i, final int g0, final int g1) {
         switch (i <= 0x7E ? g0 : g1) {
             case 0x31:
                 return false;
@@ -136,7 +136,7 @@ public class CodeTableGenerated implements CodeTableInterface {
      * @param c
      * @param mode
      */
-    public char getChar(int c, int mode) {
+    public char getChar(final int c, final int mode) {
         int code = getCharCode(c, mode);
         if (code == -1) {
             return (char)0;
@@ -148,7 +148,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         return (char)code;
     }
 
-    private int getCharCode(int c, int mode) {
+    private int getCharCode(final int c, final int mode) {
         if (c == 0x20) {
             return c;
         }
@@ -1533,7 +1533,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private char getMultiByteChar_0x210000_0x214fff(int c) {
+    private char getMultiByteChar_0x210000_0x214fff(final int c) {
         switch (c) {
             case 0x212320:
                 return (char)0x3000;
@@ -7422,7 +7422,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private char getMultiByteChar_0x215000_0x21ffff(int c) {
+    private char getMultiByteChar_0x215000_0x21ffff(final int c) {
         switch (c) {
             case 0x215021:
                 return (char)0x7b4d;
@@ -12487,7 +12487,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private char getMultiByteChar_0x220000_0x22ffff(int c) {
+    private char getMultiByteChar_0x220000_0x22ffff(final int c) {
         switch (c) {
             case 0x222224:
                 return (char)0x5bf0;
@@ -17652,7 +17652,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private char getMultiByteChar_0x230000_0x27ffff(int c) {
+    private char getMultiByteChar_0x230000_0x27ffff(final int c) {
         switch (c) {
             case 0x232223:
                 return (char)0x83fd;
@@ -24193,7 +24193,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private char getMultiByteChar_0x280000_0x7f7fff(int c) {
+    private char getMultiByteChar_0x280000_0x7f7fff(final int c) {
         switch (c) {
             case 0x28232b:
                 return (char)0x5c66;
@@ -33046,7 +33046,7 @@ public class CodeTableGenerated implements CodeTableInterface {
         }
     }
 
-    private int getMultiByteChar(int c) {
+    private int getMultiByteChar(final int c) {
         if (c >= 0x210000 && c <= 0x214fff) {
             return getMultiByteChar_0x210000_0x214fff(c);
         }

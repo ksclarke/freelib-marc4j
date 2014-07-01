@@ -20,14 +20,12 @@
 
 package info.freelibrary.marc4j.impl;
 
-import org.marc4j.Constants;
-
-import org.marc4j.marc.InvalidMARCException;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.marc4j.Constants;
 import org.marc4j.marc.ControlField;
+import org.marc4j.marc.InvalidMARCException;
 
 /**
  * ControlField defines behavior for a control field (tag 001-009).
@@ -60,7 +58,7 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * 
      * @param aTag The field tag for the <code>ControlField</code>
      */
-    ControlFieldImpl(String aTag) {
+    ControlFieldImpl(final String aTag) {
         setTag(aTag);
     }
 
@@ -71,7 +69,7 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * @param aTag The tag for the <code>ControlField</code>
      * @param aData The data for the <code>ControlField</code>
      */
-    ControlFieldImpl(String aTag, String aData) {
+    ControlFieldImpl(final String aTag, final String aData) {
         setTag(aTag);
         setData(aData);
     }
@@ -81,7 +79,8 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * 
      * @param aTag The tag of a <code>ControlField</code>
      */
-    public void setTag(String aTag) {
+    @Override
+    public void setTag(final String aTag) {
         super.setTag(aTag);
 
         if (!Constants.CF_TAG_PATTERN.matcher(aTag).find()) {
@@ -95,7 +94,8 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * 
      * @param aData The data for the <code>ControlField</code>
      */
-    public void setData(String aData) {
+    @Override
+    public void setData(final String aData) {
         myData = aData;
     }
 
@@ -104,6 +104,7 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * 
      * @return The <code>ControlField</code>'s data
      */
+    @Override
     public String getData() {
         return myData;
     }
@@ -120,6 +121,7 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * 
      * @return A string representation of this control field
      */
+    @Override
     public String toString() {
         return super.toString() + " " + getData();
     }
@@ -131,9 +133,10 @@ public class ControlFieldImpl extends VariableFieldImpl implements ControlField 
      * @param aPattern The regular expression pattern to compare against the
      *        <code>ControlField</code>'s data
      */
-    public boolean find(String aPattern) {
-        Pattern pattern = Pattern.compile(aPattern);
-        Matcher matcher = pattern.matcher(getData());
+    @Override
+    public boolean find(final String aPattern) {
+        final Pattern pattern = Pattern.compile(aPattern);
+        final Matcher matcher = pattern.matcher(getData());
 
         return matcher.find();
     }

@@ -35,6 +35,9 @@ import org.marc4j.marc.Record;
  */
 public class HandleExceptionExample {
 
+    private HandleExceptionExample() {
+    }
+
     /**
      * The main class for the HandleExceptionExample.
      *

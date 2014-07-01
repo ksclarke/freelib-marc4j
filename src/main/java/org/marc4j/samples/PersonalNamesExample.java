@@ -33,6 +33,9 @@ import org.marc4j.marc.Record;
  */
 public class PersonalNamesExample {
 
+    private PersonalNamesExample() {
+    }
+
     /**
      * The main class for the PersonalNamesExample.
      *

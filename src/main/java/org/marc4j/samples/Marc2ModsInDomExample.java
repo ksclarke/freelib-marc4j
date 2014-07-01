@@ -43,6 +43,9 @@ import org.w3c.dom.Document;
  */
 public class Marc2ModsInDomExample {
 
+    private Marc2ModsInDomExample() {
+    }
+
     /**
      * The main class for the Marc2ModsInDomExample.
      *

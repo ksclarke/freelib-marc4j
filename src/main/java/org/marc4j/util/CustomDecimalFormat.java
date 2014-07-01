@@ -34,10 +34,10 @@ public class CustomDecimalFormat extends DecimalFormat {
 
     /**
      * Creates a custom decimal format with the supplied number of digits.
-     * 
+     *
      * @param numberDigits
      */
-    public CustomDecimalFormat(int numberDigits) {
+    public CustomDecimalFormat(final int numberDigits) {
         super(formatString.substring(0, numberDigits));
 
         maximumValue = Long.parseLong(maxString.substring(0, numberDigits));
@@ -48,11 +48,11 @@ public class CustomDecimalFormat extends DecimalFormat {
 
     /**
      * Creates a custom decimal format with the supplied number of digits.
-     * 
+     *
      * @param numberDigits
      * @param overflowType
      */
-    public CustomDecimalFormat(int numberDigits, int overflowType) {
+    public CustomDecimalFormat(final int numberDigits, final int overflowType) {
         super(formatString.substring(0, numberDigits));
 
         maximumValue = Long.parseLong(maxString.substring(0, numberDigits));
@@ -62,24 +62,26 @@ public class CustomDecimalFormat extends DecimalFormat {
     }
 
     @Override
-    public StringBuffer format(double number, StringBuffer toAppendTo,
-            FieldPosition pos) {
+    public StringBuffer format(final double number, final StringBuffer toAppendTo,
+            final FieldPosition pos) {
         if (number > maximumValue) {
-            number = getOverflowRepresentation((long) number);
+            return super.format(getOverflowRepresentation((long) number), toAppendTo, pos);
         }
+
         return super.format(number, toAppendTo, pos);
     }
 
     @Override
-    public StringBuffer format(long number, StringBuffer toAppendTo,
-            FieldPosition pos) {
+    public StringBuffer format(final long number, final StringBuffer toAppendTo,
+            final FieldPosition pos) {
         if (number > maximumValue) {
-            number = getOverflowRepresentation(number);
+            return super.format(getOverflowRepresentation(number), toAppendTo, pos);
         }
+
         return super.format(number, toAppendTo, pos);
     }
 
-    private long getOverflowRepresentation(long number) {
+    private long getOverflowRepresentation(final long number) {
         switch (overflowRepresentation) {
             case REP_ALL_ZEROS:
                 return (0);

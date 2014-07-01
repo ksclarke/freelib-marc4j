@@ -40,7 +40,7 @@ public class MarcException extends RuntimeException {
      * 
      * @param message information about the cause of the exception
      */
-    public MarcException(String message) {
+    public MarcException(final String message) {
         super(message);
     }
 
@@ -51,7 +51,7 @@ public class MarcException extends RuntimeException {
      * @param message information about the cause of the exception
      * @param ex the nested exception that caused this exception
      */
-    public MarcException(String message, Throwable ex) {
+    public MarcException(final String message, final Throwable ex) {
         super(message, ex);
     }
 

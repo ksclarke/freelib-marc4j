@@ -29,6 +29,9 @@ import org.marc4j.marc.Record;
  */
 public class StylesheetChainExample {
 
+    private StylesheetChainExample() {
+    }
+
     /**
      * The main class for StylesheetChainExample.
      *

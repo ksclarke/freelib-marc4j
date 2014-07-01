@@ -1,14 +1,14 @@
 
 package org.marc4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Binary MARC records have a maximum size of 99999 bytes. In the data dumps
@@ -56,8 +56,8 @@ public class MarcCombiningReader implements MarcReader {
      * @param rightControlField - string representing a control field in the
      *        next record to use for matching purposes (null to default to 001).
      */
-    public MarcCombiningReader(MarcReader reader, String idsToMerge,
-            String leftControlField, String rightControlField) {
+    public MarcCombiningReader(final MarcReader reader, final String idsToMerge,
+            final String leftControlField, final String rightControlField) {
         this.reader = reader;
         this.idsToMerge = idsToMerge;
         this.leftControlField = leftControlField;
@@ -92,9 +92,9 @@ public class MarcCombiningReader implements MarcReader {
      * @param rightControlField - string representing a control field in the
      *        next record to use for matching purposes (null to default to 001).
      */
-    public MarcCombiningReader(MarcReader reader, ErrorHandler currentErrors,
-            ErrorHandler nextErrors, String idsToMerge,
-            String leftControlField, String rightControlField) {
+    public MarcCombiningReader(final MarcReader reader, final ErrorHandler currentErrors,
+            final ErrorHandler nextErrors, final String idsToMerge,
+            final String leftControlField, final String rightControlField) {
         this.reader = reader;
         this.idsToMerge = idsToMerge;
         this.leftControlField = leftControlField;
@@ -107,6 +107,7 @@ public class MarcCombiningReader implements MarcReader {
      * Returns <code>true</code> if there is a next record; else
      * <code>false</code>.
      */
+    @Override
     public boolean hasNext() {
         if (currentRecord == null) {
             currentRecord = next();
@@ -119,9 +120,10 @@ public class MarcCombiningReader implements MarcReader {
      * Returns the next {@link Record} record if there is one and
      * <code>null</code> if there isn't.
      */
+    @Override
     public Record next() {
         if (currentRecord != null) {
-            Record tmp = currentRecord;
+            final Record tmp = currentRecord;
             currentRecord = null;
             return (tmp);
         } else if (currentRecord == null) {
@@ -137,9 +139,9 @@ public class MarcCombiningReader implements MarcReader {
 
             try {
                 nextRecord = reader.next();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 if (currentRecord != null) {
-                    String recCntlNum = currentRecord.getControlNumber();
+                    final String recCntlNum = currentRecord.getControlNumber();
 
                     throw new MarcException("Couldn't get next record after " +
                             (recCntlNum != null ? recCntlNum : "") + " -- " +
@@ -158,8 +160,8 @@ public class MarcCombiningReader implements MarcReader {
                 if (reader.hasNext()) {
                     try {
                         nextRecord = reader.next();
-                    } catch (Exception e) {
-                        String recCntlNum = currentRecord.getControlNumber();
+                    } catch (final Exception e) {
+                        final String recCntlNum = currentRecord.getControlNumber();
 
                         throw new MarcException(
                                 "Couldn't get next record after " +
@@ -184,19 +186,19 @@ public class MarcCombiningReader implements MarcReader {
      * @param record - record to search
      * @param tag - tag number to search for
      */
-    private String findControlField(Record record, String tag) {
-        String tagstart = tag.substring(0, 3);
-        List<VariableField> fields = record.getVariableFields(tagstart);
+    private String findControlField(final Record record, final String tag) {
+        final String tagstart = tag.substring(0, 3);
+        final List<VariableField> fields = record.getVariableFields(tagstart);
 
-        for (VariableField field : fields) {
+        for (final VariableField field : fields) {
             if (field instanceof ControlField) {
-                ControlField cf = (ControlField) field;
+                final ControlField cf = (ControlField) field;
 
                 if (cf.getTag().matches(tagstart)) {
-                    return ((String) cf.getData());
+                    return (cf.getData());
                 }
             } else if (field instanceof DataField) {
-                DataField df = (DataField) field;
+                final DataField df = (DataField) field;
 
                 if (df.getTag().matches(tagstart)) {
                     char subfieldtag = 'a';
@@ -205,7 +207,7 @@ public class MarcCombiningReader implements MarcReader {
                         subfieldtag = tag.charAt(4);
                     }
 
-                    Subfield sf = df.getSubfield(subfieldtag);
+                    final Subfield sf = df.getSubfield(subfieldtag);
 
                     if (sf != null) {
                         return (sf.getData());
@@ -223,7 +225,7 @@ public class MarcCombiningReader implements MarcReader {
      * @param left - left side of the comparison (current record)
      * @param right - right side of the comparison (next record)
      */
-    private boolean recordsMatch(Record left, Record right) {
+    private boolean recordsMatch(final Record left, final Record right) {
         // Records can't match if they don't exist!
         if (left == null || right == null) {
             return false;
@@ -257,14 +259,14 @@ public class MarcCombiningReader implements MarcReader {
         return false;
     }
 
-    private void copyErrors(ErrorHandler currentErr, ErrorHandler nextErr) {
+    private void copyErrors(final ErrorHandler currentErr, final ErrorHandler nextErr) {
         if (currentErr != null && nextErr != null) {
             currentErr.reset();
             mergeErrors(currentErr, nextErr);
         }
     }
 
-    private void mergeErrors(ErrorHandler currentErr, ErrorHandler nextErr) {
+    private void mergeErrors(final ErrorHandler currentErr, final ErrorHandler nextErr) {
         if (currentErr != null && nextErr != null) {
             currentErr.addErrors(nextErr.getErrors());
         }
@@ -279,11 +281,11 @@ public class MarcCombiningReader implements MarcReader {
      * @param idsToMerge
      * @return
      */
-    static public Record combineRecords(Record currentRecord,
-            Record nextRecord, String idsToMerge) {
-        List<VariableField> fields = nextRecord.getVariableFields();
+    static public Record combineRecords(final Record currentRecord,
+            final Record nextRecord, final String idsToMerge) {
+        final List<VariableField> fields = nextRecord.getVariableFields();
 
-        for (VariableField field : fields) {
+        for (final VariableField field : fields) {
             if (field.getTag().matches(idsToMerge)) {
                 currentRecord.addVariableField(field);
             }
@@ -302,29 +304,29 @@ public class MarcCombiningReader implements MarcReader {
      * @param fieldInsertBefore
      * @return
      */
-    static public Record combineRecords(Record currentRecord,
-            Record nextRecord, String idsToMerge, String fieldInsertBefore) {
-        List<VariableField> existingFields = currentRecord.getVariableFields();
-        List<VariableField> fieldsToMove = new ArrayList<VariableField>();
+    static public Record combineRecords(final Record currentRecord,
+            final Record nextRecord, final String idsToMerge, final String fieldInsertBefore) {
+        final List<VariableField> existingFields = currentRecord.getVariableFields();
+        final List<VariableField> fieldsToMove = new ArrayList<VariableField>();
 
         // temporarily remove some existing fields
-        for (VariableField field : existingFields) {
+        for (final VariableField field : existingFields) {
             if (field.getTag().matches(fieldInsertBefore)) {
                 fieldsToMove.add(field);
                 currentRecord.removeVariableField(field);
             }
         }
 
-        List<VariableField> fields = nextRecord.getVariableFields();
+        final List<VariableField> fields = nextRecord.getVariableFields();
 
-        for (VariableField field : fields) {
+        for (final VariableField field : fields) {
             if (field.getTag().matches(idsToMerge)) {
                 currentRecord.addVariableField(field);
             }
         }
 
         // now add back the temporarily removed fields
-        for (VariableField field : fieldsToMove) {
+        for (final VariableField field : fieldsToMove) {
             currentRecord.addVariableField(field);
         }
 

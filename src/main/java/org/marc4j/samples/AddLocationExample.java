@@ -36,6 +36,9 @@ import org.marc4j.marc.Record;
  */
 public class AddLocationExample {
 
+    private AddLocationExample() {
+    }
+
     /**
      * The main class for AddLocationExample.
      *

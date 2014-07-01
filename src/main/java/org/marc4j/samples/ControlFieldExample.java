@@ -35,6 +35,9 @@ import org.marc4j.marc.Record;
  */
 public class ControlFieldExample {
 
+    private ControlFieldExample() {
+    }
+
     /**
      * The main class for the ControlFieldExample.
      *

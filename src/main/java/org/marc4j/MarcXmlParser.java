@@ -47,7 +47,7 @@ public class MarcXmlParser {
      * 
      * @param handler the <code>MarcXmlHandler</code> object
      */
-    public MarcXmlParser(MarcXmlHandler handler) {
+    public MarcXmlParser(final MarcXmlHandler handler) {
         this.handler = handler;
     }
 
@@ -56,7 +56,7 @@ public class MarcXmlParser {
      * 
      * @param input the input source
      */
-    public void parse(InputSource input) {
+    public void parse(final InputSource input) {
         parse(handler, input);
     }
 
@@ -67,16 +67,16 @@ public class MarcXmlParser {
      * @param input the input source
      * @param th the transformation content handler
      */
-    public void parse(InputSource input, TransformerHandler th) {
-        SAXResult result = new SAXResult();
+    public void parse(final InputSource input, final TransformerHandler th) {
+        final SAXResult result = new SAXResult();
         result.setHandler(handler);
         th.setResult(result);
         parse(th, input);
 
     }
 
-    private void parse(ContentHandler handler, InputSource input) {
-        SAXParserFactory spf = SAXParserFactory.newInstance();
+    private void parse(final ContentHandler handler, final InputSource input) {
+        final SAXParserFactory spf = SAXParserFactory.newInstance();
         XMLReader reader = null;
         try {
             reader = spf.newSAXParser().getXMLReader();
@@ -85,7 +85,7 @@ public class MarcXmlParser {
                     true);
             reader.setContentHandler(handler);
             reader.parse(input);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new MarcException("Unable to parse input", e);
         }
     }

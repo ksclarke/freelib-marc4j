@@ -323,6 +323,7 @@ public class MarcXmlWriter implements MarcWriter {
     /**
      * Closes the writer.
      */
+    @Override
     public void close() {
         writeEndDocument();
         try {
@@ -340,6 +341,7 @@ public class MarcXmlWriter implements MarcWriter {
      *
      * @return CharConverter the character converter
      */
+    @Override
     public CharConverter getConverter() {
         return converter;
     }
@@ -349,6 +351,7 @@ public class MarcXmlWriter implements MarcWriter {
      *
      * @param converter the character converter
      */
+    @Override
     public void setConverter(final CharConverter converter) {
         this.converter = converter;
     }
@@ -445,6 +448,7 @@ public class MarcXmlWriter implements MarcWriter {
      * @param record - the <code>Record</code> object
      * @throws SAXException
      */
+    @Override
     public void write(final Record record) {
         try {
             toXml(record);

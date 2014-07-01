@@ -38,6 +38,9 @@ import org.marc4j.marc.Record;
  */
 public class Marc8ToUnicodeExample {
 
+    private Marc8ToUnicodeExample() {
+    }
+
     /**
      * The main class for Marc8ToUnicodeExample.
      *

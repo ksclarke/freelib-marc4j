@@ -59,8 +59,8 @@ public class MarcDirStreamReader implements MarcReader {
      * @param dirName - The path of the directory from which to read all of the
      *        .mrc files
      */
-    public MarcDirStreamReader(String dirName) {
-        File dir = new File(dirName);
+    public MarcDirStreamReader(final String dirName) {
+        final File dir = new File(dirName);
         init(dir, false, false, null);
     }
 
@@ -71,7 +71,7 @@ public class MarcDirStreamReader implements MarcReader {
      * @param dir - The path of the directory from which to read all of the .mrc
      *        files
      */
-    public MarcDirStreamReader(File dir) {
+    public MarcDirStreamReader(final File dir) {
         init(dir, false, false, null);
     }
 
@@ -88,9 +88,9 @@ public class MarcDirStreamReader implements MarcReader {
      * @param convertToUTF8 - Set to true to specify that reader should convert
      *        the records being read to UTF-8 encoding as they are being read.
      */
-    public MarcDirStreamReader(String dirName, boolean permissive,
-            boolean convertToUTF8) {
-        File dir = new File(dirName);
+    public MarcDirStreamReader(final String dirName, final boolean permissive,
+            final boolean convertToUTF8) {
+        final File dir = new File(dirName);
         init(dir, permissive, convertToUTF8, null);
     }
 
@@ -107,8 +107,8 @@ public class MarcDirStreamReader implements MarcReader {
      * @param convertToUTF8 - Set to true to specify that reader should convert
      *        the records being read to UTF-8 encoding as they are being read.
      */
-    public MarcDirStreamReader(File dir, boolean permissive,
-            boolean convertToUTF8) {
+    public MarcDirStreamReader(final File dir, final boolean permissive,
+            final boolean convertToUTF8) {
         init(dir, permissive, convertToUTF8, null);
     }
 
@@ -127,9 +127,9 @@ public class MarcDirStreamReader implements MarcReader {
      * @param defaultEncoding - Specifies the character encoding that the
      *        records being read are presumed to be in..
      */
-    public MarcDirStreamReader(String dirName, boolean permissive,
-            boolean convertToUTF8, String defaultEncoding) {
-        File dir = new File(dirName);
+    public MarcDirStreamReader(final String dirName, final boolean permissive,
+            final boolean convertToUTF8, final String defaultEncoding) {
+        final File dir = new File(dirName);
         init(dir, permissive, convertToUTF8, defaultEncoding);
     }
 
@@ -148,16 +148,17 @@ public class MarcDirStreamReader implements MarcReader {
      * @param defaultEncoding - Specifies the character encoding that the
      *        records being read are presumed to be in..
      */
-    public MarcDirStreamReader(File dir, boolean permissive,
-            boolean convertToUTF8, String defaultEncoding) {
+    public MarcDirStreamReader(final File dir, final boolean permissive,
+            final boolean convertToUTF8, final String defaultEncoding) {
         init(dir, permissive, convertToUTF8, defaultEncoding);
     }
 
-    private void init(File dir, boolean permissive, boolean convertToUTF8,
-            String defaultEncoding) {
-        FilenameFilter filter = new FilenameFilter() {
+    private void init(final File dir, final boolean permissive, final boolean convertToUTF8,
+            final String defaultEncoding) {
+        final FilenameFilter filter = new FilenameFilter() {
 
-            public boolean accept(File dir, String name) {
+            @Override
+            public boolean accept(final File dir, final String name) {
                 return (name.endsWith("mrc"));
             }
         };
@@ -173,6 +174,7 @@ public class MarcDirStreamReader implements MarcReader {
     /**
      * Returns true if the iteration has more records, false otherwise.
      */
+    @Override
     public boolean hasNext() {
         if (curFileReader == null || curFileReader.hasNext() == false) {
             nextFile();
@@ -196,7 +198,7 @@ public class MarcDirStreamReader implements MarcReader {
                                     list[curFileNum++]), permissive,
                                     convertToUTF8);
                 }
-            } catch (FileNotFoundException e) {
+            } catch (final FileNotFoundException e) {
                 nextFile();
             }
         } else {
@@ -209,6 +211,7 @@ public class MarcDirStreamReader implements MarcReader {
      * 
      * @return Record - the record object
      */
+    @Override
     public Record next() {
         if (curFileReader == null || curFileReader.hasNext() == false) {
             nextFile();

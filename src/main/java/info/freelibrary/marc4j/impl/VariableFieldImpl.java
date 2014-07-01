@@ -44,9 +44,10 @@ public abstract class VariableFieldImpl implements VariableField {
      * 
      * @param aTag This field's tag
      */
-    public void setTag(String aTag) {
+    @Override
+    public void setTag(final String aTag) {
         if (aTag == null) {
-            String className = getClass().getSimpleName();
+            final String className = getClass().getSimpleName();
             throw new NullPointerException(className + "'s tag can't be null");
         }
 
@@ -58,6 +59,7 @@ public abstract class VariableFieldImpl implements VariableField {
      * 
      * @return This field's tag
      */
+    @Override
     public String getTag() {
         return myTag;
     }
@@ -68,12 +70,13 @@ public abstract class VariableFieldImpl implements VariableField {
      * @param aObject A {@link VariableField} to compare to this one
      * @return 0 for a match, -1 if this one sorts first, or 1 if it sorts last
      */
-    public int compareTo(VariableField aObject) {
+    @Override
+    public int compareTo(final VariableField aObject) {
         if (!(aObject instanceof VariableFieldImpl)) {
             throw new ClassCastException("A VariableField object expected");
         }
 
-        return myTag.compareTo(((VariableField) aObject).getTag());
+        return myTag.compareTo(aObject.getTag());
     }
 
     /**
@@ -81,7 +84,8 @@ public abstract class VariableFieldImpl implements VariableField {
      * 
      * @param aID A unique ID for this field
      */
-    public void setId(Long aID) {
+    @Override
+    public void setId(final Long aID) {
         // TODO: understand the point of this ID
         myID = aID;
     }
@@ -91,6 +95,7 @@ public abstract class VariableFieldImpl implements VariableField {
      * 
      * @return The field's unique ID
      */
+    @Override
     public Long getId() {
         return myID;
     }
@@ -100,6 +105,7 @@ public abstract class VariableFieldImpl implements VariableField {
      * 
      * @return A string representation of this variable field
      */
+    @Override
     public String toString() {
         return myTag;
     }

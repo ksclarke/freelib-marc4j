@@ -1,17 +1,16 @@
 
 package org.marc4j;
 
-import org.marc4j.marc.Subfield;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.ControlField;
-import org.marc4j.marc.Record;
-import org.marc4j.marc.MarcFactory;
-
-import org.marc4j.util.JsonParser;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.Subfield;
+import org.marc4j.util.JsonParser;
 
 public class MarcJsonReader implements MarcReader {
 
@@ -40,7 +39,7 @@ public class MarcJsonReader implements MarcReader {
      * 
      * @param is
      */
-    public MarcJsonReader(InputStream is) {
+    public MarcJsonReader(final InputStream is) {
         parser =
                 new JsonParser(JsonParser.OPT_INTERN_KEYWORDS |
                         JsonParser.OPT_UNQUOTED_KEYWORDS |
@@ -59,7 +58,7 @@ public class MarcJsonReader implements MarcReader {
      * 
      * @param in
      */
-    public MarcJsonReader(Reader in) {
+    public MarcJsonReader(final Reader in) {
         parser = new JsonParser(0);
         parser.setInput("MarcInput", in, false);
         // if(System.getProperty("org.marc4j.marc.MarcFactory") == null)
@@ -74,6 +73,7 @@ public class MarcJsonReader implements MarcReader {
      * Returns <code>true</code> if there is a next record; else,
      * <code>false</code>.
      */
+    @Override
     public boolean hasNext() {
         int code = parser.getEventCode();
 
@@ -95,6 +95,7 @@ public class MarcJsonReader implements MarcReader {
     /**
      * Returns the next {@link Record}.
      */
+    @Override
     public Record next() {
         int code = parser.getEventCode();
         Record record = null;
@@ -104,7 +105,7 @@ public class MarcJsonReader implements MarcReader {
         int inArray = NO_ARRAY;
 
         while (true) {
-            String mname = parser.getMemberName();
+            final String mname = parser.getMemberName();
 
             switch (code) {
                 case JsonParser.EVT_OBJECT_BEGIN:
