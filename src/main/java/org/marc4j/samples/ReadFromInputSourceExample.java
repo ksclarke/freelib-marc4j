@@ -27,24 +27,27 @@ import org.xml.sax.InputSource;
 
 /**
  * Reads MARC XML from an input source.
- * 
+ *
  * @author Bas Peters
  */
 public class ReadFromInputSourceExample {
 
+    private ReadFromInputSourceExample() {
+    }
+
     /**
      * The main class for ReadFromInputSourceExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
-        String systemId = "http://www.loc.gov/standards/marcxml/Sandburg/sandburg.xml";
-        InputSource input = new InputSource(systemId);
-        MarcReader reader = new MarcXmlReader(input);
+    public static void main(final String args[]) throws Exception {
+        final String systemId = "http://www.loc.gov/standards/marcxml/Sandburg/sandburg.xml";
+        final InputSource input = new InputSource(systemId);
+        final MarcReader reader = new MarcXmlReader(input);
 
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             System.out.println(record.toString());
         }
 

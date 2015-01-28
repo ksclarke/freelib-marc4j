@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
  * officially "end-of-life'd" it should be a reasonable assumption that users
  * are not using a version of java that is even older than that, and this shim
  * interface class can be deprecated.
- * 
+ *
  * @author rh9ec
  */
 
@@ -62,12 +62,12 @@ public class Normalizer {
 
     /**
      * Normalizes the supplied string using the supplied mode.
-     * 
+     *
      * @param str
      * @param mode
      * @return
      */
-    public static String normalize(String str, int mode) {
+    public static String normalize(final String str, final int mode) {
         String result = str;
         if (normalizerInAvailableJar == null) {
             initializeNormalizer();
@@ -108,13 +108,13 @@ public class Normalizer {
                 }
             }
 
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -131,23 +131,23 @@ public class Normalizer {
             normalizeMethod =
                     normalizerInAvailableJar.getMethod("normalize",
                             java.lang.CharSequence.class, normalizerFormClass);
-            Method valueOf =
+            final Method valueOf =
                     normalizerFormClass.getMethod("valueOf", String.class);
             NFD_obj = valueOf.invoke(null, "NFD");
             NFKD_obj = valueOf.invoke(null, "NFKD");
             NFC_obj = valueOf.invoke(null, "NFC");
             NFKC_obj = valueOf.invoke(null, "NFKC");
 
-        } catch (ClassNotFoundException cnfe) {
+        } catch (final ClassNotFoundException cnfe) {
             try {
                 normalizerInAvailableJar =
                         Class.forName("com.ibm.icu.text.Normalizer");
 
-            } catch (ClassNotFoundException e) {
+            } catch (final ClassNotFoundException e) {
                 try {
                     normalizerInAvailableJar =
                             Class.forName("com.solrmarc.icu.text.Normalizer");
-                } catch (ClassNotFoundException e1) {
+                } catch (final ClassNotFoundException e1) {
                     throw new RuntimeException(e);
                 }
             }
@@ -158,26 +158,26 @@ public class Normalizer {
                 decomposeMethod =
                         normalizerInAvailableJar.getMethod("decompose",
                                 String.class, boolean.class);
-            } catch (SecurityException e) {
+            } catch (final SecurityException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            } catch (NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (SecurityException e) {
+        } catch (final SecurityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

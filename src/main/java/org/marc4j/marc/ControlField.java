@@ -27,24 +27,24 @@ package org.marc4j.marc;
  * zero's. They are comprised of data and a field terminator and do not contain
  * indicators or subfield codes. The structure of a control field according to
  * the MARC standard is as follows:
- * 
+ *
  * <pre>DATA_ELEMENT FIELD_TERMINATOR</pre>
  * </p>
- * 
+ *
  * @author Bas Peters
  */
 public interface ControlField extends VariableField {
 
     /**
      * Returns the data element.
-     * 
+     *
      * @return The data element
      */
     public String getData();
 
     /**
      * Sets the data element.
-     * 
+     *
      * @param data The data element
      */
     public void setData(String data);

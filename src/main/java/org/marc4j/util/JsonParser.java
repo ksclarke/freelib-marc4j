@@ -405,7 +405,8 @@ public class JsonParser extends Object {
                 // previous event code
                 int pet = evtCode;
                 // flags when within quotes, and if they are single quotes
-                boolean qut = false, squ = false;
+                boolean qut = false;
+                boolean squ = false;
                 // flags whether we can accumulate more data (set false after
                 // closing quote, true after appropriate divider (: or ,))
                 boolean amd = true;
@@ -416,6 +417,7 @@ public class JsonParser extends Object {
                 evtCode = 0;
                 evtLine = 0;
                 evtColumn = 0;
+
                 if (pet == EVT_OBJECT_BEGIN) {
                     mbrName = "";
                 } else if (pet == EVT_OBJECT_ENDED) {
@@ -425,6 +427,7 @@ public class JsonParser extends Object {
                 } else if (pet == EVT_OBJECT_MEMBER) {
                     mbrName = "";
                 }
+
                 mbrValue = null;
 
                 while ((ich = readChar()) != -1) {
@@ -436,6 +439,7 @@ public class JsonParser extends Object {
                             }
                         } else if (ich == '/') {
                             int tmp = readChar();
+
                             if (tmp == '/') {
                                 while ((ich = readChar()) != -1 && ich != '\n') {
                                     ;
@@ -447,23 +451,27 @@ public class JsonParser extends Object {
                                             "Multiline comment not permitted by parser",
                                             null, evtLine, evtColumn);
                                 }
+
                                 while ((tmp = readChar()) != -1) {
                                     if (tmp == '*' && (tmp = readChar()) == '/') {
                                         break;
                                     }
                                 }
+
                                 if (tmp != '/') {
                                     throw parserError(
                                             Escape.MALFORMED,
                                             "Multiline comment not closed before EOF",
                                             null, evtLine, evtColumn);
                                 }
+
                                 ich = ' ';
                             } else { // one slash, but not two
                                 unreadChar(tmp);
                                 ich = '/';
                             }
                         }
+
                         if (ich == -1) {
                             break;
                         }
@@ -475,13 +483,16 @@ public class JsonParser extends Object {
                     // ------------------------------------------------------------------------------------------------
 
                     if (ich == '\\') {
-                        final int lin = inpLine, col = inpColumn;
+                        final int lin = inpLine;
+                        final int col = inpColumn;
+
                         if ((ich = readChar()) == -1) {
                             throw parserError(
                                     Escape.BAD_ESCAPE,
                                     "The input stream ended with an incomplete escape sequence",
                                     null, lin, col);
                         }
+
                         switch (ich) {
                             case '"': {
                                 storeChar('\"');
@@ -520,12 +531,14 @@ public class JsonParser extends Object {
                                 final int ic2 = readChar();
                                 final int ic3 = readChar();
                                 final int ic4 = readChar();
+
                                 if (ic4 == -1) {
                                     throw parserError(
                                             Escape.BAD_ESCAPE,
                                             "The input stream ended with an incomplete escape sequence",
                                             null, lin, col);
                                 }
+
                                 storeChar((char) decodeHexChar((char) ic1,
                                         (char) ic2, (char) ic3, (char) ic4,
                                         lin, col));
@@ -534,12 +547,14 @@ public class JsonParser extends Object {
                             case 'x': { // ascii 0x00-0xFF
                                 final int ic1 = readChar();
                                 final int ic2 = readChar();
+
                                 if (ic2 == -1) {
                                     throw parserError(
                                             Escape.BAD_ESCAPE,
                                             "The input stream ended with an incomplete escape sequence",
                                             null, lin, col);
                                 }
+
                                 storeChar((char) decodeHexByte((char) ic1,
                                         (char) ic2, lin, col));
                             }
@@ -563,10 +578,12 @@ public class JsonParser extends Object {
                                                     ? " except CR and LF" : "") +
                                             " - controls must be escaped using \\uHHHH");
                         }
+
                         if ((!squ && ich == '"') || (squ && ich == '\'')) {
                             qut = false;
                             amd = false;
                         }
+
                         storeChar((char) ich);
                         continue;
                     }
@@ -586,12 +603,14 @@ public class JsonParser extends Object {
                                             "missing quotes); Text=\"" +
                                             accumulator.toString() + "\"");
                         }
+
                         if (!amd) {
                             throw parserError(
                                     Escape.MALFORMED,
                                     "A string value cannot contain unescaped quotes (this is usually caused by "
                                             + "a missing comma between members)");
                         }
+
                         qut = true;
                         squ = (ich == '\'');
                         storeChar((char) ich);
@@ -606,13 +625,16 @@ public class JsonParser extends Object {
                                         "An object member value contained a colon but was not enclosed in quotes "
                                                 + "(this can often be caused by a missing comma between members)");
                             }
+
                             if (objectData.arrayDepth != 0) {
                                 throw parserError(
                                         Escape.MALFORMED,
                                         "An array element cannot be a Name:Value pair - it must be only a value (this "
                                                 + "is most likely caused by misplaced or missing closing bracket)");
                             }
+
                             final String txt = getAccumulatedText(true);
+
                             if (txt.length() == 0) {
                                 throw parserError(Escape.MALFORMED,
                                         "An object member name cannot be blank");
@@ -662,6 +684,7 @@ public class JsonParser extends Object {
                                 mbrValue = getAccumulatedText(false);
                                 return (evtCode = EVT_OBJECT_MEMBER);
                             }
+
                             amd = true;
                             continue;
                         }
@@ -675,16 +698,20 @@ public class JsonParser extends Object {
                                                 "; Text=\"" +
                                                 accumulator.toString() + "\"");
                             }
+
                             pushObjectData();
+
                             if (objectData.arrayDepth != 0) {
                                 mbrName = objectData.arrayName;
                             }
+
                             objectData = new ObjectData(mbrName);
                             return (evtCode = EVT_OBJECT_BEGIN);
                         }
 
                         case '}': {
                             mbrValue = getAccumulatedText(false);
+
                             if (objectData.arrayDepth == 0 &&
                                     mbrName.length() == 0 &&
                                     mbrValue.length() > 0) {
@@ -694,9 +721,11 @@ public class JsonParser extends Object {
                                                 + "possibly caused by missing array brackets in an array)");
                             } else if (mbrValue.length() > 0) {
                                 unreadChar(ich);
+
                                 if (objectData.arrayDepth != 0) {
                                     mbrName = objectData.arrayName;
                                 }
+
                                 return (evtCode = EVT_OBJECT_MEMBER);
                             }
 
@@ -713,11 +742,13 @@ public class JsonParser extends Object {
                                                 " colon); Text=\"" +
                                                 accumulator.toString() + "\"");
                             }
+
                             if (objectData.arrayDepth == 0) {
                                 objectData.arrayName = mbrName;
                             } else {
                                 mbrName = objectData.arrayName;
                             }
+
                             objectData.arrayDepth++;
                             return (evtCode = EVT_ARRAY_BEGIN);
                         }
@@ -731,19 +762,24 @@ public class JsonParser extends Object {
                             }
 
                             mbrValue = getAccumulatedText(false);
+
                             if (mbrValue.length() > 0) {
                                 unreadChar(ich);
+
                                 if (objectData.arrayDepth != 0) {
                                     mbrName = objectData.arrayName;
                                 }
+
                                 return (evtCode = EVT_OBJECT_MEMBER);
                             }
 
                             objectData.arrayDepth--;
                             mbrName = objectData.arrayName;
+
                             if (objectData.arrayDepth == 0) {
                                 objectData.arrayName = "";
                             }
+
                             return (evtCode = EVT_ARRAY_ENDED);
                         }
 
@@ -757,6 +793,7 @@ public class JsonParser extends Object {
                                             "A string value cannot contain data after its closing quote (this is "
                                                     + "most likely caused by a missing comma between members)");
                                 }
+
                                 if (pws && accumulator.length() != 0) {
                                     throw parserError(
                                             Escape.MALFORMED,
@@ -766,9 +803,11 @@ public class JsonParser extends Object {
                                                     accumulator.toString() +
                                                     "\"");
                                 }
+
                                 storeChar((char) ich);
                                 pws = false;
                             }
+
                             continue;
                         }
                     }
@@ -777,6 +816,7 @@ public class JsonParser extends Object {
                 // END OF INPUT REACHED
                 mbrName = null;
                 mbrValue = null;
+
                 if (objectStack.size() != 0) {
                     if (qut) {
                         throw parserError(
@@ -790,6 +830,7 @@ public class JsonParser extends Object {
                                         + " before object was terminated)");
                     }
                 }
+
                 if (objectData.arrayDepth != 0) {
                     throw parserError(Escape.MALFORMED, "Array named '" +
                             objectData.arrayName +
@@ -798,6 +839,7 @@ public class JsonParser extends Object {
 
                 evtLine = inpLine;
                 evtColumn = inpColumn;
+
                 if (inpClose) {
                     try {
                         inpReader.close();
@@ -806,6 +848,7 @@ public class JsonParser extends Object {
                     }
                 }
             }
+
             return (evtCode = EVT_INPUT_ENDED);
         } catch (final IOException thr) {
             if (inpClose) {
@@ -815,6 +858,7 @@ public class JsonParser extends Object {
                     ;
                 }
             }
+
             throw new Escape(Escape.IOERROR, ("I/O Exception: " + thr), thr);
         }
     }
@@ -830,8 +874,10 @@ public class JsonParser extends Object {
         }
 
         int level = 1;
+
         while (level > 0) {
             final int eventCode = next();
+
             if (eventCode == EVT_OBJECT_BEGIN) {
                 level++;
             } else if (eventCode == EVT_OBJECT_ENDED) {
@@ -851,8 +897,10 @@ public class JsonParser extends Object {
         }
 
         int level = 1;
+
         while (level > 0) {
             final int eventCode = next();
+
             if (eventCode == EVT_ARRAY_BEGIN) {
                 level++;
             } else if (eventCode == EVT_ARRAY_ENDED) {
@@ -868,6 +916,7 @@ public class JsonParser extends Object {
             evtLine = inpLine;
             evtColumn = inpColumn;
         }
+
         accumulator.append(ch);
     }
 
@@ -1238,10 +1287,11 @@ public class JsonParser extends Object {
      * Strip the text-value-indicating quotes from the supplied member value, if
      * any.
      */
-    static public String stripQuotes(String val) {
+    static public String stripQuotes(final String val) {
         if (isQuoted(val)) {
-            val = val.substring(1, val.length() - 1);
+            return val.substring(1, val.length() - 1);
         }
+
         return val;
     }
 

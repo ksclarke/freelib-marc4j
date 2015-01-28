@@ -43,6 +43,9 @@ import org.marc4j.marc.Record;
  */
 public class Marc2ModsExample {
 
+    private Marc2ModsExample() {
+    }
+
     /**
      * The main class for the Marc2ModsExample.
      *

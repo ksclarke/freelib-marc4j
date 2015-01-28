@@ -57,6 +57,7 @@ public class CodeTable implements CodeTableInterface {
      * @param g1
      * @return
      */
+    @Override
     public boolean isCombining(final int i, final int g0, final int g1) {
         if (i <= 0x7E) {
             final Vector<Integer> v = combining.get(new Integer(g0));
@@ -74,6 +75,7 @@ public class CodeTable implements CodeTableInterface {
      * @param mode
      * @return
      */
+    @Override
     public char getChar(final int c, final int mode) {
         if (c == 0x20) {
             return (char) c;

@@ -179,6 +179,7 @@ public class MarcXmlReader implements MarcReader {
      *
      * @return boolean - true if the iteration has more records, false otherwise
      */
+    @Override
     public boolean hasNext() {
         return queue.hasNext();
     }
@@ -188,6 +189,7 @@ public class MarcXmlReader implements MarcReader {
      *
      * @return Record - the record object
      */
+    @Override
     public Record next() {
         return queue.pop();
     }

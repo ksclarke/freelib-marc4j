@@ -17,10 +17,10 @@ public class MarcUnprettyXmlReader implements MarcReader {
 
     /**
      * Creates an ugly XML reader from the supplied {@link InputStream}.
-     * 
+     *
      * @param input
      */
-    public MarcUnprettyXmlReader(InputStream input) {
+    public MarcUnprettyXmlReader(final InputStream input) {
         reader = new MarcXmlReader(input);
     }
 
@@ -28,24 +28,26 @@ public class MarcUnprettyXmlReader implements MarcReader {
      * Returns <code>true</code> if there is a next record to read; else,
      * <code>false</code>.
      */
+    @Override
     public boolean hasNext() {
         return (reader.hasNext());
     }
 
     /**
      * Returns the next {@link Record} from the reader.
-     * 
+     *
      * @return The next {@link Record} from the reader
      */
+    @Override
     public Record next() {
-        Record rec = reader.next();
-        List<?> varFields = rec.getVariableFields();
+        final Record rec = reader.next();
+        final List<?> varFields = rec.getVariableFields();
 
         rec.getLeader().setCharCodingScheme('a');
 
-        for (Object f : varFields) {
+        for (final Object f : varFields) {
             if (f instanceof ControlField) {
-                ControlField cf = (ControlField) f;
+                final ControlField cf = (ControlField) f;
                 String data = cf.getData();
 
                 if (data.contains("\n")) {
@@ -54,11 +56,11 @@ public class MarcUnprettyXmlReader implements MarcReader {
                     cf.setData(data);
                 }
             } else if (f instanceof DataField) {
-                DataField df = (DataField) f;
-                List<?> subFields = df.getSubfields();
+                final DataField df = (DataField) f;
+                final List<?> subFields = df.getSubfields();
 
-                for (Object s : subFields) {
-                    Subfield sf = (Subfield) s;
+                for (final Object s : subFields) {
+                    final Subfield sf = (Subfield) s;
                     String data = sf.getData();
 
                     if (data.contains("\n")) {

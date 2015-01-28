@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  * Represents a variable field in a MARC record.
- * 
+ *
  * @author Bas Peters
  */
 public interface VariableField extends Serializable, Comparable<VariableField> {
@@ -34,7 +34,7 @@ public interface VariableField extends Serializable, Comparable<VariableField> {
      * <p>
      * The purpose of this identifier is to provide an identifier for
      * persistency.
-     * 
+     *
      * @param id the identifier
      */
     public void setId(Long id);
@@ -44,21 +44,21 @@ public interface VariableField extends Serializable, Comparable<VariableField> {
      * <p>
      * The purpose of this identifier is to provide an identifier for
      * persistency.
-     * 
+     *
      * @return The identifier
      */
     public Long getId();
 
     /**
      * Returns the tag name.
-     * 
+     *
      * @return String - the tag name
      */
     public String getTag();
 
     /**
      * Sets the tag name.
-     * 
+     *
      * @param tag the tag name
      */
     public void setTag(String tag);
@@ -70,7 +70,7 @@ public interface VariableField extends Serializable, Comparable<VariableField> {
      * See {@link java.util.regex.Pattern} for more information about Java
      * regular expressions.
      * </p>
-     * 
+     *
      * @param pattern the regular expression
      * @return true if the pattern matches, false othewise
      */

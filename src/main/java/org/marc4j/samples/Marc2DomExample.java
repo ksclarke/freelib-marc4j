@@ -40,6 +40,9 @@ import org.w3c.dom.Document;
  */
 public class Marc2DomExample {
 
+    private Marc2DomExample() {
+    }
+
     /**
      * The main class for the Marc2DomExample.
      *

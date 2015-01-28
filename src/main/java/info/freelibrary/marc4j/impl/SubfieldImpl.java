@@ -49,7 +49,7 @@ public class SubfieldImpl implements Subfield {
      * 
      * @param code the data element identifier
      */
-    public SubfieldImpl(char code) {
+    public SubfieldImpl(final char code) {
         this.setCode(code);
     }
 
@@ -60,7 +60,7 @@ public class SubfieldImpl implements Subfield {
      * @param code the data element identifier
      * @param data the data element
      */
-    public SubfieldImpl(char code, String data) {
+    public SubfieldImpl(final char code, final String data) {
         this.setCode(code);
         this.setData(data);
     }
@@ -68,13 +68,15 @@ public class SubfieldImpl implements Subfield {
     /**
      * Sets the {@link Subfield} code.
      */
-    public void setCode(char code) {
+    @Override
+    public void setCode(final char code) {
         this.code = code;
     }
 
     /**
      * Gets the {@link Subfield} code.
      */
+    @Override
     public char getCode() {
         return code;
     }
@@ -82,13 +84,15 @@ public class SubfieldImpl implements Subfield {
     /**
      * Sets the {@link Subfield} data.
      */
-    public void setData(String data) {
+    @Override
+    public void setData(final String data) {
         this.data = data;
     }
 
     /**
      * Gets the {@link Subfield} data.
      */
+    @Override
     public String getData() {
         return data;
     }
@@ -97,9 +101,10 @@ public class SubfieldImpl implements Subfield {
      * Returns <code>true</code> is the supplied regular expression pattern
      * matches the {@link Subfield} data; else, <code>false</code>.
      */
-    public boolean find(String pattern) {
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(getData());
+    @Override
+    public boolean find(final String pattern) {
+        final Pattern p = Pattern.compile(pattern);
+        final Matcher m = p.matcher(getData());
 
         return m.find();
     }
@@ -115,6 +120,7 @@ public class SubfieldImpl implements Subfield {
      * 
      * @return String - a string representation of this subfield
      */
+    @Override
     public String toString() {
         return "$" + getCode() + getData();
     }
@@ -122,13 +128,15 @@ public class SubfieldImpl implements Subfield {
     /**
      * Sets the ID for this {@link Subfield}.
      */
-    public void setId(Long id) {
+    @Override
+    public void setId(final Long id) {
         this.id = id;
     }
 
     /**
      * Gets the ID for this {@link Subfield}.
      */
+    @Override
     public Long getId() {
         return id;
     }

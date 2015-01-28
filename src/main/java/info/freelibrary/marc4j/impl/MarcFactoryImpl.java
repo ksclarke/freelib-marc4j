@@ -46,6 +46,7 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return ControlField
      */
+    @Override
     public ControlField newControlField() {
         return new ControlFieldImpl();
     }
@@ -55,7 +56,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return ControlField
      */
-    public ControlField newControlField(String tag) {
+    @Override
+    public ControlField newControlField(final String tag) {
         return new ControlFieldImpl(tag);
     }
 
@@ -65,7 +67,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return ControlField
      */
-    public ControlField newControlField(String tag, String data) {
+    @Override
+    public ControlField newControlField(final String tag, final String data) {
         return new ControlFieldImpl(tag, data);
     }
 
@@ -74,6 +77,7 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return DataField
      */
+    @Override
     public DataField newDataField() {
         return new DataFieldImpl();
     }
@@ -84,7 +88,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return DataField
      */
-    public DataField newDataField(String tag, char ind1, char ind2) {
+    @Override
+    public DataField newDataField(final String tag, final char ind1, final char ind2) {
         return new DataFieldImpl(tag, ind1, ind2);
     }
 
@@ -94,9 +99,10 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return DataField
      */
-    public DataField newDataField(String tag, char ind1, char ind2,
-            String... subfieldCodesAndData) {
-        DataField df = new DataFieldImpl(tag, ind1, ind2);
+    @Override
+    public DataField newDataField(final String tag, final char ind1, final char ind2,
+            final String... subfieldCodesAndData) {
+        final DataField df = new DataFieldImpl(tag, ind1, ind2);
         if (subfieldCodesAndData.length % 2 == 1) {
             throw new MarcException(
                     "Error: must provide even number of parameters for subfields: code, data, code, data, ...");
@@ -106,7 +112,7 @@ public class MarcFactoryImpl extends MarcFactory {
                 throw new MarcException(
                         "Error: subfieldCode must be a single character");
             }
-            Subfield sf =
+            final Subfield sf =
                     newSubfield(subfieldCodesAndData[i].charAt(0),
                             subfieldCodesAndData[i + 1]);
             df.addSubfield(sf);
@@ -119,6 +125,7 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Leader
      */
+    @Override
     public Leader newLeader() {
         return new LeaderImpl();
     }
@@ -128,7 +135,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Leader
      */
-    public Leader newLeader(String ldr) {
+    @Override
+    public Leader newLeader(final String ldr) {
         return new LeaderImpl(ldr);
     }
 
@@ -137,6 +145,7 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Record
      */
+    @Override
     public Record newRecord() {
         return newRecord(new LeaderImpl("00000nam a2200000 a 4500"));
     }
@@ -146,6 +155,7 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Leader
      */
+    @Override
     public Subfield newSubfield() {
         return new SubfieldImpl();
     }
@@ -155,7 +165,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Subfield
      */
-    public Subfield newSubfield(char code) {
+    @Override
+    public Subfield newSubfield(final char code) {
         return new SubfieldImpl(code);
     }
 
@@ -164,15 +175,17 @@ public class MarcFactoryImpl extends MarcFactory {
      * 
      * @return Subfield
      */
-    public Subfield newSubfield(char code, String data) {
+    @Override
+    public Subfield newSubfield(final char code, final String data) {
         return new SubfieldImpl(code, data);
     }
 
     /**
      * Returns a new {@link Record} with the supplied {@link Leader}.
      */
-    public Record newRecord(Leader leader) {
-        Record record = new RecordImpl();
+    @Override
+    public Record newRecord(final Leader leader) {
+        final Record record = new RecordImpl();
         record.setLeader(leader);
         return record;
     }
@@ -181,7 +194,8 @@ public class MarcFactoryImpl extends MarcFactory {
      * Returns a new {@link Record} with a {@link Leader} from the supplied
      * string.
      */
-    public Record newRecord(String leader) {
+    @Override
+    public Record newRecord(final String leader) {
         return newRecord(new LeaderImpl(leader));
     }
 

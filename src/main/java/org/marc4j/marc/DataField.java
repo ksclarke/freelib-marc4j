@@ -28,7 +28,7 @@ import java.util.List;
  * Data fields are variable fields identified by tags beginning with ASCII
  * numeric values other than two zero's. Data fields contain indicators,
  * subfield codes, data and a field terminator.
- * 
+ *
  * @author Bas Peters
  * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
@@ -36,42 +36,42 @@ public interface DataField extends VariableField {
 
     /**
      * Returns the first indicator of the <code>DataField</code>
-     * 
+     *
      * @return The first indicator of the <code>DataField</code>
      */
     public char getIndicator1();
 
     /**
      * Sets the first indicator of the <code>DataField</code>.
-     * 
+     *
      * @param aFirstInd The first indicator of the <code>DataField</code>
      */
     public void setIndicator1(char aFirstInd);
 
     /**
      * Returns the second indicator of the <code>DataField</code>.
-     * 
+     *
      * @return The second indicator character of the <code>DataField</code>
      */
     public char getIndicator2();
 
     /**
      * Sets the second indicator of the <code>DataField</code>.
-     * 
+     *
      * @param aSecondInd The second indicator of the <code>DataField</code>
      */
     public void setIndicator2(char aSecondInd);
 
     /**
      * Returns the {@link List} of {@link Subfield}.
-     * 
+     *
      * @return The {@link List} of {@link Subfield}s
      */
     public List<Subfield> getSubfields();
 
     /**
      * Returns the {@link List} of {@link Subfield}s for the given subfield code.
-     * 
+     *
      * @param aCode The code of the subfields to return
      * @return The {@link List} of {@link Subfield}s in the <code>DataField</code>
      */
@@ -79,7 +79,7 @@ public interface DataField extends VariableField {
 
     /**
      * Returns the first <code>Subfield</code> with the given code.
-     * 
+     *
      * @param aCode The subfield code of the <code>Subfield</code> to return
      * @return The <code>Subfield</code> or null if no subfield is found
      */
@@ -87,7 +87,7 @@ public interface DataField extends VariableField {
 
     /**
      * Adds the supplied <code>Subfield</code> to the <code>DataField</code>.
-     * 
+     *
      * @param aSubfield The <code>Subfield</code> object
      * @throws IllegalAddException when the parameter is not a
      *         <code>Subfield</code> instance
@@ -96,7 +96,7 @@ public interface DataField extends VariableField {
 
     /**
      * Inserts a <code>Subfield</code> at the specified position.
-     * 
+     *
      * @param aIndex The position at which to add the <code>Subfield<code>
      * @param aSubfield The <code>Subfield</code> to add to the
      *        <code>DataField</code>
@@ -107,14 +107,14 @@ public interface DataField extends VariableField {
 
     /**
      * Removes a <code>Subfield</code>.
-     * 
+     *
      * @param aSubfield The <code>Subfield</code> to remove
      */
     public void removeSubfield(Subfield aSubfield);
 
     /**
      * Returns the number of subfields in this <code>DataField</code>.
-     * 
+     *
      * @return The number of subfields in this <code>DataField</code>
      */
     public int countSubfields();

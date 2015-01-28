@@ -34,6 +34,9 @@ import org.marc4j.marc.Record;
  */
 public class ReadMarcXmlExample {
 
+    private ReadMarcXmlExample() {
+    }
+
     /**
      * The main class for the ReadMarcXmlExample.
      *

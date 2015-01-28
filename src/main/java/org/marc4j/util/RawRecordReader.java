@@ -18,7 +18,7 @@ import java.util.LinkedHashSet;
  * data. Its purpose is to quickly iterate through records looking for one that
  * matches certain simple criteria, at which point the full marc record can be
  * unpacked for more extensive processing
- * 
+ *
  * @author Robert Haschart
  */
 public class RawRecordReader {
@@ -33,7 +33,7 @@ public class RawRecordReader {
 
     /**
      * Creates a raw record reader from the supplied {@link InputStream}.
-     * 
+     *
      * @param is
      */
     public RawRecordReader(final InputStream is) {
@@ -43,7 +43,7 @@ public class RawRecordReader {
 /**
      * Creates a raw record reader from the supplied {@link InputStream)
      * and merge records boolean flag.
-     * 
+     *
      * @param is
      * @param mergeRecords
      */
@@ -55,7 +55,7 @@ public class RawRecordReader {
     /**
      * Returns <code>true</code> if there is another raw record to read; else,
      * <code>false</code>.
-     * 
+     *
      * @return
      */
     public boolean hasNext() {
@@ -85,7 +85,7 @@ public class RawRecordReader {
 
     /**
      * Returns the next raw record.
-     * 
+     *
      * @return The next raw record
      */
     public RawRecord next() {

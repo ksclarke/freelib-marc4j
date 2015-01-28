@@ -17,16 +17,16 @@ public class PersonalNamesReader implements MarcReader {
 
     private BufferedReader br = null;
 
-    private MarcFactory factory;
+    private final MarcFactory factory;
 
     private String line;
 
     /**
      * Creates a PersonalNamesReader from the supplied InputStream.
-     * 
+     *
      * @param in
      */
-    public PersonalNamesReader(InputStream in) {
+    public PersonalNamesReader(final InputStream in) {
         factory = MarcFactory.newInstance();
         br = new BufferedReader(new InputStreamReader(in));
     }
@@ -34,6 +34,7 @@ public class PersonalNamesReader implements MarcReader {
     /**
      * Returns true if the PersonalNamesReader has another Record.
      */
+    @Override
     public boolean hasNext() {
         try {
             if ((line = br.readLine()) != null) {
@@ -41,7 +42,7 @@ public class PersonalNamesReader implements MarcReader {
             } else {
                 return false;
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new MarcException(e.getMessage(), e);
         }
     }
@@ -49,19 +50,20 @@ public class PersonalNamesReader implements MarcReader {
     /**
      * Returns the next Record in the PersonalNamesReader.
      */
+    @Override
     public Record next() {
-        String[] tokens = line.trim().split("\t");
+        final String[] tokens = line.trim().split("\t");
 
         if (tokens.length != 3) {
             throw new MarcException("Index out of bounds");
         }
 
-        Record record = factory.newRecord("00000nz  a2200000o  4500");
+        final Record record = factory.newRecord("00000nz  a2200000o  4500");
 
-        ControlField cf = factory.newControlField("001", tokens[0]);
+        final ControlField cf = factory.newControlField("001", tokens[0]);
         record.addVariableField(cf);
 
-        DataField df = factory.newDataField("100", '1', ' ');
+        final DataField df = factory.newDataField("100", '1', ' ');
         df.addSubfield(factory.newSubfield('a', tokens[1]));
         df.addSubfield(factory.newSubfield('d', tokens[2]));
         record.addVariableField(df);

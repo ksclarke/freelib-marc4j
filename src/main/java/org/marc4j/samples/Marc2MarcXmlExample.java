@@ -38,6 +38,9 @@ import org.marc4j.marc.Record;
  */
 public class Marc2MarcXmlExample {
 
+    private Marc2MarcXmlExample() {
+    }
+
     /**
      * The main class for the Marc2MarcXmlExample.
      *

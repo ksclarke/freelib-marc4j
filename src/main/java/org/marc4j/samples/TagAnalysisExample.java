@@ -21,6 +21,9 @@ import org.marc4j.marc.VariableField;
  */
 public class TagAnalysisExample {
 
+    private TagAnalysisExample() {
+    }
+
     /**
      * The main class for the TagAnalysisExample.
      *

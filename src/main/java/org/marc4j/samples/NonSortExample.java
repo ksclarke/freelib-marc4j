@@ -36,6 +36,9 @@ import org.marc4j.marc.Subfield;
  */
 public class NonSortExample {
 
+    private NonSortExample() {
+    }
+
     /**
      * The main class for NonSortExample.
      *

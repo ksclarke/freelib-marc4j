@@ -15,21 +15,21 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 /**
- * Invoked at build time to generate a java source file (named
- * ReverseCodeTableGenerated.java) which when compiled will extend the
- * ReverseCodeTable abstract class (primarily through switch statements) and
- * which can be used by the UnicodeToAnsel converter which will produce the same
- * results as the object ReverseCodeTableHash.<br/>
- * The following routines are only used in the code generation process, and are
- * not available to be called from within an application that uses MARC4J.<br/>
- * The routines generated for converting unicode characters to MARC8 multibyte
- * characters are split into several routines to workaround a limitation in java
- * that a method can only contain 64k of code when it is compiled.
+ * Invoked at build time to generate a java source file (named ReverseCodeTableGenerated.java) which when compiled will
+ * extend the ReverseCodeTable abstract class (primarily through switch statements) and which can be used by the
+ * UnicodeToAnsel converter which will produce the same results as the object ReverseCodeTableHash.<br/>
+ * The following routines are only used in the code generation process, and are not available to be called from within
+ * an application that uses MARC4J.<br/>
+ * The routines generated for converting unicode characters to MARC8 multibyte characters are split into several
+ * routines to workaround a limitation in java that a method can only contain 64k of code when it is compiled.
  *
  * @author Robert Haschart
  * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
 public class ReverseCodeTableGenerator {
+
+    private ReverseCodeTableGenerator() {
+    }
 
     /**
      * The main class for the reverse code table generator.
@@ -48,8 +48,7 @@ public class ReverseCodeTableGenerator {
             final XMLReader rdr = saxParser.getXMLReader();
 
             final InputSource src =
-                    new InputSource(ReverseCodeTableHandler.class
-                            .getResourceAsStream("resources/codetables.xml"));
+                    new InputSource(ReverseCodeTableHandler.class.getResourceAsStream("resources/codetables.xml"));
 
             final ReverseCodeTableHandler saxUms = new ReverseCodeTableHandler();
 
@@ -74,10 +73,8 @@ public class ReverseCodeTableGenerator {
         }
     }
 
-    private static void dumpTablesAsSwitchStatement(
-            final Vector<Character> combining,
-            final Hashtable<Character, Hashtable<Integer, char[]>> charsets,
-            final PrintStream out) {
+    private static void dumpTablesAsSwitchStatement(final Vector<Character> combining,
+            final Hashtable<Character, Hashtable<Integer, char[]>> charsets, final PrintStream out) {
         out.println("package info.freelibrary.marc4j.converter.impl;");
         out.println("");
         out.println("/**");
@@ -102,7 +99,7 @@ public class ReverseCodeTableGenerator {
         out.println("     * @param c");
         out.println("     * @return True if supplied character is combining; else, false");
         out.println("     */");
-        out.println("    public boolean isCombining(Character c) {");
+        out.println("    public boolean isCombining(final Character c) {");
         out.println("        switch ((int)c.charValue()) {");
 
         final Character combineArray[] = combining.toArray(new Character[0]);
@@ -132,17 +129,17 @@ public class ReverseCodeTableGenerator {
         out.println("     * @param c");
         out.println("     * @return The character hashtable");
         out.println("     */");
-        out.println("    public Hashtable<Integer, char[]> getCharTable(Character c) {");
-        out.println("        String resultStr1 = getCharTableCharSet(c);");
-        out.println("        String resultStr2 = getCharTableCharString(c);");
+        out.println("    public Hashtable<Integer, char[]> getCharTable(final Character c) {");
+        out.println("        final String resultStr1 = getCharTableCharSet(c);");
+        out.println("        final String resultStr2 = getCharTableCharString(c);");
         out.println("        if (resultStr2 == null) {");
         out.println("            return null;");
         out.println("        }");
-        out.println("        int htSize = resultStr1.length();");
-        out.println("        Hashtable<Integer, char[]> result = new Hashtable<Integer, char[]>(htSize);");
-        out.println("        String res2[] = resultStr2.split(\" \");");
+        out.println("        final int htSize = resultStr1.length();");
+        out.println("        final Hashtable<Integer, char[]> result = new Hashtable<Integer, char[]>(htSize);");
+        out.println("        final String res2[] = resultStr2.split(\" \");");
         out.println("        for (int index = 0; index < resultStr1.length(); index++) {");
-        out.println("            Integer intChar = new Integer(resultStr1.charAt(index));");
+        out.println("            final Integer intChar = new Integer(resultStr1.charAt(index));");
         out.println("            result.put(intChar, deHexify(res2[(res2.length == 1) ? 0 : index]));");
         out.println("        }");
         out.println("        return result;");
@@ -153,8 +150,8 @@ public class ReverseCodeTableGenerator {
         Arrays.sort(charsetsKeys);
         final StringBuilder buffer = new StringBuilder();
 
-        out.println("    private String getCharTableCharSet(Character c) {");
-        out.println("        int cVal = (int)c.charValue();");
+        out.println("    private String getCharTableCharSet(final Character c) {");
+        out.println("        final int cVal = (int)c.charValue();");
         out.println("        switch(cVal) {");
 
         for (int sel = 0; sel < charsetsKeys.length; sel++) {
@@ -179,19 +176,14 @@ public class ReverseCodeTableGenerator {
         out.println("        }");
         out.println("        return \"1\";");
         out.println("    }");
-        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 0,
-                3500);
-        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets,
-                3500, 7000);
-        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets,
-                7000, 10500);
-        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets,
-                10500, 14000);
-        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets,
-                14000, charsetsKeys.length);
+        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 0, 3500);
+        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 3500, 7000);
+        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 7000, 10500);
+        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 10500, 14000);
+        dumpPartialCharTableCharString(out, buffer, charsetsKeys, charsets, 14000, charsetsKeys.length);
 
-        out.println("    private String getCharTableCharString(Character c) {");
-        out.println("        int cVal = (int)c.charValue();");
+        out.println("    private String getCharTableCharString(final Character c) {");
+        out.println("        final int cVal = (int)c.charValue();");
         out.println(buffer.toString());
         out.println("        return null;");
         out.println("    }");
@@ -199,28 +191,20 @@ public class ReverseCodeTableGenerator {
 
     }
 
-    static private void dumpPartialCharTableCharString(final PrintStream out,
-            final StringBuilder buffer, final Object charsetsKeys[],
-            final Hashtable<Character, Hashtable<Integer, char[]>> charsets,
+    static private void dumpPartialCharTableCharString(final PrintStream out, final StringBuilder buffer,
+            final Object charsetsKeys[], final Hashtable<Character, Hashtable<Integer, char[]>> charsets,
             final int startOffset, final int endOffset) {
-        final String startByteStr =
-                "0x" +
-                        Integer.toHexString((((Character) charsetsKeys[startOffset])
-                                .charValue()));
-        final String endByteStr =
-                "0x" +
-                        Integer.toHexString((((Character) charsetsKeys[endOffset - 1])
-                                .charValue()));
-        buffer.append("        if (cVal >= " + startByteStr + " && cVal <= " +
-                endByteStr + ") {\n            return getCharTableCharString_" +
-                startByteStr + "_" + endByteStr + "(c);\n        }\n");
+        final String startByteStr = "0x" + Integer.toHexString((((Character) charsetsKeys[startOffset]).charValue()));
+        final String endByteStr = "0x" + Integer.toHexString((((Character) charsetsKeys[endOffset - 1]).charValue()));
+        buffer.append("        if (cVal >= " + startByteStr + " && cVal <= " + endByteStr +
+                ") {\n            return getCharTableCharString_" + startByteStr + "_" + endByteStr +
+                "(c);\n        }\n");
 
-        out.println("    private String getCharTableCharString_" +
-                startByteStr + "_" + endByteStr + "(Character c) {");
+        out.println("    private String getCharTableCharString_" + startByteStr + "_" + endByteStr +
+                "(final Character c) {");
         out.println("        switch ((int)c.charValue()) {");
 
-        for (int sel = startOffset; sel < charsetsKeys.length &&
-                sel < endOffset; sel++) {
+        for (int sel = startOffset; sel < charsetsKeys.length && sel < endOffset; sel++) {
             final Hashtable<Integer, char[]> table = charsets.get(charsetsKeys[sel]);
             final Object tableKeys[] = table.keySet().toArray();
             Arrays.sort(tableKeys);
@@ -238,8 +222,7 @@ public class ReverseCodeTableGenerator {
                     sb2.append(hexify(valarray));
                 }
 
-                if (index > 0 && valarray.length == 1 &&
-                        prevcharArray != null && prevcharArray.length == 1 &&
+                if (index > 0 && valarray.length == 1 && prevcharArray != null && prevcharArray.length == 1 &&
                         valarray[0] != prevcharArray[0]) {
                     useSB1 = true;
                 }
@@ -248,8 +231,7 @@ public class ReverseCodeTableGenerator {
                 prevcharArray = valarray;
             }
 
-            final String returnVal =
-                    useSB1 ? sb1.toString().trim() : sb2.toString().trim();
+            final String returnVal = useSB1 ? sb1.toString().trim() : sb2.toString().trim();
             final int intChar = ((Character) charsetsKeys[sel]).charValue();
             final String hex = Integer.toHexString(intChar);
             out.println("            case 0x" + hex + ":");
@@ -264,8 +246,7 @@ public class ReverseCodeTableGenerator {
     }
 
     /**
-     * Utility function for translating an array of characters to a two
-     * character hex string of the character values.
+     * Utility function for translating an array of characters to a two character hex string of the character values.
      *
      * @param aValArray The array of characters to encode
      * @return A string representation of the hex code

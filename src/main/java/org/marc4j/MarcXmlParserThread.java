@@ -33,7 +33,7 @@ import org.xml.sax.InputSource;
  */
 public class MarcXmlParserThread extends Thread {
 
-    private RecordStack queue;
+    private final RecordStack queue;
 
     private InputSource input;
 
@@ -44,7 +44,7 @@ public class MarcXmlParserThread extends Thread {
      * 
      * @param queue the record queue
      */
-    public MarcXmlParserThread(RecordStack queue) {
+    public MarcXmlParserThread(final RecordStack queue) {
         this.queue = queue;
     }
 
@@ -55,7 +55,7 @@ public class MarcXmlParserThread extends Thread {
      * @param queue the record queue
      * @param input the input stream
      */
-    public MarcXmlParserThread(RecordStack queue, InputSource input) {
+    public MarcXmlParserThread(final RecordStack queue, final InputSource input) {
         this.queue = queue;
         this.input = input;
     }
@@ -74,7 +74,7 @@ public class MarcXmlParserThread extends Thread {
      * 
      * @param th - the transformation content handler
      */
-    public void setTransformerHandler(TransformerHandler th) {
+    public void setTransformerHandler(final TransformerHandler th) {
         this.th = th;
     }
 
@@ -92,7 +92,7 @@ public class MarcXmlParserThread extends Thread {
      * 
      * @param input the input stream
      */
-    public void setInputSource(InputSource input) {
+    public void setInputSource(final InputSource input) {
         this.input = input;
     }
 
@@ -101,17 +101,18 @@ public class MarcXmlParserThread extends Thread {
      * <code>RecordQueue</code> and sends the <code>InputStream</code> to the
      * <code>MarcXmlParser</code> parser.
      */
+    @Override
     public void run() {
         try {
-            MarcXmlHandler handler = new MarcXmlHandler(queue);
-            MarcXmlParser parser = new MarcXmlParser(handler);
+            final MarcXmlHandler handler = new MarcXmlHandler(queue);
+            final MarcXmlParser parser = new MarcXmlParser(handler);
 
             if (th == null) {
                 parser.parse(input);
             } else {
                 parser.parse(input, th);
             }
-        } catch (MarcException me) {
+        } catch (final MarcException me) {
             queue.passException(me);
         } finally {
             queue.end();

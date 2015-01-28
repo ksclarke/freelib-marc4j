@@ -20,6 +20,10 @@
 
 package org.marc4j.util;
 
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
+import info.freelibrary.marc4j.converter.impl.Iso5426ToUnicode;
+import info.freelibrary.marc4j.converter.impl.Iso6937ToUnicode;
+
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,11 +43,6 @@ import org.marc4j.Constants;
 import org.marc4j.MarcStreamReader;
 import org.marc4j.MarcXmlWriter;
 import org.marc4j.converter.CharConverter;
-
-import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
-import info.freelibrary.marc4j.converter.impl.Iso5426ToUnicode;
-import info.freelibrary.marc4j.converter.impl.Iso6937ToUnicode;
-
 import org.marc4j.marc.Record;
 
 /**
@@ -81,6 +80,9 @@ import org.marc4j.marc.Record;
  * @author Bas Peters
  */
 public class MarcXmlDriver {
+
+    private MarcXmlDriver() {
+    }
 
     /**
      * Provides a static entry point.

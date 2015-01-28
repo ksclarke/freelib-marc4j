@@ -36,6 +36,9 @@ import org.marc4j.marc.Record;
  */
 public class WriteMarcExample {
 
+    private WriteMarcExample() {
+    }
+
     /**
      * The main class for WriteMarcExample.
      *

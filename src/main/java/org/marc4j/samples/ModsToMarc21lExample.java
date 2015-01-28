@@ -35,6 +35,9 @@ import org.marc4j.marc.Record;
  */
 public class ModsToMarc21lExample {
 
+    private ModsToMarc21lExample() {
+    }
+
     /**
      * The main class for the ModsToMarc21lExample.
      *

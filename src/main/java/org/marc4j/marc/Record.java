@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Represents a MARC record.
- * 
+ *
  * @author Bas Peters
  */
 public interface Record extends Serializable {
@@ -33,63 +33,63 @@ public interface Record extends Serializable {
     /**
      * Sets the identifier. The purpose of this identifier is to provide an
      * identifier for persistency.
-     * 
+     *
      * @param id the identifier
      */
     public void setId(Long id);
 
     /**
      * Returns the identifier.
-     * 
+     *
      * @return Long - the identifier
      */
     public Long getId();
 
     /**
      * Sets the type of record.
-     * 
+     *
      * @param type the type of record
      */
     public void setType(String type);
 
     /**
      * Returns the type of record.
-     * 
+     *
      * @return String - the type of record
      */
     public String getType();
 
     /**
      * Adds a <code>VariableField</code>.
-     * 
+     *
      * @param field the <code>VariableField</code>
      */
     public void addVariableField(VariableField field);
 
     /**
      * Removes a variable field from the collection.
-     * 
+     *
      * @param field the variable field
      */
     public void removeVariableField(VariableField field);
 
     /**
      * Returns a list of variable fields
-     * 
+     *
      * @return List - the variable fields
      */
     public List<VariableField> getVariableFields();
 
     /**
      * Returns a list of control fields
-     * 
+     *
      * @return List - the control fields
      */
     public List<ControlField> getControlFields();
 
     /**
      * Returns a list of data fields
-     * 
+     *
      * @return List - the data fields
      */
     public List<DataField> getDataFields();
@@ -97,7 +97,7 @@ public interface Record extends Serializable {
     /**
      * Returns the control number field or <code>null</code> if no control
      * number field is available.
-     * 
+     *
      * @return ControlField - the control number field
      */
     public ControlField getControlNumberField();
@@ -106,21 +106,21 @@ public interface Record extends Serializable {
      * Returns the control number or <code>null</code> if no control number is
      * available. This method returns the data for a <code>ControlField</code>
      * with tag 001.
-     * 
+     *
      * @return String - the control number
      */
     public String getControlNumber();
 
     /**
      * Returns the first instance of the variable field with the given tag.
-     * 
+     *
      * @return VariableField - the variable field
      */
     public VariableField getVariableField(String tag);
 
     /**
      * Returns a list of variable fields with the given tag.
-     * 
+     *
      * @return List - the variable fields
      */
     public List<VariableField> getVariableFields(String tag);
@@ -129,27 +129,27 @@ public interface Record extends Serializable {
      * Returns a list of variable fields for the given tags.
      * <p>
      * For example:
-     * 
+     *
      * <pre>
      * String tags = { &quot;100&quot;, &quot;245&quot;, &quot;260&quot;, &quot;300&quot; };
-     * 
+     *
      * List fields = record.getVariableFields(tags);
      * </pre>
-     * 
+     *
      * @return List - the variable fields
      */
     public List<VariableField> getVariableFields(String[] tag);
 
     /**
      * Returns the <code>Leader</code>.
-     * 
+     *
      * @return Leader - the <code>Leader</code>
      */
     public Leader getLeader();
 
     /**
      * Sets the <code>Leader</code>.
-     * 
+     *
      * @param leader the <code>Leader</code>
      */
     public void setLeader(Leader leader);
@@ -161,7 +161,7 @@ public interface Record extends Serializable {
      * See {@link java.util.regex.Pattern} for more information about Java
      * regular expressions.
      * </p>
-     * 
+     *
      * @param pattern the regular expression
      * @return List - the result list
      */
@@ -174,7 +174,7 @@ public interface Record extends Serializable {
      * See {@link java.util.regex.Pattern} for more information about Java
      * regular expressions.
      * </p>
-     * 
+     *
      * @param tag the tag value
      * @param pattern the regular expression
      * @return List - the result list
@@ -188,7 +188,7 @@ public interface Record extends Serializable {
      * See {@link java.util.regex.Pattern} for more information about Java
      * regular expressions.
      * </p>
-     * 
+     *
      * @param tag the tag values
      * @param pattern the regular expression
      * @return List - the result list

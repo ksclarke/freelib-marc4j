@@ -329,8 +329,10 @@ public class AnselToUnicode extends CharConverter {
         }
     }
 
-    private void set_cdt(final CodeTracker cdt, final int g0_or_g1, final char[] data, int addnlOffset,
+    private void set_cdt(final CodeTracker cdt, final int g0_or_g1, final char[] data, final int aAddnlOffset,
             final boolean multibyte) {
+        int addnlOffset = aAddnlOffset;
+
         if (data[cdt.offset + addnlOffset] == '!' && data[cdt.offset + addnlOffset + 1] == 'E') {
             addnlOffset++;
         } else if (data[cdt.offset + addnlOffset] == ' ') {
@@ -707,18 +709,20 @@ public class AnselToUnicode extends CharConverter {
         return getMBChar(makeMultibyte(data[offset + bumps[0]], data[offset + bumps[1]], data[offset + bumps[2]]));
     }
 
-    private int getRawMBLength(final char[] data, int offset) {
+    private int getRawMBLength(final char[] aDataArray, final int aOffset) {
+        int offset = aOffset;
         int length = 0;
 
-        while (offset < data.length && data[offset] != 0x1b) {
+        while (offset < aDataArray.length && aDataArray[offset] != 0x1b) {
             offset++;
             length++;
         }
 
-        return (length);
+        return length;
     }
 
-    private int getNumSpacesInMBLength(final char[] data, int offset) {
+    private int getNumSpacesInMBLength(final char[] data, final int aOffset) {
+        int offset = aOffset;
         int cnt = 0;
 
         while (offset < data.length && data[offset] != 0x1b) {
@@ -729,7 +733,7 @@ public class AnselToUnicode extends CharConverter {
             offset++;
         }
 
-        return (cnt);
+        return cnt;
     }
 
     private char getCharCDT(final char[] data, final CodeTracker cdt) {

@@ -36,6 +36,9 @@ import org.marc4j.marc.Record;
  */
 public class CheckAgencyExample {
 
+    private CheckAgencyExample() {
+    }
+
     /**
      * The main class for CheckAgencyExample.
      *

@@ -97,7 +97,8 @@ public class CodeTableHandler extends DefaultHandler {
      * 
      * @param locator the {@link Locator}object
      */
-    public void setDocumentLocator(Locator locator) {
+    @Override
+    public void setDocumentLocator(final Locator locator) {
         this.locator = locator;
     }
 
@@ -110,8 +111,9 @@ public class CodeTableHandler extends DefaultHandler {
      * @param atts
      * @throws SAXParseException
      */
-    public void startElement(String uri, String name, String qName,
-            Attributes atts) throws SAXParseException {
+    @Override
+    public void startElement(final String uri, final String name, final String qName,
+            final Attributes atts) throws SAXParseException {
         if (name.equals("characterSet")) {
             charset = new HashMap<Integer, Character>();
             isocode = Integer.valueOf(atts.getValue("ISOcode"), 16);
@@ -139,7 +141,8 @@ public class CodeTableHandler extends DefaultHandler {
      * @param start
      * @param length
      */
-    public void characters(char[] ch, int start, int length) {
+    @Override
+    public void characters(final char[] ch, final int start, final int length) {
         if (data != null) {
             data.append(ch, start, length);
         }
@@ -153,7 +156,8 @@ public class CodeTableHandler extends DefaultHandler {
      * @param qname
      * @throws SAXParseException
      */
-    public void endElement(String uri, String name, String qName)
+    @Override
+    public void endElement(final String uri, final String name, final String qName)
             throws SAXParseException {
         if (name.equals("characterSet")) {
             sets.put(isocode, charset);
@@ -196,25 +200,25 @@ public class CodeTableHandler extends DefaultHandler {
      * 
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         @SuppressWarnings("unused")
         HashMap<Integer, HashMap<Integer, Character>> charsets = null;
 
         try {
 
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
-            SAXParser saxParser = factory.newSAXParser();
-            XMLReader rdr = saxParser.getXMLReader();
+            final SAXParser saxParser = factory.newSAXParser();
+            final XMLReader rdr = saxParser.getXMLReader();
 
             // FIXME: Needed?
-            File file =
+            final File file =
                     new File(
                             "C:\\Documents and Settings\\ckeith\\Desktop\\Projects\\Code Tables\\codetables.xml");
-            InputSource src = new InputSource(new FileInputStream(file));
+            final InputSource src = new InputSource(new FileInputStream(file));
 
-            CodeTableHandler saxUms = new CodeTableHandler();
+            final CodeTableHandler saxUms = new CodeTableHandler();
 
             rdr.setContentHandler(saxUms);
             rdr.parse(src);
@@ -224,7 +228,7 @@ public class CodeTableHandler extends DefaultHandler {
             // System.out.println( charsets.toString() );
             System.out.println(saxUms.getCombiningChars());
 
-        } catch (Exception exc) {
+        } catch (final Exception exc) {
             exc.printStackTrace(System.out);
             // System.err.println( "Exception: " + exc );
         }

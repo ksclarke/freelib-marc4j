@@ -1,9 +1,9 @@
 
 package info.freelibrary.marc4j.impl;
 
-import org.marc4j.marc.VariableField;
-
 import java.util.Collections;
+
+import org.marc4j.marc.VariableField;
 
 /**
  * @author Robert Haschart
@@ -18,8 +18,9 @@ public class SortedRecordImpl extends RecordImpl {
     /**
      * Adds a {@link VariableField} to the record.
      */
-    public void addVariableField(VariableField field) {
-        int cfSize = controlFields.size();
+    @Override
+    public void addVariableField(final VariableField field) {
+        final int cfSize = controlFields.size();
 
         // Let the class we extend do the work...
         super.addVariableField(field);

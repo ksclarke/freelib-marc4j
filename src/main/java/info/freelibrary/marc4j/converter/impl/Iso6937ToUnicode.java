@@ -41,17 +41,18 @@ public class Iso6937ToUnicode extends CharConverter {
      * @param data - the ISO 6937 data in an array of char
      * @return {@link String}- the UCS/Unicode data
      */
-    public String convert(char data[]) {
-        StringBuilder sb = new StringBuilder();
+    @Override
+    public String convert(final char data[]) {
+        final StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < data.length; i++) {
-            char c = data[i];
-            int len = data.length;
+            final char c = data[i];
+            final int len = data.length;
 
             if (isAscii(c)) {
                 sb.append(c);
             } else if (isCombining(c) && hasNext(i, len)) {
-                char d = getCombiningChar(c * 256 + data[i + 1]);
+                final char d = getCombiningChar(c * 256 + data[i + 1]);
 
                 if (d != 0) {
                     sb.append(d);
@@ -67,7 +68,7 @@ public class Iso6937ToUnicode extends CharConverter {
         return sb.toString();
     }
 
-    private boolean hasNext(int pos, int len) {
+    private boolean hasNext(final int pos, final int len) {
         if (pos < (len - 1)) {
             return true;
         }
@@ -75,7 +76,7 @@ public class Iso6937ToUnicode extends CharConverter {
         return false;
     }
 
-    private boolean isAscii(int i) {
+    private boolean isAscii(final int i) {
         if (i >= 0x00 && i <= 0x7F) {
             return true;
         }
@@ -83,7 +84,7 @@ public class Iso6937ToUnicode extends CharConverter {
         return false;
     }
 
-    private boolean isCombining(int i) {
+    private boolean isCombining(final int i) {
         if (i >= 0xC0 && i <= 0xDF) {
             return true;
         }
@@ -98,12 +99,13 @@ public class Iso6937ToUnicode extends CharConverter {
      * @return boolean whether the CharConverter returns Unicode encoded
      *         characters
      */
+    @Override
     public boolean outputsUnicode() {
         return (true);
     }
 
     // Source : http://anubis.dkuug.dk/JTC1/SC2/WG3/docs/6937cd.pdf
-    private char getChar(int i) {
+    private char getChar(final int i) {
         switch (i) {
             case 0xA0:
                 return 0x00A0; // 10/00 NO-BREAK SPACE
@@ -269,7 +271,7 @@ public class Iso6937ToUnicode extends CharConverter {
         }
     }
 
-    private char getCombiningChar(int i) {
+    private char getCombiningChar(final int i) {
         switch (i) {
         // 12/00 (This position shall not be used)
 

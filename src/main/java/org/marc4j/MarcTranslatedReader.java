@@ -18,18 +18,17 @@ package org.marc4j;
  * limitations under the License.
  */
 
-import org.marc4j.converter.CharConverter;
-
 import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
 
+import java.util.List;
+
+import org.marc4j.converter.CharConverter;
 import org.marc4j.marc.DataField;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
 import org.marc4j.util.Normalizer;
-
-import java.util.List;
 
 /**
  * @author Robert Haschart
@@ -48,7 +47,7 @@ public class MarcTranslatedReader implements MarcReader {
      * @param r
      * @param unicodeNormalizeBool
      */
-    public MarcTranslatedReader(MarcReader r, boolean unicodeNormalizeBool) {
+    public MarcTranslatedReader(final MarcReader r, final boolean unicodeNormalizeBool) {
         reader = r;
         convert = new AnselToUnicode();
 
@@ -64,7 +63,7 @@ public class MarcTranslatedReader implements MarcReader {
      * @param r
      * @param unicodeNormalizeStr
      */
-    public MarcTranslatedReader(MarcReader r, String unicodeNormalizeStr) {
+    public MarcTranslatedReader(final MarcReader r, final String unicodeNormalizeStr) {
         reader = r;
         convert = new AnselToUnicode();
 
@@ -84,6 +83,7 @@ public class MarcTranslatedReader implements MarcReader {
     /**
      * Returns <code>true</code> if the reader has another {@link Record}.
      */
+    @Override
     public boolean hasNext() {
         return reader.hasNext();
     }
@@ -91,9 +91,10 @@ public class MarcTranslatedReader implements MarcReader {
     /**
      * Returns the next {@link Record}.
      */
+    @Override
     public Record next() {
-        Record rec = reader.next();
-        Leader l = rec.getLeader();
+        final Record rec = reader.next();
+        final Leader l = rec.getLeader();
         boolean is_utf_8 = false;
 
         if (l.getCharCodingScheme() == 'a') {
@@ -104,18 +105,18 @@ public class MarcTranslatedReader implements MarcReader {
             return (rec);
         }
 
-        List<VariableField> fields = rec.getVariableFields();
+        final List<VariableField> fields = rec.getVariableFields();
 
-        for (VariableField f : fields) {
+        for (final VariableField f : fields) {
             if (!(f instanceof DataField)) {
                 continue;
             }
 
-            DataField field = (DataField) f;
-            List<Subfield> subfields = field.getSubfields();
+            final DataField field = (DataField) f;
+            final List<Subfield> subfields = field.getSubfields();
 
-            for (Subfield sf : subfields) {
-                String oldData = sf.getData();
+            for (final Subfield sf : subfields) {
+                final String oldData = sf.getData();
                 String newData = oldData;
 
                 if (!is_utf_8) {

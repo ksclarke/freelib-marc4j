@@ -39,6 +39,9 @@ import org.marc4j.marc.Record;
  */
 public class RemoveLocalFieldsExample {
 
+    private RemoveLocalFieldsExample() {
+    }
+
     /**
      * The main class for RemoveLocalFieldsExample.
      *

@@ -26,6 +26,9 @@ import org.marc4j.marc.Record;
  */
 public class TemplatesExample {
 
+    private TemplatesExample() {
+    }
+
     /**
      * The main class for TemplateExample.
      *
@@ -50,6 +53,7 @@ public class TemplatesExample {
             // create a filter to include only .xml files
             final FilenameFilter filter = new FilenameFilter() {
 
+                @Override
                 public boolean accept(final File dir, final String name) {
                     return name.endsWith(".xml");
                 }

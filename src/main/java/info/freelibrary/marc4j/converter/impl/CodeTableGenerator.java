@@ -29,16 +29,13 @@ import java.util.HashMap;
 import java.util.Vector;
 
 /**
- * Invoked at build time to generate a java source file (named
- * CodeTableGenerated.java) which when compiled will implement the
- * CodeTableInterface (primarily through switch statements) and which can be
- * used be the AnselToUnicode converter instead of this class, and which will
- * produce the same results as the object CodeTable. <br>
- * The following routines are only used in the code generation process, and are
- * not available to be called from within an application that uses Marc4j. <br>
- * The routines generated for converting MARC8 multibyte characters to unicode
- * are split into several routines to workaround a limitation in java that a
- * method can only contain 64k of code when it is compiled.
+ * Invoked at build time to generate a java source file (named CodeTableGenerated.java) which when compiled will
+ * implement the CodeTableInterface (primarily through switch statements) and which can be used be the AnselToUnicode
+ * converter instead of this class, and which will produce the same results as the object CodeTable. <br>
+ * The following routines are only used in the code generation process, and are not available to be called from within
+ * an application that uses Marc4j. <br>
+ * The routines generated for converting MARC8 multibyte characters to unicode are split into several routines to
+ * workaround a limitation in java that a method can only contain 64k of code when it is compiled.
  *
  * @author Robert Haschart
  * @author Kevin S. Clarke <ksclarke@gmail.com>
@@ -61,8 +58,7 @@ public class CodeTableGenerator extends CodeTable {
      * @throws FileNotFoundException
      */
     public static void main(final String args[]) throws FileNotFoundException {
-        final InputStream in =
-                CodeTable.class.getResourceAsStream("resources/codetables.xml");
+        final InputStream in = CodeTable.class.getResourceAsStream("resources/codetables.xml");
         final CodeTableGenerator ctGenerator = new CodeTableGenerator(in);
 
         if (args.length > 0) {
@@ -94,7 +90,7 @@ public class CodeTableGenerator extends CodeTable {
         out.println("     * @param g0");
         out.println("     * @param g1");
         out.println("     */");
-        out.println("    public boolean isCombining(int i, int g0, int g1) {");
+        out.println("    public boolean isCombining(final int i, final int g0, final int g1) {");
         out.println("        switch (i <= 0x7E ? g0 : g1) {");
 
         final Object combiningKeys[] = combining.keySet().toArray();
@@ -102,14 +98,12 @@ public class CodeTableGenerator extends CodeTable {
 
         for (int combiningSel = 0; combiningSel < combiningKeys.length; combiningSel++) {
             final Integer nextKey = (Integer) combiningKeys[combiningSel];
-            out.println("            case 0x" + Integer.toHexString(nextKey) +
-                    ":");
+            out.println("            case 0x" + Integer.toHexString(nextKey) + ":");
             final Vector<Integer> v = combining.get(nextKey);
             if (v.size() > 0) {
                 out.println("                switch (i) {");
                 for (final Integer vVal : v) {
-                    out.println("                    case 0x" +
-                            Integer.toHexString(vVal) + ":");
+                    out.println("                    case 0x" + Integer.toHexString(vVal) + ":");
                 }
                 out.println("                        return true;");
                 out.println("                    default:");
@@ -130,7 +124,7 @@ public class CodeTableGenerator extends CodeTable {
         out.println("     * @param c");
         out.println("     * @param mode");
         out.println("     */");
-        out.println("    public char getChar(int c, int mode) {");
+        out.println("    public char getChar(final int c, final int mode) {");
         out.println("        int code = getCharCode(c, mode);");
         out.println("        if (code == -1) {");
         out.println("            return (char)0;");
@@ -142,7 +136,7 @@ public class CodeTableGenerator extends CodeTable {
         out.println("        return (char)code;");
         out.println("    }");
         out.println("");
-        out.println("    private int getCharCode(int c, int mode) {");
+        out.println("    private int getCharCode(final int c, final int mode) {");
         out.println("        if (c == 0x20) {");
         out.println("            return c;");
         out.println("        }");
@@ -174,12 +168,11 @@ public class CodeTableGenerator extends CodeTable {
                     if (c != null) {
                         final String kHex = Integer.toHexString(mKey);
                         final String vHex = Integer.toHexString(c.charValue());
-                        out.println("                    case 0x" + kHex +
-                                ":\n                        return 0x" + vHex + ";");
+                        out.println("                    case 0x" + kHex + ":\n                        return 0x" +
+                                vHex + ";");
                     } else {
                         final String kHex = Integer.toHexString(mKey);
-                        out.println("                    case 0x" + kHex +
-                                ":\n                        return 0;");
+                        out.println("                    case 0x" + kHex + ":\n                        return 0;");
                     }
                 }
 
@@ -197,7 +190,7 @@ public class CodeTableGenerator extends CodeTable {
 
         final StringBuffer getMultiByteFunc = new StringBuffer();
 
-        getMultiByteFunc.append("    private int getMultiByteChar(int c) {\n");
+        getMultiByteFunc.append("    private int getMultiByteChar(final int c) {\n");
 
         final HashMap<Integer, Character> map = charsets.get(new Integer(0x31));
         final Integer keyArray[] = map.keySet().toArray(new Integer[0]);
@@ -208,16 +201,11 @@ public class CodeTableGenerator extends CodeTable {
         // characters must be divided up like this so that the 64K code
         // size per method limitation is not exceeded.
 
-        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map,
-                0x210000, 0x214fff);
-        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map,
-                0x215000, 0x21ffff);
-        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map,
-                0x220000, 0x22ffff);
-        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map,
-                0x230000, 0x27ffff);
-        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map,
-                0x280000, 0x7f7fff);
+        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map, 0x210000, 0x214fff);
+        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map, 0x215000, 0x21ffff);
+        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map, 0x220000, 0x22ffff);
+        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map, 0x230000, 0x27ffff);
+        dumpPartialMultiByteTable(out, getMultiByteFunc, keyArray, map, 0x280000, 0x7f7fff);
 
         getMultiByteFunc.append("        return 0;\n");
         getMultiByteFunc.append("    }");
@@ -227,18 +215,15 @@ public class CodeTableGenerator extends CodeTable {
         out.println("}");
     }
 
-    private void dumpPartialMultiByteTable(final PrintStream out,
-            final StringBuffer buffer, final Integer keyArray[],
-            final HashMap<Integer, Character> map, final int startByte, final int endByte) {
+    private void dumpPartialMultiByteTable(final PrintStream out, final StringBuffer buffer,
+            final Integer keyArray[], final HashMap<Integer, Character> map, final int startByte, final int endByte) {
         final String startByteStr = "0x" + Integer.toHexString(startByte);
         final String endByteStr = "0x" + Integer.toHexString(endByte);
 
-        buffer.append("        if (c >= " + startByteStr + " && c <= " +
-                endByteStr + ") {\n            return getMultiByteChar_" +
-                startByteStr + "_" + endByteStr + "(c);\n        }\n");
+        buffer.append("        if (c >= " + startByteStr + " && c <= " + endByteStr +
+                ") {\n            return getMultiByteChar_" + startByteStr + "_" + endByteStr + "(c);\n        }\n");
 
-        out.println("    private char getMultiByteChar_" + startByteStr + "_" +
-                endByteStr + "(int c) {");
+        out.println("    private char getMultiByteChar_" + startByteStr + "_" + endByteStr + "(final int c) {");
         out.println("        switch (c) {");
 
         for (int sel = 0; sel < keyArray.length; sel++) {
@@ -250,12 +235,10 @@ public class CodeTableGenerator extends CodeTable {
                     final String kHex = Integer.toHexString(mKey);
                     final String vHex = Integer.toHexString(c.charValue());
 
-                    out.println("            case 0x" + kHex +
-                            ":\n                return (char)0x" + vHex + ";");
+                    out.println("            case 0x" + kHex + ":\n                return (char)0x" + vHex + ";");
                 } else {
                     final String kHex = Integer.toHexString(mKey);
-                    out.println("            case 0x" + kHex +
-                            ":\n                return (char)0;");
+                    out.println("            case 0x" + kHex + ":\n                return (char)0;");
                 }
             }
         }

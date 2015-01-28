@@ -43,14 +43,15 @@ public class UnicodeToIso5426 extends CharConverter {
      * @param data - the UCS/Unicode data in an array of char
      * @return {@link String}- the UNIMARC (ISO 5426 charset) data
      */
-    public String convert(char data[]) {
-        StringBuffer sb = new StringBuffer();
+    @Override
+    public String convert(final char data[]) {
+        final StringBuffer sb = new StringBuffer();
         for (int i = 0; i < data.length; i++) {
-            char c = data[i];
+            final char c = data[i];
             if (c < 128) {
                 sb.append(c);
             } else {
-                int d = convert(c);
+                final int d = convert(c);
                 if (d < 256) {
                     sb.append((char) d);
                 } else {
@@ -62,7 +63,7 @@ public class UnicodeToIso5426 extends CharConverter {
         return sb.toString();
     }
 
-    private int convert(int i) {
+    private int convert(final int i) {
         switch (i) {
             case 0x0024:
                 return 0xA4; // 2/4 dollar sign

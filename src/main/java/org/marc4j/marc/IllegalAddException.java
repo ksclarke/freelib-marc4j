@@ -35,7 +35,7 @@ public class IllegalAddException extends IllegalArgumentException {
      * 
      * @param className the class name
      */
-    public IllegalAddException(String className) {
+    public IllegalAddException(final String className) {
         super(new StringBuffer().append("The addition of the object of type ")
                 .append(className).append(" is not allowed.").toString());
     }
@@ -47,7 +47,7 @@ public class IllegalAddException extends IllegalArgumentException {
      * @param className the class name
      * @param reason the reason why the exception is thrown
      */
-    public IllegalAddException(String className, String reason) {
+    public IllegalAddException(final String className, final String reason) {
         super(new StringBuffer().append("The addition of the object of type ")
                 .append(className).append(" is not allowed: ").append(reason)
                 .append(".").toString());

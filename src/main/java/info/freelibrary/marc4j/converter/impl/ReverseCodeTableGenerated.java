@@ -22,7 +22,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
      * @param c
      * @return True if supplied character is combining; else, false
      */
-    public boolean isCombining(Character c) {
+    public boolean isCombining(final Character c) {
         switch ((int)c.charValue()) {
             case 0x300:
             case 0x301:
@@ -93,24 +93,24 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
      * @param c
      * @return The character hashtable
      */
-    public Hashtable<Integer, char[]> getCharTable(Character c) {
-        String resultStr1 = getCharTableCharSet(c);
-        String resultStr2 = getCharTableCharString(c);
+    public Hashtable<Integer, char[]> getCharTable(final Character c) {
+        final String resultStr1 = getCharTableCharSet(c);
+        final String resultStr2 = getCharTableCharString(c);
         if (resultStr2 == null) {
             return null;
         }
-        int htSize = resultStr1.length();
-        Hashtable<Integer, char[]> result = new Hashtable<Integer, char[]>(htSize);
-        String res2[] = resultStr2.split(" ");
+        final int htSize = resultStr1.length();
+        final Hashtable<Integer, char[]> result = new Hashtable<Integer, char[]>(htSize);
+        final String res2[] = resultStr2.split(" ");
         for (int index = 0; index < resultStr1.length(); index++) {
-            Integer intChar = new Integer(resultStr1.charAt(index));
+            final Integer intChar = new Integer(resultStr1.charAt(index));
             result.put(intChar, deHexify(res2[(res2.length == 1) ? 0 : index]));
         }
         return result;
     }
 
-    private String getCharTableCharSet(Character c) {
-        int cVal = (int)c.charValue();
+    private String getCharTableCharSet(final Character c) {
+        final int cVal = (int)c.charValue();
         switch(cVal) {
             case 0x1b:
                 return "B";
@@ -1251,7 +1251,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
         return "1";
     }
-    private String getCharTableCharString_0x1b_0x5e5f(Character c) {
+    private String getCharTableCharString_0x1b_0x5e5f(final Character c) {
         switch ((int)c.charValue()) {
             case 0x1b:
                 return "1b";
@@ -8258,7 +8258,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
     }
 
-    private String getCharTableCharString_0x5e61_0x73a9(Character c) {
+    private String getCharTableCharString_0x5e61_0x73a9(final Character c) {
         switch ((int)c.charValue()) {
             case 0x5e61:
                 return "222758";
@@ -15265,7 +15265,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
     }
 
-    private String getCharTableCharString_0x73ab_0x89e1(Character c) {
+    private String getCharTableCharString_0x73ab_0x89e1(final Character c) {
         switch ((int)c.charValue()) {
             case 0x73ab:
                 return "214b38";
@@ -22272,7 +22272,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
     }
 
-    private String getCharTableCharString_0x89e3_0x9f62(Character c) {
+    private String getCharTableCharString_0x89e3_0x9f62(final Character c) {
         switch ((int)c.charValue()) {
             case 0x89e3:
                 return "215834";
@@ -29279,7 +29279,7 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
     }
 
-    private String getCharTableCharString_0x9f63_0xff3d(Character c) {
+    private String getCharTableCharString_0x9f63_0xff3d(final Character c) {
         switch ((int)c.charValue()) {
             case 0x9f63:
                 return "216323";
@@ -33448,8 +33448,8 @@ public class ReverseCodeTableGenerated extends ReverseCodeTable {
         }
     }
 
-    private String getCharTableCharString(Character c) {
-        int cVal = (int)c.charValue();
+    private String getCharTableCharString(final Character c) {
+        final int cVal = (int)c.charValue();
         if (cVal >= 0x1b && cVal <= 0x5e5f) {
             return getCharTableCharString_0x1b_0x5e5f(c);
         }

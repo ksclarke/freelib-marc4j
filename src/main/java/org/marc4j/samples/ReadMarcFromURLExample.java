@@ -28,24 +28,27 @@ import org.marc4j.marc.Record;
 
 /**
  * Reads MARC input.
- * 
+ *
  * @author Bas Peters
  */
 public class ReadMarcFromURLExample {
 
+    private ReadMarcFromURLExample() {
+    }
+
     /**
      * The main class for ReadMarcFromURLExample.
-     * 
+     *
      * @param args
      * @throws Exception
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) throws Exception {
 
-        URL url = new URL("http://www.loc.gov/standards/marcxml/Sandburg/sandburg.mrc");
+        final URL url = new URL("http://www.loc.gov/standards/marcxml/Sandburg/sandburg.mrc");
 
-        MarcReader reader = new MarcStreamReader(url.openStream());
+        final MarcReader reader = new MarcStreamReader(url.openStream());
         while (reader.hasNext()) {
-            Record record = reader.next();
+            final Record record = reader.next();
             System.out.println(record.toString());
         }
 
