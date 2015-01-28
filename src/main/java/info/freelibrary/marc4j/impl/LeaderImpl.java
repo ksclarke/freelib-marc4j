@@ -26,7 +26,7 @@ import org.marc4j.marc.Leader;
 
 /**
  * Represents a record label in a MARC record.
- * 
+ *
  * @author Bas Peters
  */
 public class LeaderImpl implements Leader {
@@ -312,7 +312,7 @@ public class LeaderImpl implements Leader {
             } else {
                 setIndicatorCount(2);
             }
-            s = String.valueOf(ldr.charAt(10));
+            s = String.valueOf(ldr.charAt(11));
             if (isInteger(s)) {
                 setSubfieldCodeLength(Integer.parseInt(s));
             } else {
