@@ -414,6 +414,9 @@ public class MarcXmlWriter implements MarcWriter {
         try {
             final AttributesImpl atts = new AttributesImpl();
             handler.startDocument();
+            this.handler.startPrefixMapping("", Constants.MARCXML_NS_URI);
+            atts.addAttribute(Constants.MARCXML_NS_URI, "xmlns", "xmlns",
+                    "CDATA", Constants.MARCXML_NS_URI);
             handler.startElement(Constants.MARCXML_NS_URI, COLLECTION,
                     COLLECTION, atts);
         } catch (final SAXException e) {
