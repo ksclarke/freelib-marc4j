@@ -45,7 +45,7 @@ Lastly, if you are using Maven, you can also just include MARC4J as a dependency
     <dependency>
 	    <groupId>info.freelibrary</groupId>
 	    <artifactId>freelib-marc4j</artifactId>
-	    <version>2.6.3</version>
+	    <version>2.6.5</version>
     </dependency>
 
 It's that simple.

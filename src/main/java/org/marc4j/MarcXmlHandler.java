@@ -35,16 +35,14 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * Creates <code>Record</code> objects from SAX events and pushes each item onto
- * the top of the <code>RecordStack</code>.
- * 
+ * Creates <code>Record</code> objects from SAX events and pushes each item onto the top of the
+ * <code>RecordStack</code>.
+ *
  * @author Bas Peters
  */
 public class MarcXmlHandler implements ContentHandler {
 
     private final RecordStack queue;
-
-    // private InputSource input;
 
     private StringBuffer sb;
 
@@ -100,7 +98,7 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * Default constructor.
-     * 
+     *
      * @param queue
      */
     public MarcXmlHandler(final RecordStack queue) {
@@ -119,14 +117,14 @@ public class MarcXmlHandler implements ContentHandler {
      * An event fired at the start of an element.
      */
     @Override
-    public void startElement(final String uri, final String name, final String qName,
-            final Attributes atts) throws SAXException {
+    public void startElement(final String uri, final String name, final String qName, final Attributes atts)
+            throws SAXException {
 
         final String realname = (name.length() == 0) ? qName : name;
         final Integer elementType = elementMap.get(realname);
 
         if (elementType == null) {
-            return;
+            throw new MarcException("Unexpected XML element: " + realname);
         }
 
         switch (elementType.intValue()) {
@@ -139,51 +137,68 @@ public class MarcXmlHandler implements ContentHandler {
                 sb = new StringBuffer();
                 break;
             case CONTROLFIELD_ID:
-                sb = new StringBuffer();
                 tag = atts.getValue(TAG_ATTR);
+
+                if (tag == null) {
+                    throw new MarcException("ControlField missing tag value");
+                }
+
                 controlField = factory.newControlField(tag);
+                sb = new StringBuffer();
                 break;
             case DATAFIELD_ID:
                 tag = atts.getValue(TAG_ATTR);
+
+                if (tag == null) {
+                    throw new MarcException("DataField missing tag value");
+                }
+
                 String ind1 = atts.getValue(IND_1_ATTR);
                 String ind2 = atts.getValue(IND_2_ATTR);
+
                 if (ind1 == null) {
-                    throw new MarcException("missing ind1");
+                    throw new MarcException("DataField (" + tag + ") missing first indicator");
                 }
+
                 if (ind2 == null) {
-                    throw new MarcException("missing ind2");
+                    throw new MarcException("DataField (" + tag + ") missing second indicator");
                 }
+
                 if (ind1.length() == 0) {
                     ind1 = " ";
                 }
+
                 if (ind2.length() == 0) {
                     ind2 = " ";
                 }
-                dataField =
-                        factory.newDataField(tag, ind1.charAt(0), ind2
-                                .charAt(0));
+
+                dataField = factory.newDataField(tag, ind1.charAt(0), ind2.charAt(0));
                 break;
             case SUBFIELD_ID:
-                sb = new StringBuffer();
                 String code = atts.getValue(CODE_ATTR);
-                if (code == null || code.length() == 0) {
-                    code = " "; // throw new
-                                // MarcException("missing subfield 'code' attribute");
+
+                if (code == null) {
+                    throw new MarcException("Subfield missing code attribute");
                 }
+
+                if (code.length() == 0) {
+                    code = " ";
+                }
+
                 subfield = factory.newSubfield(code.charAt(0));
+                sb = new StringBuffer();
         }
     }
 
     /**
      * An event fired as characters are consumed.
-     * 
+     *
      * @param ch
      * @param start
      * @param length
      */
     @Override
-    public void characters(final char[] ch, final int start, final int length)
-            throws SAXException {
+    public void characters(final char[] ch, final int start, final int length) throws SAXException {
         if (sb != null) {
             sb.append(ch, start, length);
         }
@@ -191,19 +206,18 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * An event fired at the end of an element.
-     * 
+     *
      * @param uri
      * @param name
      * @param qName
      */
     @Override
-    public void endElement(final String uri, final String name, final String qName)
-            throws SAXException {
+    public void endElement(final String uri, final String name, final String qName) throws SAXException {
         final String realname = (name.length() == 0) ? qName : name;
         final Integer elementType = elementMap.get(realname);
 
         if (elementType == null) {
-            return;
+            throw new MarcException("Unexpected XML element: " + realname);
         }
 
         switch (elementType.intValue()) {
@@ -240,21 +254,20 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * An event fired while consuming ignorable whitespace.
-     * 
+     *
      * @param data
      * @param offset
      * @param length
      * @throws SAXException
      */
     @Override
-    public void ignorableWhitespace(final char[] data, final int offset, final int length)
-            throws SAXException {
+    public void ignorableWhitespace(final char[] data, final int offset, final int length) throws SAXException {
         // not implemented
     }
 
     /**
      * An event fired at the end of prefix mapping.
-     * 
+     *
      * @param prefix
      * @throws SAXException
      */
@@ -264,7 +277,7 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * An event fired while consuming a skipped entity.
-     * 
+     *
      * @param name
      * @throws SAXException
      */
@@ -275,7 +288,7 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * An event fired while consuming a document locator.
-     * 
+     *
      * @param locator
      */
     @Override
@@ -285,26 +298,24 @@ public class MarcXmlHandler implements ContentHandler {
 
     /**
      * An event fired while consuming a processing instruction.
-     * 
+     *
      * @param target
      * @param data
      * @throws SAXException
      */
     @Override
-    public void processingInstruction(final String target, final String data)
-            throws SAXException {
+    public void processingInstruction(final String target, final String data) throws SAXException {
         // not implemented
     }
 
     /**
      * An event fired at the start of prefix mapping.
-     * 
+     *
      * @param prefix
      * @param uri
      */
     @Override
-    public void startPrefixMapping(final String prefix, final String uri)
-            throws SAXException {
+    public void startPrefixMapping(final String prefix, final String uri) throws SAXException {
         // not implemented
     }
 

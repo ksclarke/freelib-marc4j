@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.freelibrary</groupId>
   <artifactId>freelib-marc4j</artifactId>
   <packaging>jar</packaging>
-  <version>2.6.5-SNAPSHOT</version>
+  <version>2.6.4-SNAPSHOT</version>
   <name>FreeLib-MARC4J</name>
   <description>An easy to use Application Programming Interface (API) for working with MARC and MARCXML in
     Java.</description>
@@ -105,7 +106,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- give cobertura a little breathing room -->
-    <cobertura.maxmem>512M</cobertura.maxmem>
+    <cobertura.maxmem>1024M</cobertura.maxmem>
   </properties>
   <dependencies>
     <dependency>
@@ -134,6 +135,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -364,7 +371,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.3</version>
+        <version>3.4</version>
         <configuration>
           <generateReports>true</generateReports>
           <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
@@ -374,6 +381,7 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>jdepend-maven-plugin</artifactId>
+              <version>2.0</version>
             </plugin>
             <!-- includes the standard maven project reports -->
             <plugin>
@@ -450,7 +458,7 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>findbugs-maven-plugin</artifactId>
-              <version>2.5.4</version>
+              <version>3.0.0</version>
             </plugin>
             <!-- checkstyle here generates the plugin's reports -->
             <plugin>
@@ -466,13 +474,14 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-pmd-plugin</artifactId>
-              <version>3.1</version>
+              <version>3.4</version>
               <configuration>
                 <aggregate>true</aggregate>
                 <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                 <minimumTokens>100</minimumTokens>
                 <verbose>true</verbose>
-                <targetJdk>1.7</targetJdk>
+                <targetJdk>1.8</targetJdk>
+                 <linkXRef>false</linkXRef>
               </configuration>
             </plugin>
             <!-- report of code tags like TODO, FIXME, etc. -->
@@ -514,7 +523,6 @@
                 <aggregate>true</aggregate>
                 <outputDirectory>${project.reporting.outputDirectory}/cobertura</outputDirectory>
                 <instrumentation>
-                  <!-- We'd have to increase heap size to run these -->
                   <excludes>
                     <exclude>**/*Generated.class</exclude>
                   </excludes>
@@ -529,7 +537,7 @@
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-module-markdown</artifactId>
             <version>1.5</version>
-          </dependency>
+          </dependency> 
           <dependency>
             <groupId>lt.velykis.maven.skins</groupId>
             <artifactId>reflow-velocity-tools</artifactId>

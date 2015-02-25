@@ -1,22 +1,18 @@
 
 package info.freelibrary.marc4j;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
-import info.freelibrary.marc4j.utils.StaticTestRecords;
-import info.freelibrary.marc4j.utils.TestUtils;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.xml.transform.dom.DOMResult;
 
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Test;
+import org.marc4j.Constants;
 import org.marc4j.MarcException;
 import org.marc4j.MarcReader;
 import org.marc4j.MarcStreamReader;
@@ -28,7 +24,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class MarcXmlWriterTest {
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
+import info.freelibrary.marc4j.utils.StaticTestRecords;
+import info.freelibrary.util.StringUtils;
+
+public class MarcXmlWriterTest extends XMLTestCase {
 
     /**
      * Tests the {@link MarcXmlWriter}
@@ -43,8 +43,20 @@ public class MarcXmlWriterTest {
             writer.write(record);
         }
         writer.close();
-        TestUtils
-                .validateStringAgainstFile(new String(out.toByteArray()), StaticTestRecords.RESOURCES_SUMMERLAND_XML);
+        assertXMLEqual(new String(out.toByteArray()), StringUtils.read(new File("src/test/resources/summerland.xml")));
+    }
+
+    /**
+     * Tests the single record write of {@link MarcXmlWriter}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSingleRecordMarcXmlWriter() throws Exception {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        MarcXmlWriter.writeSingleRecord(StaticTestRecords.summerland[0], out, true);
+        assertXMLEqual(new String(out.toByteArray()), StringUtils.read(new File(
+                "src/test/resources/summerland-record.xml")));
     }
 
     /**
@@ -108,7 +120,6 @@ public class MarcXmlWriterTest {
      *
      * @throws Exception
      */
-    @Test(expected = MarcException.class)
     public void testWriteOfRecordWithIndicatorlessSubfield() throws Exception {
         final Record record = StaticTestRecords.getSummerlandRecord();
         final MarcFactory factory = StaticTestRecords.getFactory();
@@ -120,7 +131,14 @@ public class MarcXmlWriterTest {
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final MarcXmlWriter writer = new MarcXmlWriter(out, true);
-        writer.write(record);
+
+        try {
+            writer.write(record);
+            fail("Failed to throw an expected MarcException for a field without indicators");
+        } catch (final MarcException details) {
+            // this is an expected exception
+        }
+
         writer.close();
     }
 
@@ -155,8 +173,9 @@ public class MarcXmlWriterTest {
         assertEquals("only one child", 1, children.getLength());
 
         final Element child = (Element) children.item(0);
-        assertEquals("child should be a record", "record", child.getNodeName());
-        assertEquals("one leader expected", 1, child.getElementsByTagName("leader").getLength());
+        assertEquals("child should be a record", "record", child.getLocalName());
+        assertEquals("one leader expected", 1, child.getElementsByTagNameNS(Constants.MARCXML_NS_URI, "leader")
+                .getLength());
     }
 
     /**

@@ -46,6 +46,9 @@ public class Constants {
     /** NS URI */
     public static final String MARCXML_NS_URI = "http://www.loc.gov/MARC21/slim";
 
+    /** NS Prefix */
+    public static final String MARCXML_NS_PREFIX = "marcxml";
+
     /** MARC-8 ANSEL ENCODING **/
     public static final String MARC_8_ENCODING = "MARC8";
 

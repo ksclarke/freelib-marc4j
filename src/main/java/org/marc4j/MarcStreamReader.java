@@ -20,8 +20,6 @@
 
 package org.marc4j;
 
-import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -38,6 +36,8 @@ import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
 import org.marc4j.marc.Record;
 import org.marc4j.marc.Subfield;
+
+import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
 
 /**
  * An iterator over a collection of MARC records in ISO 2709 format.
@@ -169,11 +169,13 @@ public class MarcStreamReader implements MarcReader {
                     encoding = "UTF8";
                 }
         }
+
         record.setLeader(ldr);
 
         if ((directoryLength % 12) != 0) {
             throw new MarcException("invalid directory");
         }
+
         final DataInputStream inputrec = new DataInputStream(new ByteArrayInputStream(recordBuf));
         final int size = directoryLength / 12;
 
@@ -390,6 +392,12 @@ public class MarcStreamReader implements MarcReader {
         } else if (encoding.equals("ISO-8859-1") || encoding.equals("ISO8859_1") || encoding.equals("ISO_8859_1")) {
             try {
                 dataElement = new String(bytes, "ISO-8859-1");
+            } catch (final UnsupportedEncodingException e) {
+                throw new MarcException("unsupported encoding", e);
+            }
+        } else if (override) {
+            try {
+                dataElement = new String(bytes, encoding);
             } catch (final UnsupportedEncodingException e) {
                 throw new MarcException("unsupported encoding", e);
             }
