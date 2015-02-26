@@ -30,6 +30,15 @@
     <url>http://freelibrary.info</url>
   </organization>
   <developers>
+      <developer>
+      <email>ksclarke@gmail.com</email>
+      <name>Kevin S. Clarke</name>
+      <url>http://kevinclarke.info</url>
+      <roles>
+        <role>FreeLib-MARC4J Forker</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+    </developer>
     <developer>
       <email>rochkind@jhu.edu</email>
       <name>Jonathan Rochkind</name>
@@ -47,14 +56,6 @@
         <role>Original Developer</role>
       </roles>
       <timezone>America/New_York</timezone>
-    </developer>
-    <developer>
-      <email>mail@bpeters.com</email>
-      <name>Bas Peters</name>
-      <roles>
-        <role>Project Creator</role>
-      </roles>
-      <timezone>Europe/Amsterdam</timezone>
     </developer>
     <developer>
       <email>rh9ec@virginia.edu</email>
@@ -83,14 +84,13 @@
       </roles>
       <timezone>America/New_York</timezone>
     </developer>
-    <developer>
-      <email>ksclarke@gmail.com</email>
-      <name>Kevin S. Clarke</name>
-      <url>http://kevinclarke.info</url>
+        <developer>
+      <email>mail@bpeters.com</email>
+      <name>Bas Peters</name>
       <roles>
-        <role>FreeLib-MARC4J Forker</role>
+        <role>Project Creator</role>
       </roles>
-      <timezone>America/New_York</timezone>
+      <timezone>Europe/Amsterdam</timezone>
     </developer>
   </developers>
   <properties>
