@@ -35,7 +35,7 @@ If you just want to include MARC4J as a dependency in your own Maven-managed pro
     <dependency>
         <groupId>info.freelibrary</groupId>
         <artifactId>freelib-marc4j</artifactId>
-        <version>2.6.5</version>
+        <version>2.6.6</version>
     </dependency>
 
 
