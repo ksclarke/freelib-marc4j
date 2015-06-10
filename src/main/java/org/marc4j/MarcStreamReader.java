@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import org.marc4j.converter.CharConverter;
 import org.marc4j.marc.ControlField;
@@ -181,6 +183,8 @@ public class MarcStreamReader implements MarcReader {
 
         final String[] tags = new String[size];
         final int[] lengths = new int[size];
+        final int[] starts  = new int[size];
+        final HashMap<Integer, Integer> unsortedStartIndex = new HashMap<Integer, Integer>();
 
         final byte[] tag = new byte[3];
         final byte[] length = new byte[4];
@@ -199,13 +203,23 @@ public class MarcStreamReader implements MarcReader {
                 lengths[i] = Integer.parseInt(tmp);
 
                 inputrec.readFully(start);
+
+                tmp = new String(start);
+                starts[i] = Integer.parseInt(tmp);
+                unsortedStartIndex.put((Integer)starts[i], (Integer)i);
             }
+
+            // Sort starting character positions
+            Arrays.sort(starts);
 
             if (inputrec.read() != Constants.FT) {
                 throw new MarcException("expected field terminator at end of directory");
             }
 
-            for (int i = 0; i < size; i++) {
+            int i = 0;
+            for (int s = 0; s < size; s++) {
+                i = unsortedStartIndex.get((Integer)starts[s]).intValue();
+
                 getFieldLength(inputrec);
 
                 // If tag is for a ControlField; else, try as DataField
