@@ -45,7 +45,7 @@ public class MarcStreamReaderTest {
     public void testParseRecordOnUnorderDirectoryEntries() {
         String file = "src/test/resources/unordered-directory-entries.mrc";
         try {
-			MarcStreamReader reader =
+            MarcStreamReader reader =
                     new MarcStreamReader(new FileInputStream(file));
 
             while (reader.hasNext()) {
