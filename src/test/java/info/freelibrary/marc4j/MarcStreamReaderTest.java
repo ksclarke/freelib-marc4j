@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import org.junit.Test;
+import org.marc4j.MarcException;
 import org.marc4j.MarcStreamReader;
 
 /**
@@ -37,6 +38,23 @@ public class MarcStreamReaderTest {
             }
         } catch (final FileNotFoundException details) {
             fail("Couldn't find the expected cyrillic_capital_e.mrc test resource file");
+        }
+    }
+
+    @Test
+    public void testParseRecordOnUnorderDirectoryEntries() {
+        String file = "src/test/resources/unordered-directory-entries.mrc";
+        try {
+            MarcStreamReader reader =
+                    new MarcStreamReader(new FileInputStream(file));
+
+            while (reader.hasNext()) {
+                reader.next();
+            }
+        } catch (FileNotFoundException e) {
+            fail("Couldn't find the expected test resource file: " + file);
+        } catch (MarcException e) {
+            fail("Failed to parse record having unordered directory entries");
         }
     }
 
