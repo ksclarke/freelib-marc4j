@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>info.freelibrary</groupId>
+
   <artifactId>freelib-marc4j</artifactId>
   <packaging>jar</packaging>
   <version>2.6.7-SNAPSHOT</version>
@@ -9,6 +10,7 @@
   <description>An easy to use Application Programming Interface (API) for working with MARC and MARCXML in
     Java.</description>
   <url>https://github.com/ksclarke/freelib-marc4j</url>
+
   <licenses>
     <license>
       <name>GNU Lesser General Public License, Version 2.1</name>
@@ -16,6 +18,7 @@
       <comments>Licensed under the GNU LGPL 2.1 or later (at your option)</comments>
     </license>
   </licenses>
+
   <scm>
     <connection>scm:git:git@github.com:ksclarke/freelib-marc4j.git</connection>
     <developerConnection>scm:git:git@github.com:ksclarke/freelib-marc4j.git</developerConnection>
@@ -25,17 +28,14 @@
     <system>GitHub</system>
     <url>https://github.com/ksclarke/freelib-marc4j/issues</url>
   </issueManagement>
-  <organization>
-    <name>FreeLibrary</name>
-    <url>http://freelibrary.info</url>
-  </organization>
+
   <developers>
-      <developer>
+    <developer>
       <email>ksclarke@gmail.com</email>
       <name>Kevin S. Clarke</name>
       <url>http://kevinclarke.info</url>
       <roles>
-        <role>FreeLib-MARC4J Forker</role>
+        <role>FreeLib-MARC4J developer</role>
       </roles>
       <timezone>America/New_York</timezone>
     </developer>
@@ -84,7 +84,7 @@
       </roles>
       <timezone>America/New_York</timezone>
     </developer>
-        <developer>
+    <developer>
       <email>mail@bpeters.com</email>
       <name>Bas Peters</name>
       <roles>
@@ -93,187 +93,53 @@
       <timezone>Europe/Amsterdam</timezone>
     </developer>
   </developers>
+
   <properties>
-    <freelib.build.tools.version>0.0.7</freelib.build.tools.version>
-    <maven.checkstyle.version>2.12.1</maven.checkstyle.version>
-
-    <!-- used for finding the unpacked checkstyle-suppressions.xml file -->
-    <!-- built-in for eclipse-cs tool so we make it work with maven too -->
-    <config_loc>${project.basedir}/target/classes/checkstyle</config_loc>
-
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-    <!-- give cobertura a little breathing room -->
-    <cobertura.maxmem>1024M</cobertura.maxmem>
+    <freelib.utils.version>0.4.6</freelib.utils.version>
+    <maven.compiler.version>3.1</maven.compiler.version>
+    <org.reflections.version>0.9.9-RC1</org.reflections.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.7</version>
     </dependency>
     <dependency>
       <groupId>info.freelibrary</groupId>
       <artifactId>freelib-utils</artifactId>
-      <version>0.4.5</version>
+      <version>${freelib.utils.version}</version>
     </dependency>
     <!-- Temporary dependency until samples can be moved into tests -->
     <dependency>
       <groupId>org.reflections</groupId>
       <artifactId>reflections</artifactId>
-      <version>0.9.9-RC1</version>
+      <version>${org.reflections.version}</version>
     </dependency>
+    <!-- End of temporary dependencies -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.1.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>xmlunit</groupId>
       <artifactId>xmlunit</artifactId>
-      <version>1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
-    <resources>
-      <!-- site's markdown template resources -->
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/*.md</include>
-        </includes>
-        <targetPath>${basedir}/src</targetPath>
-      </resource>
-      <!-- normal types of project resources -->
-      <resource>
-        <directory>${basedir}/src/main/resources</directory>
-        <filtering>true</filtering>
-        <excludes>
-          <exclude>**/*.md</exclude>
-        </excludes>
-      </resource>
-    </resources>
     <plugins>
-      <!-- checks project's code for conformance to coding standards -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${maven.checkstyle.version}</version>
-        <configuration>
-          <consoleOutput>true</consoleOutput>
-          <violationSeverity>warning</violationSeverity>
-          <configLocation>${basedir}/target/classes/checkstyle/checkstyle.xml</configLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <id>checkstyle</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- enforces some rules for the project, like checkstyle does for code -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.3.1</version>
-        <executions>
-          <execution>
-            <id>enforce-java</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <message>Java 6 or greater is required</message>
-                  <version>[1.6,)</version>
-                </requireJavaVersion>
-              </rules>
-            </configuration>
-          </execution>
-          <execution>
-            <id>enforce-no-snapshots</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <failFast>true</failFast>
-              <rules>
-                <!-- don't want to allow snapshots unless excluded -->
-                <!-- can be skipped by adding following to command line: -Denforcer.skip=true -->
-                <requireReleaseDeps>
-                  <message>Sorry, no dependency snapshots allowed! Skip this check by adding the following to the
-                    command line: -Denforcer.skip=true</message>
-                </requireReleaseDeps>
-              </rules>
-              <fail>true</fail>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- extracts project site's css and js from freelib-build-tools jar -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.8</version>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <!-- copies the site stylesheets into the project -->
-                <artifactItem>
-                  <groupId>info.freelibrary</groupId>
-                  <artifactId>freelib-build-tools</artifactId>
-                  <version>${freelib.build.tools.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.css,**/*.js</includes>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                </artifactItem>
-                <!-- copies site templates into the resources directory -->
-                <artifactItem>
-                  <groupId>info.freelibrary</groupId>
-                  <artifactId>freelib-build-tools</artifactId>
-                  <version>${freelib.build.tools.version}</version>
-                  <type>jar</type>
-                  <includes>**/*.md</includes>
-                  <outputDirectory>${basedir}/src/main/resources</outputDirectory>
-                </artifactItem>
-                <!-- copies checkstyle configs so we can filter them -->
-                <artifactItem>
-                  <groupId>info.freelibrary</groupId>
-                  <artifactId>freelib-build-tools</artifactId>
-                  <version>${freelib.build.tools.version}</version>
-                  <type>jar</type>
-                  <includes>checkstyle/*.xml</includes>
-                  <outputDirectory>${basedir}/src/main/resources</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>${maven.compiler.version}</version>
         <executions>
           <execution>
             <id>codetable-compile</id>
@@ -290,10 +156,10 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Generates the code table Java source, which is then compiled along with the rest of the project -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.3.1</version>
         <executions>
           <execution>
             <id>codetable-generator</id>
@@ -326,10 +192,45 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
         <executions>
+          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <execution>
+            <id>copy-build-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/site</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/target/build-resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <execution>
+            <id>copy-site-resources</id>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/jbake</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/jbake</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <!-- This is the local configuration that required the above two to be included here (so they wouldn't be ignored) -->
           <execution>
             <id>codetable-resources</id>
+            <!-- We need this configuration because we run this at an earlier Maven lifecycle -->
             <phase>initialize</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -345,264 +246,35 @@
           </execution>
         </executions>
       </plugin>
-      <!-- cleans up build artifacts -->
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>2.5</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}/src</directory>
-              <includes>
-                <include>**/coders-welcome.md</include>
-                <include>**/testers-welcome.md</include>
-                <include>**/translators-welcome.md</include>
-                <include>**/documenters-welcome.md</include>
-              </includes>
-            </fileset>
-            <fileset>
-              <directory>${basedir}/src/main/resources/checkstyle</directory>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-      <!-- maven site generates documentation for use in project website -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.4</version>
-        <configuration>
-          <generateReports>true</generateReports>
-          <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
-          <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
-          <reportPlugins>
-            <!-- includes information about project's dependencies -->
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>jdepend-maven-plugin</artifactId>
-              <version>2.0</version>
-            </plugin>
-            <!-- includes the standard maven project reports -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>2.7</version>
-              <configuration>
-                <anonymousConnection>scm:git:git@github.com:ksclarke/freelib-marc4j.git</anonymousConnection>
-                <developerConnection>scm:git:git@github.com:ksclarke/freelib-marc4j.git</developerConnection>
-              </configuration>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>summary</report>
-                    <report>license</report>
-                    <report>modules</report>
-                    <report>project-team</report>
-                    <report>plugins</report>
-                    <report>dependency-info</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-            <!-- includes unit test reports -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.17</version>
-              <configuration>
-                <forkCount>3</forkCount>
-                <reuseForks>true</reuseForks>
-              </configuration>
-            </plugin>
-            <!-- includes report of changes from the Git repo -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-changes-plugin</artifactId>
-              <version>2.10</version>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>changes-report</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-            <!-- includes a changelog built from Git repo activity -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-changelog-plugin</artifactId>
-              <version>2.3</version>
-            </plugin>
-            <!-- includes javadoc documentation of the project's code -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.9.1</version>
-              <reportSets>
-                <reportSet>
-                  <id>default</id>
-                  <reports>
-                    <report>javadoc</report>
-                  </reports>
-                </reportSet>
-                <reportSet>
-                  <id>aggregate</id>
-                  <reports>
-                    <report>aggregate</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-            <!-- findbugs finds common programming problems -->
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
-              <version>3.0.0</version>
-            </plugin>
-            <!-- checkstyle here generates the plugin's reports -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-checkstyle-plugin</artifactId>
-              <version>${maven.checkstyle.version}</version>
-              <configuration>
-                <consoleOutput>true</consoleOutput>
-                <configLocation>${basedir}/target/classes/checkstyle/checkstyle.xml</configLocation>
-              </configuration>
-            </plugin>
-            <!-- source code analyzer somewhat similar to findbugs -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-pmd-plugin</artifactId>
-              <version>3.4</version>
-              <configuration>
-                <aggregate>true</aggregate>
-                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                <minimumTokens>100</minimumTokens>
-                <verbose>true</verbose>
-                <targetJdk>1.8</targetJdk>
-                 <linkXRef>false</linkXRef>
-              </configuration>
-            </plugin>
-            <!-- report of code tags like TODO, FIXME, etc. -->
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>taglist-maven-plugin</artifactId>
-              <version>2.4</version>
-              <configuration>
-                <tagListOptions>
-                  <tagClasses>
-                    <tagClass>
-                      <displayName>TODOs</displayName>
-                      <tags>
-                        <tag>
-                          <matchString>TODO</matchString>
-                          <matchType>exact</matchType>
-                        </tag>
-                      </tags>
-                    </tagClass>
-                    <tagClass>
-                      <displayName>FIXMEs</displayName>
-                      <tags>
-                        <tag>
-                          <matchString>FIXME</matchString>
-                          <matchType>exact</matchType>
-                        </tag>
-                      </tags>
-                    </tagClass>
-                  </tagClasses>
-                </tagListOptions>
-              </configuration>
-            </plugin>
-            <!-- calculates test coverage of the project's code -->
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>cobertura-maven-plugin</artifactId>
-              <version>2.6</version>
-              <configuration>
-                <aggregate>true</aggregate>
-                <outputDirectory>${project.reporting.outputDirectory}/cobertura</outputDirectory>
-                <instrumentation>
-                  <excludes>
-                    <exclude>**/*Generated.class</exclude>
-                  </excludes>
-                </instrumentation>
-              </configuration>
-            </plugin>
-          </reportPlugins>
-        </configuration>
-        <dependencies>
-          <!-- these three deps are used to generate the Maven site -->
-          <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-module-markdown</artifactId>
-            <version>1.5</version>
-          </dependency> 
-          <dependency>
-            <groupId>lt.velykis.maven.skins</groupId>
-            <artifactId>reflow-velocity-tools</artifactId>
-            <version>1.1.1</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-          </dependency>
-        </dependencies>
-      </plugin>
+      <!-- Plugin to run the project's tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.17</version>
-        <configuration>
-          <argLine>-XX:-UseSplitVerifier</argLine>
-        </configuration>
+      </plugin>
+      <!-- Checks project's code for conformance to coding standards -->
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
       </plugin>
     </plugins>
-    <extensions>
-      <extension>
-        <groupId>org.kuali.maven.wagons</groupId>
-        <artifactId>maven-s3-wagon</artifactId>
-        <version>1.2.1</version>
-      </extension>
-    </extensions>
   </build>
-  <profiles>
-    <profile>
-      <id>release-sign-artifacts</id>
-      <activation>
-        <property>
-          <name>performRelease</name>
-          <value>true</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+
+  <!-- Enables pushing project documentation up to an S3 bucket -->
   <distributionManagement>
     <site>
       <id>s3.site</id>
       <url>s3://projects.freelibrary.info/freelib-marc4j</url>
     </site>
   </distributionManagement>
+
+  <!-- Pulls in standard FreeLibrary Project configuration options -->
   <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
+    <artifactId>freelib-parent</artifactId>
+    <groupId>info.freelibrary</groupId>
+    <version>0.0.8</version>
   </parent>
+
 </project>
