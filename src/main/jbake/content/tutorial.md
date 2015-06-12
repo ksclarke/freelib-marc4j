@@ -1,5 +1,8 @@
-# Tutorial
-
+title=Tutorial
+date=2015-06-11
+type=page
+status=published
+~~~~~~
 Copyright (C) 2002-2006 Bas Peters
 
 __Table of Contents__
