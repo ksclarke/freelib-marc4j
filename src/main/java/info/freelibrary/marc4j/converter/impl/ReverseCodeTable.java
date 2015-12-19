@@ -232,7 +232,7 @@ public abstract class ReverseCodeTable {
         for (int i = 0; i < charsetsUsed.length(); i++) {
             final char toUse = charsetsUsed.charAt(i);
 
-            if (chars.containsKey(toUse)) {
+            if (chars.containsKey((int) toUse)) {
                 return (toUse);
             }
         }

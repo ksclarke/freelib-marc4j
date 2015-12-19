@@ -2,10 +2,10 @@
 package info.freelibrary.marc4j;
 
 import org.junit.Test;
-
-import junit.framework.TestCase;
 import org.marc4j.marc.Leader;
 import org.marc4j.marc.MarcFactory;
+
+import junit.framework.TestCase;
 
 public class LeaderTest extends TestCase {
 
@@ -16,8 +16,7 @@ public class LeaderTest extends TestCase {
      */
     @Test
     public void testConstructor() {
-        Leader leader = factory.newLeader();
-        assertNotNull("leader is null", leader);
+        assertNotNull("leader is null", factory.newLeader());
     }
 
     /**
@@ -25,7 +24,7 @@ public class LeaderTest extends TestCase {
      */
     @Test
     public void testUnmarshal() {
-        Leader leader = factory.newLeader();
+        final Leader leader = factory.newLeader();
         leader.unmarshal("00714cam a2200205 a 4500");
         assertEquals("00714cam a2200205 a 4500", leader.toString());
     }
@@ -35,7 +34,7 @@ public class LeaderTest extends TestCase {
      */
     @Test
     public void testUnmarshalSubfieldCodeLength() {
-        Leader leader = factory.newLeader();
+        final Leader leader = factory.newLeader();
         leader.unmarshal("00714cam a2100205 a 4500");
         assertEquals(1, leader.getSubfieldCodeLength());
     }
@@ -45,7 +44,7 @@ public class LeaderTest extends TestCase {
      */
     @Test
     public void testMarshal() {
-        Leader leader = factory.newLeader("00714cam a2200205 a 4500");
+        final Leader leader = factory.newLeader("00714cam a2200205 a 4500");
         assertEquals("00714cam a2200205 a 4500", leader.marshal());
     }
 
