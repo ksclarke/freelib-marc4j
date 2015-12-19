@@ -119,9 +119,8 @@ public class MarcXmlHandler implements ContentHandler {
     @Override
     public void startElement(final String uri, final String name, final String qName, final Attributes atts)
             throws SAXException {
-
         final String realname = (name.length() == 0) ? qName : name;
-        final Integer elementType = elementMap.get(realname);
+        final Integer elementType = elementMap.get(stripNsPrefix(realname));
 
         if (elementType == null) {
             throw new MarcException("Unexpected XML element: " + realname);
@@ -214,7 +213,7 @@ public class MarcXmlHandler implements ContentHandler {
     @Override
     public void endElement(final String uri, final String name, final String qName) throws SAXException {
         final String realname = (name.length() == 0) ? qName : name;
-        final Integer elementType = elementMap.get(realname);
+        final Integer elementType = elementMap.get(stripNsPrefix(realname));
 
         if (elementType == null) {
             throw new MarcException("Unexpected XML element: " + realname);
@@ -319,4 +318,20 @@ public class MarcXmlHandler implements ContentHandler {
         // not implemented
     }
 
+    /**
+     * Handle namespace prefixes; also fixes issue with broken SAX emitters that spit out QName instead of local name.
+     * None of our MARCXML local names should have colons.
+     *
+     * @param aName An element name
+     * @return The element name without a namespace prefix
+     */
+    private String stripNsPrefix(final String aName) {
+        final int index = aName.indexOf(":");
+
+        if (index == -1 || index + 1 == aName.length()) {
+            return aName;
+        } else {
+            return aName.substring(index + 1);
+        }
+    }
 }
