@@ -1,19 +1,19 @@
 
 package info.freelibrary.marc4j;
 
-import org.marc4j.marc.MarcFactory;
-import org.marc4j.marc.DataField;
-import org.marc4j.marc.ControlField;
-import org.marc4j.marc.VariableField;
-import org.junit.Test;
-import org.marc4j.marc.Record;
-
-import info.freelibrary.marc4j.utils.StaticTestRecords;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.DataField;
+import org.marc4j.marc.MarcFactory;
+import org.marc4j.marc.Record;
+import org.marc4j.marc.VariableField;
+
+import info.freelibrary.marc4j.utils.StaticTestRecords;
 
 public class RecordTest {
 
@@ -24,10 +24,10 @@ public class RecordTest {
      */
     @Test
     public void testGetFields() {
-        String cn = record.getControlNumber();
+        final String cn = record.getControlNumber();
         assertEquals("12883376", cn);
 
-        ControlField cf = record.getControlNumberField();
+        final ControlField cf = record.getControlNumberField();
         assertEquals("001", cf.getTag());
         assertEquals("12883376", cf.getData());
 
@@ -40,21 +40,21 @@ public class RecordTest {
         fieldList = record.getDataFields();
         assertEquals(12, fieldList.size());
 
-        VariableField field = record.getVariableField("245");
+        final VariableField field = record.getVariableField("245");
         assertEquals("245", field.getTag());
 
         fieldList = record.getVariableFields("650");
         assertEquals(3, fieldList.size());
 
-        String[] fields = {"245", "260", "300"};
+        final String[] fields = { "245", "260", "300" };
         fieldList = record.getVariableFields(fields);
         assertEquals(3, fieldList.size());
     }
 
     /**
-     * Tests {@link Record#find(String)} and {@link Record#find(String, String)}
-     * and {@link Record#find(String[], String)}.
-     * 
+     * Tests {@link Record#find(String)} and {@link Record#find(String, String)} and
+     * {@link Record#find(String[], String)}.
+     *
      * @throws Exception
      */
     @Test
@@ -69,7 +69,7 @@ public class RecordTest {
 
         List<? extends VariableField> result = record.find("Summerland");
         assertEquals(1, result.size());
-        field = (VariableField) result.get(0);
+        field = result.get(0);
         assertEquals("245", field.getTag());
 
         result = record.find("Chabon");
@@ -78,33 +78,33 @@ public class RecordTest {
         result = record.find("100", "Chabon");
         assertEquals(1, result.size());
 
-        String[] tags = {"100", "260", "300"};
+        final String[] tags = { "100", "260", "300" };
         result = record.find(tags, "Chabon");
         assertEquals(1, result.size());
 
         result = record.find("040", "DLC");
         assertTrue(result.size() > 0);
 
-        DataField df = (DataField) result.get(0);
-        String agency = df.getSubfield('a').getData();
-        assertTrue(agency.matches("DLC"));
+        final DataField df = (DataField) result.get(0);
+        final String agency = df.getSubfield('a').getData();
 
+        assertTrue(agency.matches("DLC"));
     }
 
     /**
      * Tests creating a new {@link Record}.
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCreateRecord() throws Exception {
-        MarcFactory factory = MarcFactory.newInstance();
-        Record record = factory.newRecord("00000cam a2200000 a 4500");
+        final MarcFactory factory = MarcFactory.newInstance();
+        final Record record = factory.newRecord("00000cam a2200000 a 4500");
         assertEquals("00000cam a2200000 a 4500", record.getLeader().marshal());
 
         record.addVariableField(factory.newControlField("001", "12883376"));
 
-        DataField df = factory.newDataField("245", '1', '0');
+        final DataField df = factory.newDataField("245", '1', '0');
         df.addSubfield(factory.newSubfield('a', "Summerland /"));
         df.addSubfield(factory.newSubfield('c', "Michael Chabon."));
         record.addVariableField(df);

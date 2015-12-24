@@ -63,7 +63,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * The following example reads a file with MARC records and writes MARCXML records in UTF-8 encoding to the console:
  * </p>
  * <p/>
- *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -82,7 +81,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * To perform a character conversion like MARC-8 to UCS/Unicode register a <code>CharConverter</code>:
  * </p>
  * <p/>
- *
  * <pre>
  * writer.setConverter(new AnselToUnicode());
  * </pre>
@@ -93,7 +91,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * &quot;a�bc&quot; is normalized to &quot;�bc&quot;. To perform normalization set Unicode normalization to true:
  * </p>
  * <p/>
- *
  * <pre>
  * writer.setUnicodeNormalization(true);
  * </pre>
@@ -113,7 +110,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * MARC-8 to UCS/Unicode conversion and Unicode normalization:
  * </p>
  * <p/>
- *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -140,7 +136,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * transforms the result tree to MODS using the stylesheet provided by The Library of Congress:
  * </p>
  * <p/>
- *
  * <pre>
  *
  *      String stylesheetUrl = &quot;http://www.loc.gov/standards/mods/v3/MARC21slim2MODS3.xsl&quot;;
@@ -164,7 +159,6 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  * It is also possible to write the result into a DOM Node:
  * </p>
  * <p/>
- *
  * <pre>
  *
  *      InputStream input = new FileInputStream(&quot;input.mrc&quot;)
@@ -186,17 +180,17 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
  */
 public class MarcXmlWriter implements MarcWriter {
 
-    protected static final String CONTROL_FIELD = "controlfield";
+    public static final String CONTROL_FIELD = "controlfield";
 
-    protected static final String DATA_FIELD = "datafield";
+    public static final String DATA_FIELD = "datafield";
 
-    protected static final String SUBFIELD = "subfield";
+    public static final String SUBFIELD = "subfield";
 
-    protected static final String COLLECTION = "collection";
+    public static final String COLLECTION = "collection";
 
-    protected static final String RECORD = "record";
+    public static final String RECORD = "record";
 
-    protected static final String LEADER = "leader";
+    public static final String LEADER = "leader";
 
     private boolean indent = false;
 
@@ -413,8 +407,8 @@ public class MarcXmlWriter implements MarcWriter {
             final AttributesImpl atts = new AttributesImpl();
             handler.startDocument();
             handler.startPrefixMapping(Constants.MARCXML_NS_PREFIX, Constants.MARCXML_NS_URI);
-            handler.startElement(Constants.MARCXML_NS_URI, COLLECTION,
-                    Constants.MARCXML_NS_PREFIX + ":" + COLLECTION, atts);
+            handler.startElement(Constants.MARCXML_NS_URI, COLLECTION, Constants.MARCXML_NS_PREFIX + ":" + COLLECTION,
+                    atts);
         } catch (final SAXException details) {
             throw new MarcException("SAX error occured while writing start document", details);
         }
@@ -560,13 +554,13 @@ public class MarcXmlWriter implements MarcWriter {
 
         handler.startElement(Constants.MARCXML_NS_URI, LEADER, Constants.MARCXML_NS_PREFIX + ":" + LEADER, atts);
         final Leader leader = record.getLeader();
-        temp = leader.toString().toCharArray();
+        temp = getDataElement(leader.toString());
         handler.characters(temp, 0, temp.length);
         handler.endElement(Constants.MARCXML_NS_URI, LEADER, Constants.MARCXML_NS_PREFIX + ":" + LEADER);
 
         for (final ControlField field : record.getControlFields()) {
             atts = new AttributesImpl();
-            atts.addAttribute("", "tag", "tag", "CDATA", field.getTag());
+            atts.addAttribute("", "tag", "tag", "CDATA", getDataElementString(field.getTag()));
 
             if (indent) {
                 handler.ignorableWhitespace("\n    ".toCharArray(), 0, 5);
@@ -582,27 +576,30 @@ public class MarcXmlWriter implements MarcWriter {
 
         for (final DataField field : record.getDataFields()) {
             atts = new AttributesImpl();
-            atts.addAttribute("", "tag", "tag", "CDATA", field.getTag());
-            atts.addAttribute("", "ind1", "ind1", "CDATA", String.valueOf(field.getIndicator1()));
-            atts.addAttribute("", "ind2", "ind2", "CDATA", String.valueOf(field.getIndicator2()));
+            atts.addAttribute("", "tag", "tag", "CDATA", getDataElementString(field.getTag()));
+            atts.addAttribute("", "ind1", "ind1", "CDATA", getDataElementString(String.valueOf(field
+                    .getIndicator1())));
+            atts.addAttribute("", "ind2", "ind2", "CDATA", getDataElementString(String.valueOf(field
+                    .getIndicator2())));
 
             if (indent) {
                 handler.ignorableWhitespace("\n    ".toCharArray(), 0, 5);
             }
 
-            handler.startElement(Constants.MARCXML_NS_URI, DATA_FIELD,
-                    Constants.MARCXML_NS_PREFIX + ":" + DATA_FIELD, atts);
+            handler.startElement(Constants.MARCXML_NS_URI, DATA_FIELD, Constants.MARCXML_NS_PREFIX + ":" + DATA_FIELD,
+                    atts);
 
             for (final Subfield subfield : field.getSubfields()) {
                 atts = new AttributesImpl();
-                atts.addAttribute("", "code", "code", "CDATA", String.valueOf(subfield.getCode()));
+                atts.addAttribute("", "code", "code", "CDATA", getDataElementString(String.valueOf(subfield
+                        .getCode())));
 
                 if (indent) {
                     handler.ignorableWhitespace("\n      ".toCharArray(), 0, 7);
                 }
 
-                handler.startElement(Constants.MARCXML_NS_URI, SUBFIELD,
-                        Constants.MARCXML_NS_PREFIX + ":" + SUBFIELD, atts);
+                handler.startElement(Constants.MARCXML_NS_URI, SUBFIELD, Constants.MARCXML_NS_PREFIX + ":" + SUBFIELD,
+                        atts);
                 temp = getDataElement(subfield.getData());
                 handler.characters(temp, 0, temp.length);
                 handler.endElement(Constants.MARCXML_NS_URI, SUBFIELD, Constants.MARCXML_NS_PREFIX + ":" + SUBFIELD);
@@ -622,7 +619,7 @@ public class MarcXmlWriter implements MarcWriter {
         handler.endElement(Constants.MARCXML_NS_URI, RECORD, Constants.MARCXML_NS_PREFIX + ":" + RECORD);
     }
 
-    protected char[] getDataElement(final String data) {
+    protected String getDataElementString(final String data) {
         String dataElement = null;
 
         if (converter == null) {
@@ -635,6 +632,10 @@ public class MarcXmlWriter implements MarcWriter {
             dataElement = Normalizer.normalize(dataElement, Normalizer.NFC);
         }
 
-        return dataElement.toCharArray();
+        return dataElement;
+    }
+
+    protected char[] getDataElement(final String data) {
+        return getDataElementString(data).toCharArray();
     }
 }

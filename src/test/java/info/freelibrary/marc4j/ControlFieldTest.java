@@ -1,26 +1,25 @@
 
 package info.freelibrary.marc4j;
 
-import org.junit.Test;
-
-import org.marc4j.marc.ControlField;
-import org.marc4j.marc.MarcFactory;
-import org.marc4j.marc.InvalidMARCException;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+
+import org.junit.Test;
+import org.marc4j.marc.ControlField;
+import org.marc4j.marc.InvalidMARCException;
+import org.marc4j.marc.MarcFactory;
 
 /**
  * A series of tests for a MARC <code>ControlField</code>.
- * 
+ *
  * @author Kevin S. Clarke <ksclarke@gmail.com>
  */
 public class ControlFieldTest {
 
-    private MarcFactory myFactory = MarcFactory.newInstance();
+    private final MarcFactory myFactory = MarcFactory.newInstance();
 
     /**
      * Tests the {@link ControlField} constructor.
@@ -51,33 +50,31 @@ public class ControlFieldTest {
         try {
             cf = myFactory.newControlField("999");
             fail("Failed to throw exception for a 999 ControlField tag");
-        } catch (InvalidMARCException details) {
+        } catch (final InvalidMARCException details) {
             // expected
         }
 
         try {
             cf = myFactory.newControlField(null);
             fail("Failed to throw exception for a null ControlField tag");
-        } catch (NullPointerException details) {
-            assertEquals("ControlFieldImpl's tag can't be null", details
-                    .getMessage());
+        } catch (final NullPointerException details) {
+            assertEquals("ControlFieldImpl's tag can't be null", details.getMessage());
         }
 
         try {
             cf = myFactory.newControlField("00X");
             fail("Failed to throw exception for a 00X ControlField tag");
-        } catch (InvalidMARCException details) {
+        } catch (final InvalidMARCException details) {
             // expected
         }
     }
 
     /**
-     * Tests {@link ControlField#setData(String)} and
-     * {@link ControlField#getData()}.
+     * Tests {@link ControlField#setData(String)} and {@link ControlField#getData()}.
      */
     @Test
     public void testGetSetData() {
-        ControlField cf = myFactory.newControlField("001");
+        final ControlField cf = myFactory.newControlField("001");
 
         // Tests that what's set is what we get
         cf.setData("12883376");
@@ -85,12 +82,11 @@ public class ControlFieldTest {
     }
 
     /**
-     * Tests {@link ControlField#setTag(String)} and
-     * {@link ControlField#getTag()}.
+     * Tests {@link ControlField#setTag(String)} and {@link ControlField#getTag()}.
      */
     @Test
     public void testGetSetTag() {
-        ControlField cf = myFactory.newControlField();
+        final ControlField cf = myFactory.newControlField();
 
         // Tests that what's set is what we get
         assertNull(cf.getTag());
@@ -103,7 +99,7 @@ public class ControlFieldTest {
      */
     @Test
     public void testFind() {
-        ControlField cf = myFactory.newControlField("001", "010101");
+        final ControlField cf = myFactory.newControlField("001", "010101");
 
         // This one should pass
         assertTrue(cf.find("^0101[01]{2}$"));
@@ -117,8 +113,8 @@ public class ControlFieldTest {
      */
     @Test
     public void testComparable() {
-        ControlField cf1 = myFactory.newControlField("008", "12345");
-        ControlField cf2 = myFactory.newControlField("008", "12345");
+        final ControlField cf1 = myFactory.newControlField("008", "12345");
+        final ControlField cf2 = myFactory.newControlField("008", "12345");
 
         // These two should be the same at this point.
         assertEquals(0, cf1.compareTo(cf2));
@@ -137,7 +133,7 @@ public class ControlFieldTest {
      */
     @Test
     public void testToString() {
-        ControlField cf = myFactory.newControlField("001", "000001");
+        final ControlField cf = myFactory.newControlField("001", "000001");
         assertEquals("001 000001", cf.toString());
     }
 
@@ -146,7 +142,7 @@ public class ControlFieldTest {
      */
     @Test
     public void TestGetSetId() {
-        ControlField cf = myFactory.newControlField();
+        final ControlField cf = myFactory.newControlField();
         cf.setId(12345678910L);
         assertEquals((Long) 12345678910L, cf.getId());
     }
