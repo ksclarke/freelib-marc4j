@@ -67,6 +67,23 @@ public class MarcXmlWriterTest extends XMLTestCase {
     }
 
     /**
+     * Tests the writing of record type in MARCXML.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testMarcXmlWriterRecordType() throws Exception {
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final Record record = StaticTestRecords.getSummerlandRecord();
+
+        record.setType("Bibliographic");
+
+        MarcXmlWriter.writeSingleRecord(record, out, true);
+        assertXMLEqual(new String(out.toByteArray()), StringUtils.read(new File(
+                "src/test/resources/summerland-record-with-type.xml")));
+    }
+
+    /**
      * Tests that {@link MarcXmlWriter} can write normalized XML.
      *
      * @throws Exception

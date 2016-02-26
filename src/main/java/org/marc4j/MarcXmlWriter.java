@@ -546,7 +546,14 @@ public class MarcXmlWriter implements MarcWriter {
             handler.ignorableWhitespace("\n  ".toCharArray(), 0, 3);
         }
 
-        handler.startElement(Constants.MARCXML_NS_URI, RECORD, Constants.MARCXML_NS_PREFIX + ":" + RECORD, atts);
+        if (record.getType() != null) {
+            final AttributesImpl rAtts = new AttributesImpl();
+
+            rAtts.addAttribute("", "type", "type", "", record.getType());
+            handler.startElement(Constants.MARCXML_NS_URI, RECORD, Constants.MARCXML_NS_PREFIX + ":" + RECORD, rAtts);
+        } else {
+            handler.startElement(Constants.MARCXML_NS_URI, RECORD, Constants.MARCXML_NS_PREFIX + ":" + RECORD, atts);
+        }
 
         if (indent) {
             handler.ignorableWhitespace("\n    ".toCharArray(), 0, 5);

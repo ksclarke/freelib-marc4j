@@ -1,6 +1,7 @@
 
 package info.freelibrary.marc4j;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -43,6 +44,36 @@ public class MarcXmlReaderTest {
 
         assertFalse(" have more than two records", reader.hasNext());
         input.close();
+    }
+
+    /**
+     * Tests reading record type from MARCXML record.
+     */
+    @Test
+    public void testReadRecordType() {
+        final InputStream input = getClass().getResourceAsStream("/chabon-record-type.xml");
+        assertNotNull(input);
+        final MarcXmlReader reader = new MarcXmlReader(input);
+
+        assertTrue("Should have at least one record", reader.hasNext());
+
+        final Record record = reader.next();
+        assertEquals("Bibliographic", record.getType());
+    }
+
+    /**
+     * Tests reading bad record type from MARCXML record.
+     */
+    @Test
+    public void testReadBadRecordType() {
+        final InputStream input = getClass().getResourceAsStream("/chabon-record-type-bad.xml");
+        assertNotNull(input);
+        final MarcXmlReader reader = new MarcXmlReader(input);
+
+        assertTrue("Should have at least one record", reader.hasNext());
+
+        final Record record = reader.next();
+        assertEquals(null, record.getType());
     }
 
     /**
