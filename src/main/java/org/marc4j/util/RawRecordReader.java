@@ -14,9 +14,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
- * Read a binary MARC file, treating the records mostly as opaque blocks of
- * data. Its purpose is to quickly iterate through records looking for one that
- * matches certain simple criteria, at which point the full marc record can be
+ * Read a binary MARC file, treating the records mostly as opaque blocks of data. Its purpose is to quickly iterate
+ * through records looking for one that matches certain simple criteria, at which point the full marc record can be
  * unpacked for more extensive processing
  *
  * @author Robert Haschart
@@ -40,9 +39,8 @@ public class RawRecordReader {
         input = new DataInputStream(new BufferedInputStream(is));
     }
 
-/**
-     * Creates a raw record reader from the supplied {@link InputStream)
-     * and merge records boolean flag.
+    /**
+     * Creates a raw record reader from the supplied {@link InputStream) and merge records boolean flag.
      *
      * @param is
      * @param mergeRecords
@@ -53,8 +51,7 @@ public class RawRecordReader {
     }
 
     /**
-     * Returns <code>true</code> if there is another raw record to read; else,
-     * <code>false</code>.
+     * Returns <code>true</code> if there is another raw record to read; else, <code>false</code>.
      *
      * @return
      */
@@ -67,10 +64,8 @@ public class RawRecordReader {
             if (afterNextRec == null) {
                 afterNextRec = new RawRecord(input);
                 if (mergeRecords) {
-                    while (afterNextRec != null &&
-                            afterNextRec.getRecordBytes() != null &&
-                            afterNextRec.getRecordId().equals(
-                                    nextRec.getRecordId())) {
+                    while (afterNextRec != null && afterNextRec.getRecordBytes() != null && afterNextRec.getRecordId()
+                            .equals(nextRec.getRecordId())) {
                         nextRec = new RawRecord(nextRec, afterNextRec);
                         afterNextRec = new RawRecord(input);
                     }
@@ -94,14 +89,14 @@ public class RawRecordReader {
         nextRec = afterNextRec;
         afterNextRec = null;
 
-        return (tmpRec);
+        return tmpRec;
     }
 
     /**
      * @param args
      */
     public static void main(final String[] args) {
-        RawRecordReader reader;
+        final RawRecordReader reader;
 
         if (args.length < 2) {
             System.err.println("Error: No records specified for extraction");
@@ -115,16 +110,12 @@ public class RawRecordReader {
             if (args[offset].equals("-")) {
                 reader = new RawRecordReader(System.in);
             } else {
-                reader =
-                        new RawRecordReader(new FileInputStream(new File(
-                                args[offset])));
+                reader = new RawRecordReader(new FileInputStream(new File(args[offset])));
             }
 
             offset++;
 
-            while (offset < args.length &&
-                    (args[offset].equals("-skip") || args[offset]
-                            .equals("-num"))) {
+            while (offset < args.length && (args[offset].equals("-skip") || args[offset].equals("-num"))) {
                 if (args[offset].equals("-skip")) {
                     numToSkip = Integer.parseInt(args[offset + 1]);
                     offset += 2;
@@ -146,10 +137,8 @@ public class RawRecordReader {
                 processInput(reader, idRegex, null, null);
             } else {
                 final File idList = new File(args[offset]);
-                final BufferedReader idStream =
-                        new BufferedReader(new InputStreamReader(
-                                new BufferedInputStream(new FileInputStream(
-                                        idList))));
+                final BufferedReader idStream = new BufferedReader(new InputStreamReader(new BufferedInputStream(
+                        new FileInputStream(idList))));
                 String line;
                 String findReplace[] = null;
 
@@ -157,14 +146,11 @@ public class RawRecordReader {
                     findReplace = args[2].split("->");
                 }
 
-                final LinkedHashSet<String> idsLookedFor =
-                        new LinkedHashSet<String>();
+                final LinkedHashSet<String> idsLookedFor = new LinkedHashSet<String>();
 
                 while ((line = idStream.readLine()) != null) {
                     if (findReplace != null) {
-                        line =
-                                line.replaceFirst(findReplace[0],
-                                        findReplace[1]);
+                        line = line.replaceFirst(findReplace[0], findReplace[1]);
                     }
 
                     idsLookedFor.add(line);
@@ -183,8 +169,8 @@ public class RawRecordReader {
 
     }
 
-    private static void processInput(final RawRecordReader reader, final int numToSkip,
-            final int numToOutput) throws IOException {
+    private static void processInput(final RawRecordReader reader, final int numToSkip, final int numToOutput)
+            throws IOException {
         int num = 0;
         int numOutput = 0;
 
@@ -215,19 +201,17 @@ public class RawRecordReader {
         }
     }
 
-    static void processInput(final RawRecordReader reader, final String idRegex,
-            final String recordHas, final HashSet<String> idsLookedFor) throws IOException {
+    static void processInput(final RawRecordReader reader, final String idRegex, final String recordHas,
+            final HashSet<String> idsLookedFor) throws IOException {
         while (reader.hasNext()) {
             final RawRecord rec = reader.next();
             final String id = rec.getRecordId();
-            if ((idsLookedFor == null && recordHas == null && id
-                    .matches(idRegex)) ||
-                    (idsLookedFor != null && idsLookedFor.contains(id))) {
+            if (idsLookedFor == null && recordHas == null && id.matches(idRegex) || idsLookedFor != null &&
+                    idsLookedFor.contains(id)) {
                 final byte recordBytes[] = rec.getRecordBytes();
                 System.out.write(recordBytes);
                 System.out.flush();
-            } else if (idsLookedFor == null && idRegex == null &&
-                    recordHas != null) {
+            } else if (idsLookedFor == null && idRegex == null && recordHas != null) {
                 final String tag = recordHas.substring(0, 3);
                 final String field = rec.getFieldVal(tag);
                 if (field != null) {

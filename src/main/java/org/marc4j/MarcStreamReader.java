@@ -44,9 +44,7 @@ import info.freelibrary.marc4j.converter.impl.AnselToUnicode;
 /**
  * An iterator over a collection of MARC records in ISO 2709 format.
  * <p>
- * Example usage:
- *
- * <pre>
+ * Example usage: <pre>
  * InputStream input = new FileInputStream(&quot;file.mrc&quot;);
  * MarcReader reader = new MarcStreamReader(input);
  * while (reader.hasNext()) {
@@ -90,7 +88,7 @@ public class MarcStreamReader implements MarcReader {
      * Constructs an instance with the specified input stream.
      */
     public MarcStreamReader(final InputStream input, final String encoding) {
-        this.input = new DataInputStream((input.markSupported()) ? input : new BufferedInputStream(input));
+        this.input = new DataInputStream(input.markSupported() ? input : new BufferedInputStream(input));
         factory = MarcFactory.newInstance();
         if (encoding != null) {
             this.encoding = encoding;
@@ -133,7 +131,7 @@ public class MarcStreamReader implements MarcReader {
             final byte[] recordBuf = new byte[recordLength - 24];
             input.readFully(recordBuf);
             parseRecord(record, byteArray, recordBuf, recordLength);
-            return (record);
+            return record;
         } catch (final EOFException e) {
             throw new MarcException("Premature end of file encountered", e);
         } catch (final IOException e) {
@@ -143,8 +141,9 @@ public class MarcStreamReader implements MarcReader {
 
     private void parseRecord(final Record record, final byte[] aByteArray, final byte[] recordBuf,
             final int recordLength) {
+        final Leader ldr;
+
         byte[] byteArray = aByteArray;
-        Leader ldr;
 
         ldr = factory.newLeader();
         ldr.setRecordLength(recordLength);
@@ -174,7 +173,7 @@ public class MarcStreamReader implements MarcReader {
 
         record.setLeader(ldr);
 
-        if ((directoryLength % 12) != 0) {
+        if (directoryLength % 12 != 0) {
             throw new MarcException("invalid directory");
         }
 
@@ -183,7 +182,7 @@ public class MarcStreamReader implements MarcReader {
 
         final String[] tags = new String[size];
         final int[] lengths = new int[size];
-        final int[] starts  = new int[size];
+        final int[] starts = new int[size];
         final HashMap<Integer, Integer> unsortedStartIndex = new HashMap<Integer, Integer>();
 
         final byte[] tag = new byte[3];
@@ -206,7 +205,7 @@ public class MarcStreamReader implements MarcReader {
 
                 tmp = new String(start);
                 starts[i] = Integer.parseInt(tmp);
-                unsortedStartIndex.put((Integer)starts[i], (Integer)i);
+                unsortedStartIndex.put(starts[i], i);
             }
 
             // Sort starting character positions
@@ -218,7 +217,7 @@ public class MarcStreamReader implements MarcReader {
 
             int i = 0;
             for (int s = 0; s < size; s++) {
-                i = unsortedStartIndex.get((Integer)starts[s]).intValue();
+                i = unsortedStartIndex.get(starts[s]).intValue();
 
                 getFieldLength(inputrec);
 
@@ -346,7 +345,7 @@ public class MarcStreamReader implements MarcReader {
         } catch (final NumberFormatException e) {
             throw new MarcException("unable to parse record length", e);
         }
-        return (length);
+        return length;
     }
 
     private void parseLeader(final Leader ldr, final byte[] leaderData) throws IOException {

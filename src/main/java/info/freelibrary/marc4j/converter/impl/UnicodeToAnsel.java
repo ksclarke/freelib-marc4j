@@ -78,9 +78,9 @@ public class UnicodeToAnsel extends CharConverter {
     }
 
     /**
-     * Constructs an instance with the specified pathname. Use this constructor to create an instance with a customized
-     * code table mapping. The mapping file should follow the structure of LC's XML MARC-8 to Unicode mapping (see:
-     * http://www.loc.gov/marc/specifications/codetables.xml).
+     * Constructs an instance with the specified pathname. Use this constructor to create an instance with a
+     * customized code table mapping. The mapping file should follow the structure of LC's XML MARC-8 to Unicode
+     * mapping (see: http://www.loc.gov/marc/specifications/codetables.xml).
      */
     public UnicodeToAnsel(final String pathname) {
         rct = new ReverseCodeTableHash(pathname);
@@ -88,8 +88,8 @@ public class UnicodeToAnsel extends CharConverter {
 
     /**
      * Constructs an instance with the specified input stream. Use this constructor to create an instance with a
-     * customized code table mapping. The mapping file should follow the structure of LC's XML MARC-8 to Unicode mapping
-     * (see: http://www.loc.gov/marc/specifications/codetables.xml).
+     * customized code table mapping. The mapping file should follow the structure of LC's XML MARC-8 to Unicode
+     * mapping (see: http://www.loc.gov/marc/specifications/codetables.xml).
      */
     public UnicodeToAnsel(final InputStream in) {
         rct = new ReverseCodeTableHash(in);
@@ -101,11 +101,13 @@ public class UnicodeToAnsel extends CharConverter {
             final Constructor<?> cons = generated.getConstructor();
             final Object rct = cons.newInstance();
 
-            return ((ReverseCodeTable) rct);
+            return (ReverseCodeTable) rct;
         } catch (final Exception e) {
-            ReverseCodeTable rct;
+            final ReverseCodeTable rct;
+
             rct = new ReverseCodeTableHash(AnselToUnicode.class.getResourceAsStream("resources/codetables.xml"));
-            return (rct);
+
+            return rct;
         }
     }
 
@@ -256,12 +258,12 @@ public class UnicodeToAnsel extends CharConverter {
                 // Special case handling to handle the COMBINING DOUBLE INVERTED BREVE
                 // and the COMBINING DOUBLE TILDE where a single double wide accent character
                 // in unicode is represented by two half characters in Marc8
-                if (((int) c) == 0x360) {
-                    sb.append((char) (0xfb));
+                if ((int) c == 0x360) {
+                    sb.append((char) 0xfb);
                 }
 
-                if (((int) c) == 0x361) {
-                    sb.append((char) (0xec));
+                if ((int) c == 0x361) {
+                    sb.append((char) 0xec);
                 }
             } else {
                 sb.append(marc);
@@ -274,7 +276,7 @@ public class UnicodeToAnsel extends CharConverter {
     private static boolean allCharsHaveMatch(final ReverseCodeTable rct, final String str) {
         for (final char c : str.toCharArray()) {
             if (!rct.charHasMatch(c)) {
-                return (false);
+                return false;
             }
         }
 

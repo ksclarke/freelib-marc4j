@@ -97,12 +97,10 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Adds a <code>VariableField</code> being a <code>ControlField</code> or
-     * <code>DataField</code>.
+     * Adds a <code>VariableField</code> being a <code>ControlField</code> or <code>DataField</code>.
      * <p/>
-     * If the <code>VariableField</code> is a control number field (001) and the
-     * record already has a control number field, the field is replaced with the
-     * new instance.
+     * If the <code>VariableField</code> is a control number field (001) and the record already has a control number
+     * field, the field is replaced with the new instance.
      *
      * @param field the <code>VariableField</code>
      */
@@ -138,8 +136,7 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Returns the control number field or <code>null</code> if no control
-     * number field is available.
+     * Returns the control number field or <code>null</code> if no control number field is available.
      *
      * @return ControlField - the control number field
      */
@@ -247,8 +244,7 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Gets the {@link VariableField}s in the {@link Record} with the supplied
-     * tags.
+     * Gets the {@link VariableField}s in the {@link Record} with the supplied tags.
      */
     @Override
     public List<VariableField> getVariableFields(final String[] tags) {
@@ -272,7 +268,6 @@ public class RecordImpl implements Record {
      * <p/>
      * Example:
      * <p/>
-     *
      * <pre>
      *
      *      LEADER 00714cam a2200205 a 4500
@@ -312,8 +307,7 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Finds all the {@link VariableField}s that match the supplied regular
-     * expression pattern.
+     * Finds all the {@link VariableField}s that match the supplied regular expression pattern.
      */
     @Override
     public List<VariableField> find(final String pattern) {
@@ -342,8 +336,7 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Finds all the {@link VariableField}s that match the supplied tag and
-     * regular expression pattern.
+     * Finds all the {@link VariableField}s that match the supplied tag and regular expression pattern.
      */
     @Override
     public List<VariableField> find(final String tag, final String pattern) {
@@ -359,8 +352,7 @@ public class RecordImpl implements Record {
     }
 
     /**
-     * Finds all the {@link VariableField}s that match the supplied tags and
-     * regular expression pattern.
+     * Finds all the {@link VariableField}s that match the supplied tags and regular expression pattern.
      */
     @Override
     public List<VariableField> find(final String[] tag, final String pattern) {
@@ -397,7 +389,7 @@ public class RecordImpl implements Record {
 
     @SuppressWarnings("unchecked")
     private Iterator<? extends VariableField> getIterator(final String aTag) {
-        int tag;
+        final int tag;
 
         if (aTag.length() == 3) {
             try {
