@@ -22,6 +22,9 @@
 package org.marc4j;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.marc4j.marc.ControlField;
 import org.marc4j.marc.DataField;
@@ -81,19 +84,31 @@ public class MarcXmlHandler implements ContentHandler {
     /** The second indicator attribute name string */
     private static final String IND_2_ATTR = "ind2";
 
-    /** Hashset for mapping of element strings to constants (Integer) */
-    private static final HashMap<String, Integer> elementMap;
+    /** The type attribute name string */
+    private static final String TYPE_ATTR = "type";
+
+    private static final Set<String> RECORD_TYPES;
+
+    /** Set for mapping of element strings to constants (Integer) */
+    private static final Map<String, Integer> ELEMENTS;
 
     private MarcFactory factory = null;
 
     static {
-        elementMap = new HashMap<String, Integer>();
-        elementMap.put("collection", new Integer(COLLECTION_ID));
-        elementMap.put("leader", new Integer(LEADER_ID));
-        elementMap.put("record", new Integer(RECORD_ID));
-        elementMap.put("controlfield", new Integer(CONTROLFIELD_ID));
-        elementMap.put("datafield", new Integer(DATAFIELD_ID));
-        elementMap.put("subfield", new Integer(SUBFIELD_ID));
+        ELEMENTS = new HashMap<String, Integer>();
+        ELEMENTS.put("collection", new Integer(COLLECTION_ID));
+        ELEMENTS.put("leader", new Integer(LEADER_ID));
+        ELEMENTS.put("record", new Integer(RECORD_ID));
+        ELEMENTS.put("controlfield", new Integer(CONTROLFIELD_ID));
+        ELEMENTS.put("datafield", new Integer(DATAFIELD_ID));
+        ELEMENTS.put("subfield", new Integer(SUBFIELD_ID));
+
+        RECORD_TYPES = new HashSet<String>();
+        RECORD_TYPES.add("Bibliographic");
+        RECORD_TYPES.add("Authority");
+        RECORD_TYPES.add("Holdings");
+        RECORD_TYPES.add("Classification");
+        RECORD_TYPES.add("Community");
     }
 
     /**
@@ -119,8 +134,8 @@ public class MarcXmlHandler implements ContentHandler {
     @Override
     public void startElement(final String uri, final String name, final String qName, final Attributes atts)
             throws SAXException {
-        final String realname = (name.length() == 0) ? qName : name;
-        final Integer elementType = elementMap.get(stripNsPrefix(realname));
+        final String realname = name.length() == 0 ? qName : name;
+        final Integer elementType = ELEMENTS.get(stripNsPrefix(realname));
 
         if (elementType == null) {
             throw new MarcException("Unexpected XML element: " + realname);
@@ -130,7 +145,14 @@ public class MarcXmlHandler implements ContentHandler {
             case COLLECTION_ID:
                 break;
             case RECORD_ID:
+                final String typeAttr = atts.getValue(TYPE_ATTR);
+
                 record = factory.newRecord();
+
+                if (typeAttr != null && RECORD_TYPES.contains(typeAttr)) {
+                    record.setType(typeAttr);
+                }
+
                 break;
             case LEADER_ID:
                 sb = new StringBuffer();
@@ -212,8 +234,8 @@ public class MarcXmlHandler implements ContentHandler {
      */
     @Override
     public void endElement(final String uri, final String name, final String qName) throws SAXException {
-        final String realname = (name.length() == 0) ? qName : name;
-        final Integer elementType = elementMap.get(stripNsPrefix(realname));
+        final String realname = name.length() == 0 ? qName : name;
+        final Integer elementType = ELEMENTS.get(stripNsPrefix(realname));
 
         if (elementType == null) {
             throw new MarcException("Unexpected XML element: " + realname);

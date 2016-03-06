@@ -61,7 +61,7 @@ public class AnselToUnicode extends CharConverter {
          * Gets an item from the front of the queue.
          */
         public Object get() {
-            Object obj;
+            final Object obj;
 
             obj = peek();
             removeElementAt(0);
@@ -135,7 +135,7 @@ public class AnselToUnicode extends CharConverter {
      */
     @Override
     public boolean outputsUnicode() {
-        return (true);
+        return true;
     }
 
     protected ErrorHandler errorList = null;
@@ -177,9 +177,9 @@ public class AnselToUnicode extends CharConverter {
             final Object ct = cons.newInstance();
 
             loadedMultibyte = true;
-            return ((CodeTableInterface) ct);
+            return (CodeTableInterface) ct;
         } catch (final Exception e) {
-            CodeTableInterface ct;
+            final CodeTableInterface ct;
 
             if (loadMultibyte) {
                 ct = new CodeTable(AnselToUnicode.class.getResourceAsStream("resources/codetables.xml"));
@@ -188,7 +188,7 @@ public class AnselToUnicode extends CharConverter {
             }
 
             loadedMultibyte = loadMultibyte;
-            return (ct);
+            return ct;
         }
     }
 
@@ -482,8 +482,8 @@ public class AnselToUnicode extends CharConverter {
                 if (!greekErrorFixed && c != 0) {
                     sb.append(c);
                 } else if (!greekErrorFixed && c == 0) {
-                    final String val = "0000" + Integer.toHexString((cdtchar));
-                    sb.append("<U+" + (val.substring(val.length() - 4, val.length())) + ">");
+                    final String val = "0000" + Integer.toHexString(cdtchar);
+                    sb.append("<U+" + val.substring(val.length() - 4, val.length()) + ">");
                 }
             }
 
@@ -511,7 +511,7 @@ public class AnselToUnicode extends CharConverter {
             dataElement = newElement.toString();
         }
 
-        return (dataElement);
+        return dataElement;
     }
 
     private String convertMultibyte(final CodeTracker cdt, final char[] data) {
@@ -650,8 +650,8 @@ public class AnselToUnicode extends CharConverter {
                 }
             } else if (errorList != null && offset + 4 <= data.length && (data[offset + 1] == 0x20 || data[offset +
                     2] == 0x20)) {
-                final int multiByte = makeMultibyte(data[offset], ((data[offset + 1] != 0x20) ? data[offset + 1]
-                        : data[offset + 2]), data[offset + 3]);
+                final int multiByte = makeMultibyte(data[offset], data[offset + 1] != 0x20 ? data[offset + 1]
+                        : data[offset + 2], data[offset + 3]);
                 final char c = getMBChar(multiByte);
 
                 if (c != 0) {
@@ -711,14 +711,14 @@ public class AnselToUnicode extends CharConverter {
 
         cdt.offset = offset;
 
-        return (sb.toString());
+        return sb.toString();
     }
 
     private boolean nextEscIsMB(final char[] data, final int start, final int length) {
         for (int offset = start; offset < length - 1; offset++) {
             if (data[offset] == (char) 0x1b) {
                 if (data[offset + 1] == '$') {
-                    return (true);
+                    return true;
                 } else {
                     break;
                 }
@@ -730,19 +730,19 @@ public class AnselToUnicode extends CharConverter {
     private boolean noneEquals(final char[] data, final int start, final int end, final int val) {
         for (int offset = start; offset <= end; offset++) {
             if (data[offset] == (char) val) {
-                return (false);
+                return false;
             }
         }
-        return (true);
+        return true;
     }
 
     private boolean noneInRange(final char[] data, final int start, final int end, final int val1, final int val2) {
         for (int offset = start; offset <= end; offset++) {
             if (data[offset] >= (char) val1 && data[offset] <= (char) val2) {
-                return (false);
+                return false;
             }
         }
-        return (true);
+        return true;
     }
 
     /**
@@ -802,12 +802,12 @@ public class AnselToUnicode extends CharConverter {
             cdt.offset++;
         }
 
-        return (c);
+        return c;
     }
 
     private char getCharFromCodePoint(final String charCodePoint) {
         final int charNum = Integer.parseInt(charCodePoint, 16);
-        return ((char) charNum);
+        return (char) charNum;
     }
 
     /**
@@ -856,14 +856,14 @@ public class AnselToUnicode extends CharConverter {
         final char c = ct.getChar(ch, 0x31);
 
         if (c == 0) {
-            return ("");
+            return "";
         } else {
             return "" + c;
         }
     }
 
     private static boolean hasNext(final int pos, final int len) {
-        if (pos < (len - 1)) {
+        if (pos < len - 1) {
             return true;
         }
 

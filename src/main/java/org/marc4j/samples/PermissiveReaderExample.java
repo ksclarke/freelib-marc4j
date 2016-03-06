@@ -40,7 +40,6 @@ public class PermissiveReaderExample {
      * Shown below is the output generated when the program is run on the file error.mrc found in the resources
      * sub-directory in the samples directory:
      * </p>
-     *
      * <pre>
      *  Fatal Exception: error parsing data field for tag: 250 with data:    a1st ed.
      *  Typo         : Record terminator character not found at end of record length --- [ n/a : n/a ]
@@ -66,10 +65,10 @@ public class PermissiveReaderExample {
      */
     public static void main(final String[] aArgsArray) {
         final PrintStream out = System.out;
+        final String[] args;
 
         boolean verbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
         boolean veryverbose = Boolean.parseBoolean(System.getProperty("marc.verbose"));
-        String[] args;
 
         if (aArgsArray != null && aArgsArray.length > 0) {
             verbose = true;
@@ -89,14 +88,13 @@ public class PermissiveReaderExample {
         final File file = new File("src/test/resources/summerland.mrc");
         final ErrorHandler errorHandler = new ErrorHandler();
         final boolean to_utf_8 = true;
+        final InputStream inNorm;
+        final InputStream inPerm;
 
         MarcReader readerNormal = null;
         MarcReader readerPermissive = null;
         OutputStream patchedRecStream = null;
         MarcWriter patchedRecs = null;
-
-        InputStream inNorm;
-        InputStream inPerm;
 
         try {
             inNorm = new FileInputStream(file);
@@ -119,9 +117,8 @@ public class PermissiveReaderExample {
         }
 
         while (readerNormal.hasNext() && readerPermissive.hasNext()) {
-            Record recNorm;
-            Record recPerm;
-            recPerm = readerPermissive.next();
+            final Record recNorm;
+            final Record recPerm = readerPermissive.next();
             final String strPerm = recPerm.toString();
 
             try {
