@@ -3,8 +3,13 @@ package info.freelibrary.marc4j;
 
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.marc4j.MarcException;
@@ -24,9 +29,8 @@ public class MarcStreamReaderTest {
     @Test
     public void testGetDataAsStringWithExplicitCharset() {
         try {
-            final MarcStreamReader reader =
-                    new MarcStreamReader(new FileInputStream("src/test/resources/cyrillic_capital_e.mrc"),
-                            "iso-8859-5");
+            final MarcStreamReader reader = new MarcStreamReader(new FileInputStream(
+                    "src/test/resources/cyrillic_capital_e.mrc"), "iso-8859-5");
 
             if (reader.hasNext()) {
                 final String ctrlField = reader.next().getControlNumberField().getData();
@@ -43,19 +47,34 @@ public class MarcStreamReaderTest {
 
     @Test
     public void testParseRecordOnUnorderDirectoryEntries() {
-        String file = "src/test/resources/unordered-directory-entries.mrc";
+        final String file = "src/test/resources/unordered-directory-entries.mrc";
         try {
-            MarcStreamReader reader =
-                    new MarcStreamReader(new FileInputStream(file));
+            final MarcStreamReader reader = new MarcStreamReader(new FileInputStream(file));
 
             while (reader.hasNext()) {
                 reader.next();
             }
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             fail("Couldn't find the expected test resource file: " + file);
-        } catch (MarcException e) {
+        } catch (final MarcException e) {
             fail("Failed to parse record having unordered directory entries");
         }
     }
 
+    @Test
+    public void testByteStreamRead() throws IOException {
+        final Path path = Paths.get("src/test/resources/chabon.mrc");
+        final byte[] data = Files.readAllBytes(path);
+        final ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
+
+        try {
+            final MarcStreamReader reader = new MarcStreamReader(byteStream);
+
+            while (reader.hasNext()) {
+                reader.next();
+            }
+        } catch (final MarcException details) {
+            fail("Failed to parse record read from byte stream");
+        }
+    }
 }
