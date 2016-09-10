@@ -266,6 +266,11 @@
       <!-- Plugin to run the project's tests -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <http.agent>Maven</http.agent>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
       <!-- Checks project's code for conformance to coding standards -->
       <plugin>
