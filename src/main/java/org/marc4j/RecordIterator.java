@@ -40,10 +40,17 @@ public class RecordIterator implements Iterator<Record> {
 
     private final MarcReader wrappedReader;
 
+    private final static int SPLITERATOR_CHARACTERISTICS =  Spliterator.ORDERED |
+            Spliterator.DISTINCT |
+            Spliterator.IMMUTABLE;
 
     private boolean used = false;
 
-    public RecordIterator(MarcReader wrappedReader) {
+    /**
+     * Create a new instance that decorates the supplied reader.
+     * @param wrappedReader the reader to be decorated.
+     */
+    public RecordIterator(final MarcReader wrappedReader) {
         this.wrappedReader = wrappedReader;
     }
 
@@ -76,8 +83,8 @@ public class RecordIterator implements Iterator<Record> {
      * @inheritDoc
      */
     @Override
-    public void forEachRemaining(Consumer<? super Record> action) {
-        while( wrappedReader.hasNext() ) {
+    public void forEachRemaining(final Consumer<? super Record> action) {
+        while ( wrappedReader.hasNext() ) {
             action.accept(wrappedReader.next());
         }
     }
@@ -95,7 +102,7 @@ public class RecordIterator implements Iterator<Record> {
     }
 
     protected Spliterator<Record> getSpliterator() {
-        return Spliterators.spliteratorUnknownSize(this, Spliterator.ORDERED | Spliterator.DISTINCT | Spliterator.IMMUTABLE);
+        return Spliterators.spliteratorUnknownSize(this, SPLITERATOR_CHARACTERISTICS);
     }
 
 }

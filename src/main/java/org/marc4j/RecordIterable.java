@@ -14,13 +14,13 @@ public class RecordIterable implements Iterable<Record> {
 
     private boolean used = false;
 
-    private RecordIterator iterator;
+    private final RecordIterator iterator;
 
     /**
      * Creates a new instance wrapping a supplied reader.
      * @param reader the reader to be decorated.
      */
-    public RecordIterable(MarcReader reader) {
+    public RecordIterable(final MarcReader reader) {
         this.iterator = new RecordIterator(reader);
     }
 
@@ -42,7 +42,7 @@ public class RecordIterable implements Iterable<Record> {
      * @inheritDoc
      */
     @Override
-    public void forEach(Consumer<? super Record> action) {
+    public void forEach(final Consumer<? super Record> action) {
         iterator.forEachRemaining(action);
     }
 
