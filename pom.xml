@@ -4,7 +4,7 @@
 
   <artifactId>freelib-marc4j</artifactId>
   <packaging>jar</packaging>
-  <version>2.6.12</version>
+  <version>2.6.13-SNAPSHOT</version>
   <name>FreeLib-MARC4J</name>
   <description>An easy to use Application Programming Interface (API) for working with MARC and MARCXML in
     Java.</description>
