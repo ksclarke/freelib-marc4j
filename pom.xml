@@ -94,7 +94,6 @@
   </developers>
 
   <properties>
-    <freelib.utils.version>0.4.6</freelib.utils.version>
     <maven.compiler.version>3.1</maven.compiler.version>
     <org.reflections.version>0.9.9-RC1</org.reflections.version>
   </properties>
@@ -107,7 +106,6 @@
     <dependency>
       <groupId>info.freelibrary</groupId>
       <artifactId>freelib-utils</artifactId>
-      <version>${freelib.utils.version}</version>
     </dependency>
     <!-- Temporary dependency until samples can be moved into tests -->
     <dependency>
@@ -205,7 +203,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
-          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <!-- A duplication of what's defined in the parent but we need to override for code table execution -->
           <execution>
             <id>copy-build-resources</id>
             <phase>process-resources</phase>
@@ -222,7 +220,7 @@
               </resources>
             </configuration>
           </execution>
-          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <!-- A duplication of what's defined in the parent but we need to override for code table execution -->
           <execution>
             <id>copy-site-resources</id>
             <phase>pre-site</phase>
@@ -239,10 +237,9 @@
               </resources>
             </configuration>
           </execution>
-          <!-- This is the local configuration that required the above two to be included here (so they wouldn't be ignored) -->
+          <!-- The extra code table execution mentioned above -->
           <execution>
-            <id>codetable-resources</id>
-            <!-- We need this configuration because we run this at an earlier Maven lifecycle -->
+            <id>code-table-resources</id>
             <phase>initialize</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -261,11 +258,6 @@
       <!-- Plugin to generate JavaDocs -->
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <!-- Plugin to run Sonar analysis -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
       </plugin>
       <!-- Plugin to run the project's tests -->
       <plugin>
@@ -307,7 +299,7 @@
   <parent>
     <artifactId>freelib-parent</artifactId>
     <groupId>info.freelibrary</groupId>
-    <version>0.1.3</version>
+    <version>0.1.8</version>
   </parent>
 
 </project>
