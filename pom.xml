@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>freelib-marc4j</artifactId>
@@ -94,7 +95,6 @@
   </developers>
 
   <properties>
-    <maven.compiler.version>3.1</maven.compiler.version>
     <org.reflections.version>0.9.9-RC1</org.reflections.version>
   </properties>
 
@@ -134,6 +134,21 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>checkstyle/**</exclude>
+            <exclude>site/markdown/**</exclude>
+            <exclude>org/marc4j/samples/**</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/resources/codetablesnocjk.xml</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/resources/codetables.xml</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/ReverseCodeTableGenerator.class</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/CodeTableGenerator.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
@@ -145,7 +160,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
