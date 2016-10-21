@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>freelib-marc4j</artifactId>
@@ -94,8 +95,6 @@
   </developers>
 
   <properties>
-    <freelib.utils.version>0.4.6</freelib.utils.version>
-    <maven.compiler.version>3.1</maven.compiler.version>
     <org.reflections.version>0.9.9-RC1</org.reflections.version>
   </properties>
 
@@ -107,7 +106,6 @@
     <dependency>
       <groupId>info.freelibrary</groupId>
       <artifactId>freelib-utils</artifactId>
-      <version>${freelib.utils.version}</version>
     </dependency>
     <!-- Temporary dependency until samples can be moved into tests -->
     <dependency>
@@ -136,6 +134,21 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>checkstyle/**</exclude>
+            <exclude>site/markdown/**</exclude>
+            <exclude>org/marc4j/samples/**</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/resources/codetablesnocjk.xml</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/resources/codetables.xml</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/ReverseCodeTableGenerator.class</exclude>
+            <exclude>info/freelibrary/marc4j/converter/impl/CodeTableGenerator.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
@@ -147,7 +160,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -205,7 +217,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
-          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <!-- A duplication of what's defined in the parent but we need to override for code table execution -->
           <execution>
             <id>copy-build-resources</id>
             <phase>process-resources</phase>
@@ -222,7 +234,7 @@
               </resources>
             </configuration>
           </execution>
-          <!-- This is a duplication of what's defined in the parent but we need to override here for the one local config -->
+          <!-- A duplication of what's defined in the parent but we need to override for code table execution -->
           <execution>
             <id>copy-site-resources</id>
             <phase>pre-site</phase>
@@ -239,10 +251,9 @@
               </resources>
             </configuration>
           </execution>
-          <!-- This is the local configuration that required the above two to be included here (so they wouldn't be ignored) -->
+          <!-- The extra code table execution mentioned above -->
           <execution>
-            <id>codetable-resources</id>
-            <!-- We need this configuration because we run this at an earlier Maven lifecycle -->
+            <id>code-table-resources</id>
             <phase>initialize</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -261,11 +272,6 @@
       <!-- Plugin to generate JavaDocs -->
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-      </plugin>
-      <!-- Plugin to run Sonar analysis -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
       </plugin>
       <!-- Plugin to run the project's tests -->
       <plugin>
