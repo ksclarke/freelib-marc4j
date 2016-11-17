@@ -1,3 +1,22 @@
+/**
+ * Copyright (C) 2016 Binaek Sarkar
+ *
+ * This file is part of MARC4J
+ *
+ * MARC4J is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * MARC4J is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with MARC4J; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 package org.marc4j;
 
 import java.io.BufferedInputStream;
@@ -15,8 +34,23 @@ import org.marc4j.marc.Subfield;
 import org.marc4j.marc.VariableField;
 
 /**
+ * An iterator over a collection of MARC records in MRK8 format.
+ * <p>
+ * Example usage:
+ * <pre>
+ * InputStream input = new FileInputStream(&quot;file.mrk8&quot;);
+ * MarcReader reader = new MarcStreamReader(input);
+ * while (reader.hasNext()) {
+ *     Record record = reader.next();
+ *     // Process record
+ * }
+ * </pre>
+ * <p>
+ * Check the {@link org.marc4j.marc}&nbsp;package for examples about the use of
+ * the {@link org.marc4j.marc.Record} &nbsp;object model.
+ * </p>
  *
- * @author Admin
+ * @author Binaek Sarkar
  */
 public class Mrk8StreamReader implements MarcReader {
 
@@ -26,16 +60,31 @@ public class Mrk8StreamReader implements MarcReader {
 
     private String lastLineRead;
 
-    public Mrk8StreamReader(InputStream input) {
+    /**
+     * Constructs an instance with the specified input stream.
+     *
+     * @param input
+     */
+    public Mrk8StreamReader(final InputStream input) {
         this.input = new Scanner(new BufferedInputStream(input), StandardCharsets.UTF_8.name());
         this.factory = MarcFactory.newInstance();
     }
 
+    /**
+     * Returns true if the iteration has more records, false otherwise.
+     *
+     * @return Returns true if the iteration has more records, false otherwise.
+     */
     @Override
     public boolean hasNext() {
         return this.input.hasNextLine();
     }
 
+    /**
+     * Returns the next record in the given {@link InputStream}
+     *
+     * @return Record - the record object
+     */
     @Override
     public Record next() {
         List<String> lines = new ArrayList<>();
@@ -63,32 +112,32 @@ public class Mrk8StreamReader implements MarcReader {
         return this.parse(lines);
     }
 
-    protected Record parse(List<String> lines) {
+    protected Record parse(final List<String> lines) {
         if (lines == null || lines.isEmpty()) {
             return null;
         }
 
-        Record record = this.factory.newRecord();
+        final Record record = this.factory.newRecord();
 
-        for (String line : lines) {
+        for (final String line : lines) {
             if (line.trim().length() == 0) {
                 continue;
             }
 
-            String tag = line.substring(1, 4);
+            final String tag = line.substring(1, 4);
 
             if (tag.equalsIgnoreCase("LDR")) {
                 record.setLeader(getLeader(line.substring(6)));
             } else {
-                VariableField field;
+                final VariableField field;
                 if (this.isControlField(tag)) {
                     field = this.factory.newControlField(tag, line.substring(6));
                 } else {
                     //this is obviously a data field
                     String data = line.substring(6);
 
-                    char indicator1 = (data.startsWith("\\", 0) ? ' ' : data.charAt(0));
-                    char indicator2 = (data.startsWith("\\", 1) ? ' ' : data.charAt(1));
+                    final char indicator1 = (data.startsWith("\\", 0) ? ' ' : data.charAt(0));
+                    final char indicator2 = (data.startsWith("\\", 1) ? ' ' : data.charAt(1));
 
                     if (!this.isValidIndicator(indicator1) || !this.isValidIndicator(indicator2)) {
                         throw new MarcException("Wrong indicator format. It has to be a number or a space");
@@ -96,9 +145,9 @@ public class Mrk8StreamReader implements MarcReader {
 
                     field = this.factory.newDataField(tag, indicator1, indicator2);
 
-                    List<String> subs = Arrays.asList(data.substring(3).split("\\$"));
-                    
-                    for (String sub : subs){
+                    final List<String> subs = Arrays.asList(data.substring(3).split("\\$"));
+
+                    for (String sub : subs) {
                         Subfield subfield = this.factory.newSubfield(sub.charAt(0), sub.substring(1));
                         ((DataField) field).addSubfield(subfield);
                     }
@@ -110,17 +159,17 @@ public class Mrk8StreamReader implements MarcReader {
         return record;
     }
 
-    protected boolean isValidIndicator(char indicator) {
+    protected boolean isValidIndicator(final char indicator) {
         return (indicator == ' ' || (indicator >= '0' && indicator <= '9'));
     }
 
-    protected Leader getLeader(String substring) {
-        Leader leader = this.factory.newLeader();
+    protected Leader getLeader(final String substring) {
+        final Leader leader = this.factory.newLeader();
         leader.unmarshal(substring);
         return null;
     }
 
-    protected boolean isControlField(String tag) {
+    protected boolean isControlField(final String tag) {
         //can probably be replaced with (Integer.parseInt(tag)<10)
         return ((tag.length() == 3) && tag.startsWith("00") && (tag.charAt(2) >= '0') && (tag.charAt(2) <= '9'));
     }
