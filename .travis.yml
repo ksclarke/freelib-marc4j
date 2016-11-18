@@ -15,11 +15,6 @@ script: "mvn install"
 notifications:
   email:
     recipients:
-      - ksclarke@gmail.com
+      - binaek89@gmail.com
     on_failure: change
     on_success: change
-  irc:
-    channels:
-      - irc.freenode.org#freelibrary
-    on_failure: always
-    on_success: always
