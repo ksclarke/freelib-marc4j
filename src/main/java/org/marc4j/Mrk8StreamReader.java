@@ -87,7 +87,7 @@ public class Mrk8StreamReader implements MarcReader {
      */
     @Override
     public Record next() {
-        List<String> lines = new ArrayList<>();
+        final List<String> lines = new ArrayList<>();
         if (!this.hasNext()) {
             return null;
         }
@@ -95,7 +95,7 @@ public class Mrk8StreamReader implements MarcReader {
             lines.add(lastLineRead);
         }
         while (this.input.hasNextLine()) {
-            String line = this.input.nextLine();
+            final String line = this.input.nextLine();
 
             if (line.trim().length() == 0) {
                 //this is a blank line. We do not need it
@@ -134,7 +134,7 @@ public class Mrk8StreamReader implements MarcReader {
                     field = this.factory.newControlField(tag, line.substring(6));
                 } else {
                     //this is obviously a data field
-                    String data = line.substring(6);
+                    final String data = line.substring(6);
 
                     final char indicator1 = (data.startsWith("\\", 0) ? ' ' : data.charAt(0));
                     final char indicator2 = (data.startsWith("\\", 1) ? ' ' : data.charAt(1));
@@ -148,7 +148,7 @@ public class Mrk8StreamReader implements MarcReader {
                     final List<String> subs = Arrays.asList(data.substring(3).split("\\$"));
 
                     for (String sub : subs) {
-                        Subfield subfield = this.factory.newSubfield(sub.charAt(0), sub.substring(1));
+                        final Subfield subfield = this.factory.newSubfield(sub.charAt(0), sub.substring(1));
                         ((DataField) field).addSubfield(subfield);
                     }
                 }
