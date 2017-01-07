@@ -1,14 +1,14 @@
 # FreeLib-MARC4J [![Build Status](https://travis-ci.org/ksclarke/freelib-marc4j.png?branch=master)](https://travis-ci.org/ksclarke/freelib-marc4j)
 
-_Deprecation Notice:_ This fork was started because I needed a version of MARC4J in Maven Central. Before I forked, I'd submitted a PR to the upstream project that reworked the project as a Maven (rather 
-than Ant) project but there wasn't any interest in adopting Maven by the upstream developers. So, I forked and started working on this project, freelib-marc4j. Just recently, the upstream project has 
-reconfigured their Ant build so that they can publish artifacts into Maven Central. They've also merged in my freelib-marc4j additions (with the exception of the Maven structure). As a result, I don't 
+_**Deprecation Notice:**_ This fork was started because I needed a version of MARC4J in Maven Central. Before I forked, I'd submitted a PR to the upstream project that reworked the project as a Maven (rather 
+than Ant) project, but there wasn't any interest in adopting Maven by the upstream developers. So, I forked and started working on this project, freelib-marc4j.
+
+Just recently, the upstream project has reconfigured their Ant build so that they can publish artifacts into Maven Central. They've also merged in my freelib-marc4j additions (with the exception of the Maven structure). As a result, I don't 
 really see a reason to continue development on this fork. Having the project in the Maven structure would be nice, but it's not essential to me. I really just needed a build artifact published into Maven 
-Central. I'll keep this project around on GitHub, for awhile at least, but I'm marking it as deprecated since I'm going back to using the upstream MARC4J (and so won't be doing any future development on 
-freelib-marc4j). Thanks to the folks who submitted PRs to freelib-marc4j while it was around!
+Central.
 
-
-For more detailed information about this fork, read its [documentation](http://projects.freelibrary.info/freelib-marc4j/).
+I'll keep this project around on GitHub, for awhile at least, but I'm marking it as deprecated since I'm going back to using the upstream MARC4J (and so won't be doing any future development on 
+freelib-marc4j). Thanks to the folks who submitted PRs to freelib-marc4j while it was around. I really appreciate your contributions!
 
 ### Getting Started
 
