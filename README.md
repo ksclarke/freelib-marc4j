@@ -8,7 +8,7 @@ really see a reason to continue development on this fork. Having the project in 
 Central.
 
 I'll keep this project around on GitHub, for awhile at least, but I'm marking it as deprecated since I'm going back to using the upstream MARC4J (and so won't be doing any future development on 
-freelib-marc4j). Thanks to the folks who submitted PRs to freelib-marc4j while it was around. I really appreciate your contributions!
+freelib-marc4j). Thanks to the folks who submitted PRs to freelib-marc4j while it was around (through 10 releases). I really appreciate your contributions!
 
 ### Getting Started
 
